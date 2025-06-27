@@ -2501,6 +2501,9 @@ async def identify_struggling_topics(student_ids: list):
         # Get all practice attempts for these students
         attempts = await db.practice_attempts.find({"student_id": {"$in": student_ids}}).to_list(1000)
         
+        # Convert ObjectId to string for JSON serialization
+        attempts = convert_objectid_to_str(attempts)
+        
         topic_performance = {}
         
         for attempt in attempts:
@@ -2509,6 +2512,9 @@ async def identify_struggling_topics(student_ids: list):
             
             # Get questions and analyze performance by topic
             questions = await db.practice_questions.find({"id": {"$in": question_ids}}).to_list(len(question_ids))
+            
+            # Convert ObjectId to string for JSON serialization
+            questions = convert_objectid_to_str(questions)
             
             for question in questions:
                 topics = question.get('topics', ['General'])
