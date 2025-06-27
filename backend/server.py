@@ -2392,9 +2392,15 @@ async def get_class_performance_analysis(class_id: str, token_data: dict = Depen
         if not class_doc:
             raise HTTPException(status_code=403, detail="Access denied to this class")
         
+        # Convert ObjectId to string for JSON serialization
+        class_doc = convert_objectid_to_str(class_doc)
+        
         # Get students in this class using joined_classes array
         student_profiles = await db.student_profiles.find({"joined_classes": class_id}).to_list(1000)
         student_ids = [p['user_id'] for p in student_profiles]
+        
+        # Convert ObjectId to string for JSON serialization
+        student_profiles = convert_objectid_to_str(student_profiles)
         
         if not student_ids:
             return {
@@ -2410,6 +2416,9 @@ async def get_class_performance_analysis(class_id: str, token_data: dict = Depen
         
         # Get all practice attempts for this class
         attempts = await db.practice_attempts.find({"student_id": {"$in": student_ids}}).to_list(1000)
+        
+        # Convert ObjectId to string for JSON serialization
+        attempts = convert_objectid_to_str(attempts)
         
         # Performance summary
         if attempts:
@@ -2439,6 +2448,9 @@ async def get_class_performance_analysis(class_id: str, token_data: dict = Depen
             if attempt.get('questions'):
                 first_question = await db.practice_questions.find_one({"id": attempt['questions'][0]})
                 if first_question:
+                    # Convert ObjectId to string for JSON serialization
+                    first_question = convert_objectid_to_str(first_question)
+                    
                     subject = first_question.get('subject', 'unknown')
                     if subject not in subject_analysis:
                         subject_analysis[subject] = {
