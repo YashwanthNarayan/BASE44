@@ -184,7 +184,7 @@ class TestTeacherAnalyticsEndpoints(unittest.TestCase):
             "subject": Subject.PHYSICS.value,
             "topics": ["Mechanics"],
             "difficulty": DifficultyLevel.MEDIUM.value,
-            "question_count": 3
+            "question_count": 5
         }
         
         try:
