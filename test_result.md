@@ -210,9 +210,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Detailed Test Results API"
-    - "Class Performance Analysis API"
-    - "Enhanced Overview Analytics"
+    - "Teacher Dashboard Analytics Display"
+    - "Practice Test Question Type UI Visibility"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
