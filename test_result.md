@@ -124,11 +124,11 @@ backend:
 
   - task: "Class Performance Analysis API"
     implemented: true
-    working: false
+    working: true
     file: "backend/server.py"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
@@ -139,6 +139,9 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "Fixed ObjectId serialization issue by adding convert_objectid_to_str. Upon review, the endpoint already correctly uses joined_classes array. Need to investigate the 403 errors more deeply."
+        - working: true
+          agent: "testing"
+          comment: "The /api/teacher/analytics/class-performance/{class_id} endpoint is now working correctly after fixing ObjectId serialization issues. The endpoint was correctly using the joined_classes array to find students in a class, but was failing due to MongoDB ObjectId objects not being properly serialized to JSON. Added convert_objectid_to_str calls to handle ObjectId serialization in the identify_struggling_topics function and throughout the endpoint."
 
   - task: "Enhanced Overview Analytics"
     implemented: true
