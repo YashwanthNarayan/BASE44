@@ -2475,7 +2475,7 @@ async def get_class_performance_analysis(class_id: str, token_data: dict = Depen
         top_performers = sorted_students[:5]  # Top 5
         students_needing_help = [s for s in sorted_students if s[1]['average_score'] < 60][-5:]  # Bottom 5 scoring below 60%
         
-        return {
+        result = {
             "class_info": class_doc,
             "student_count": len(student_profiles),
             "performance_summary": performance_summary,
@@ -2485,6 +2485,9 @@ async def get_class_performance_analysis(class_id: str, token_data: dict = Depen
             "top_performers": top_performers,
             "students_needing_help": students_needing_help
         }
+        
+        # Convert ObjectId to string for JSON serialization
+        return convert_objectid_to_str(result)
         
     except HTTPException:
         raise
