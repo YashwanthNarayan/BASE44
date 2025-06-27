@@ -125,7 +125,7 @@ backend:
     file: "backend/server.py"
     stuck_count: 1
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
@@ -133,6 +133,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "The /api/teacher/analytics/class-performance/{class_id} endpoint is not working correctly. It returns a 403 Access Denied error even for valid class IDs. The issue is the same as with the test results endpoint - it's looking for students with a class_id field in their profile, but students have class IDs in a joined_classes array instead. This mismatch prevents the endpoint from finding students in the class."
+        - working: "NA"
+          agent: "main"
+          comment: "Fixed ObjectId serialization issue by adding convert_objectid_to_str. Upon review, the endpoint already correctly uses joined_classes array. Need to investigate the 403 errors more deeply."
 
   - task: "Enhanced Overview Analytics"
     implemented: true
