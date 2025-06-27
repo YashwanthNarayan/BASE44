@@ -2359,7 +2359,7 @@ async def get_detailed_test_results(
             }
             detailed_results.append(detailed_result)
         
-        return {
+        result = {
             "test_results": detailed_results,
             "total_results": len(detailed_results),
             "filters_applied": {
@@ -2368,6 +2368,9 @@ async def get_detailed_test_results(
                 "subject": subject
             }
         }
+        
+        # Convert ObjectId to string for JSON serialization
+        return convert_objectid_to_str(result)
         
     except HTTPException:
         raise
