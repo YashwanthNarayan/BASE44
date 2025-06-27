@@ -137,7 +137,7 @@ backend:
     file: "backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
@@ -145,6 +145,9 @@ backend:
         - working: true
           agent: "testing"
           comment: "The /api/teacher/analytics/overview endpoint is working correctly in terms of returning a 200 response with the expected data structure. However, it's not showing any students or test data in the classes due to the same data structure mismatch issue affecting the other endpoints. The endpoint returns empty arrays for class_summary and subject_distribution."
+        - working: "NA"
+          agent: "main"
+          comment: "Fixed ObjectId serialization issue by adding convert_objectid_to_str to all analytics endpoints response. This should resolve the 500 Internal Server Error."
 
   - task: "Authorization & Security"
     implemented: true
