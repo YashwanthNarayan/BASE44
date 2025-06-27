@@ -1,0 +1,598 @@
+Using API URL: https://42bacf43-e6df-4e28-85e1-ec60e41fbbde.preview.emergentagent.com/api
+
+==== TESTING TEACHER ANALYTICS API ====
+
+
+🔍 Setting up teacher account...
+Registered teacher with ID: 5386ca88-a65a-49c5-a427-3174075e66d7
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: 7a99a741-1e29-42b2-80eb-c3f8d87bfade
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: 3c51da71-1988-467e-96f5-3f76cfe52ab0
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: e79dc673-8d44-4fa8-bf3f-fe0d81ebad91
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: 10d9be06-1dcf-4e90-acef-fc78329058a2 and join code: 8YY2VM
+
+🔍 Creating class: Physics Class...
+Created class with ID: 43c1bf3d-54b1-46fe-8891-195b240d4a45 and join code: OKPJLZ
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: 8YY2VM
+Student 1 joined class with join code: OKPJLZ
+Student 2 joined class with join code: 8YY2VM
+Student 2 joined class with join code: OKPJLZ
+Student 3 joined class with join code: 8YY2VM
+Student 3 joined class with join code: OKPJLZ
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: a6d97e0e-7db6-4fba-9c68-0ad1b3b8ff25 and score: 90%
+Submitted test with ID: cf985289-93c2-48e6-a350-b1cec6783ca9 and score: 75%
+Submitted test with ID: 6f2831b4-8114-421c-9b5d-8f38e30bc9a3 and score: 60%
+Submitted test with ID: 60ca5804-b58a-4aa4-a8c4-325bfac26c15 and score: 90%
+Submitted test with ID: 00f592b3-dd63-4031-b0ce-0968b90cf9cd and score: 75%
+Submitted test with ID: 47f21d62-b877-4a0a-8540-79e0c114f1ff and score: 60%
+Submitted test with ID: 280b990d-d6d9-4880-8c79-da5cbf7fa311 and score: 40%
+Submitted test with ID: 47978205-b75f-414a-849a-c6c07ae68562 and score: 50%
+Submitted test with ID: 2ced5f04-9bdc-42da-ac63-4cd64da18b6d and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 41\n}\n]"}
+Submitted test with ID: 7e14781e-dbc0-474e-86de-1014c4c9ae13 and score: 60%
+
+🔍 Testing Detailed Test Results API (No Filters)...
+Detailed Test Results Response: 200
+Retrieved 0 test results
+❌ Detailed test results test failed: False is not true : Should have at least one test result
+F
+🔍 Setting up teacher account...
+Registered teacher with ID: 3cf5e941-b090-4e85-ae80-a41761b19c64
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: d218d1ec-9441-4ca3-87fc-45a0409da636
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: 7c8c276c-0feb-45d3-a055-e56f1ce69176
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: 367825a1-f2c3-468e-8e18-f54131dab737
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: 9cd58e1d-23ad-4cf9-949a-0f864cabd59e and join code: U104V2
+
+🔍 Creating class: Physics Class...
+Created class with ID: 8a9e4d0e-6406-4268-b27c-ff3ee4c02e71 and join code: 7564H5
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: U104V2
+Student 1 joined class with join code: 7564H5
+Student 2 joined class with join code: U104V2
+Student 2 joined class with join code: 7564H5
+Student 3 joined class with join code: U104V2
+Student 3 joined class with join code: 7564H5
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: 777aabdf-620a-4066-99f7-bc8586a15b84 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 39\n}\n]"}
+Submitted test with ID: 62d66c23-865c-49d0-8686-81ec28253234 and score: 60%
+Submitted test with ID: 528daeef-5751-4457-b112-7d2e5ad7c14d and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 38\n}\n]"}
+Submitted test with ID: 787c0973-ee21-420e-a7a8-f9f23b04204f and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 38\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 38\n}\n]"}
+Submitted test with ID: ae611444-540b-48a1-b82a-0b73380e843a and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 38\n}\n]"}
+Submitted test with ID: 971afc5c-a8b6-4c10-aa2a-ae2faf3f4066 and score: 60%
+
+🔍 Testing Detailed Test Results API (Class Filter)...
+Detailed Test Results (Class Filter) Response: 403
+❌ Detailed test results (class filter) test failed: 403 != 200 : Failed to get detailed test results with class filter
+F
+🔍 Setting up teacher account...
+Registered teacher with ID: fe046d7d-5875-429a-8f18-315ec2f4e168
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: a65bcee6-2f00-4140-aab1-3b2f4baff619
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: 56495a15-3502-4625-b7d8-23dc98fef372
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: 1db46901-df06-4d57-832b-55341bb37c5a
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: 30112782-5889-425b-a7f4-b47ddb45fd78 and join code: IJM7D4
+
+🔍 Creating class: Physics Class...
+Created class with ID: d17b6be7-99cc-4bb8-a323-2a906e9c2087 and join code: 7JB6KP
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: IJM7D4
+Student 1 joined class with join code: 7JB6KP
+Student 2 joined class with join code: IJM7D4
+Student 2 joined class with join code: 7JB6KP
+Student 3 joined class with join code: IJM7D4
+Student 3 joined class with join code: 7JB6KP
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: 264fc53e-bb2a-4897-92cd-584d6f260c8f and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 36\n}\n]"}
+Submitted test with ID: 5da95516-f26d-49e4-bd66-04214c589414 and score: 60%
+Submitted test with ID: 8495ed58-fa0c-444a-b543-6695a2240091 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 36\n}\n]"}
+Submitted test with ID: 70209fca-064e-4f96-87eb-725f3d206c4d and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 36\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 36\n}\n]"}
+Submitted test with ID: 482961d6-e6e5-472c-b3ee-2922cba504da and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 35\n}\n]"}
+Submitted test with ID: 86f0c765-9db4-4171-8030-15f92662d9b1 and score: 60%
+
+🔍 Testing Detailed Test Results API (Student Filter)...
+Detailed Test Results (Student Filter) Response: 403
+❌ Detailed test results (student filter) test failed: 403 != 200 : Failed to get detailed test results with student filter
+F
+🔍 Setting up teacher account...
+Registered teacher with ID: 802401c8-cb6e-4ff0-b793-670a46f2372c
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: 4adc51a3-b4cf-4d92-bd72-5554e6638862
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: 241c4acf-c1bd-4af8-8cfd-eac932cc2397
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: 426c4bee-ae18-4ea3-994f-5391eb4f19ca
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: faa923f3-b7b1-4839-9c7e-1e3d84565ff0 and join code: NHWQ4W
+
+🔍 Creating class: Physics Class...
+Created class with ID: bd5fd991-776c-4a70-ace3-a161ef65d339 and join code: RJ7CJ4
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: NHWQ4W
+Student 1 joined class with join code: RJ7CJ4
+Student 2 joined class with join code: NHWQ4W
+Student 2 joined class with join code: RJ7CJ4
+Student 3 joined class with join code: NHWQ4W
+Student 3 joined class with join code: RJ7CJ4
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: 739ed455-01c9-42c7-9503-4cd06ba82335 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 33\n}\n]"}
+Submitted test with ID: 3f46d948-97e9-47fd-8a55-528342a93814 and score: 60%
+Submitted test with ID: 6f8f8bab-fe00-40fd-9b9d-cfc77bcce7e2 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 33\n}\n]"}
+Submitted test with ID: 685558b0-ad07-4b6b-85be-cce1d642b2e3 and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 33\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 33\n}\n]"}
+Submitted test with ID: b742ec1b-4f03-4070-b6db-767a6b8ed9d1 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 33\n}\n]"}
+Submitted test with ID: f2bdd27a-425a-447d-bc4a-57edb631371c and score: 60%
+
+🔍 Testing Detailed Test Results API (Subject Filter)...
+Detailed Test Results (Subject Filter) Response: 200
+Retrieved 0 test results for subject math
+✅ Detailed test results (subject filter) test passed
+.
+🔍 Setting up teacher account...
+Registered teacher with ID: 3cfb318e-9d94-4223-a4b1-d1e741bce34d
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: f8e3c6cf-8399-47a0-af63-e66aae3daff3
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: a625e636-d858-427d-b0ec-d934e808d121
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: 91b6e9c7-53e0-49e9-b5c3-9d109d01da2b
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: 19c9a508-df08-47d7-b5c5-3f88140d0df1 and join code: BTF9HF
+
+🔍 Creating class: Physics Class...
+Created class with ID: bd02b461-ad5f-43c7-9565-b8dca601abf6 and join code: 3Z7RIP
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: BTF9HF
+Student 1 joined class with join code: 3Z7RIP
+Student 2 joined class with join code: BTF9HF
+Student 2 joined class with join code: 3Z7RIP
+Student 3 joined class with join code: BTF9HF
+Student 3 joined class with join code: 3Z7RIP
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: f7d5f5e8-1daf-4bda-8523-242340ef57f6 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 31\n}\n]"}
+Submitted test with ID: 2c28b6ab-6cc3-47de-a7ce-4803345a6ebd and score: 60%
+Submitted test with ID: cb2c817b-ff48-4079-b42c-4f150af7d19a and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 31\n}\n]"}
+Submitted test with ID: 938dfabf-edd7-4a92-9ac6-bd867609c37c and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 30\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 30\n}\n]"}
+Submitted test with ID: ffef43a5-6c65-4718-8b39-23e3f6a9e232 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 30\n}\n]"}
+Submitted test with ID: 1e6de8fc-a827-4919-8492-7395754e60a7 and score: 60%
+
+🔍 Testing Detailed Test Results API (Combined Filters)...
+Detailed Test Results (Combined Filters) Response: 403
+❌ Detailed test results (combined filters) test failed: 403 != 200 : Failed to get detailed test results with combined filters
+F
+🔍 Setting up teacher account...
+Registered teacher with ID: 39882d3c-8f4d-4a3d-a320-dd1a678677e8
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: 3d944482-db11-485b-bef0-6331b2ff7758
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: 4644a321-aa2d-4b9d-a230-49cc4e07f832
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: 44cb150d-cfb5-4d92-b08a-83e515d0441c
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: 5ddb5b04-8c68-4b62-b485-9f336ee554b5 and join code: N9OBPG
+
+🔍 Creating class: Physics Class...
+Created class with ID: ce65920b-5599-4d91-9c41-7474004991a8 and join code: MXW08M
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: N9OBPG
+Student 1 joined class with join code: MXW08M
+Student 2 joined class with join code: N9OBPG
+Student 2 joined class with join code: MXW08M
+Student 3 joined class with join code: N9OBPG
+Student 3 joined class with join code: MXW08M
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: 9a79d121-a7ea-45f2-8f38-c3aff2e737ab and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 28\n}\n]"}
+Submitted test with ID: 23eac811-f5b6-4baf-940a-4d8057bd37df and score: 60%
+Submitted test with ID: 8045bd54-ca5e-42dc-9ba7-4ec81d671e54 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 28\n}\n]"}
+Submitted test with ID: dbab676e-de0f-48ac-87ff-1e9ea1e0bc43 and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 28\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 28\n}\n]"}
+Submitted test with ID: 96e92a2f-8ef4-4816-bb68-ddb56b28c8ba and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 28\n}\n]"}
+Submitted test with ID: 202b3409-17a2-40ca-9967-1e4cb66e0475 and score: 60%
+
+🔍 Testing Class Performance Analysis API...
+Class Performance Analysis Response: 403
+❌ Class performance analysis test failed: 403 != 200 : Failed to get class performance analysis
+F
+🔍 Setting up teacher account...
+Registered teacher with ID: 6da33421-c126-4d62-8577-a91663c40e30
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: 9e793933-18d7-4cd6-8d54-d07e44488707
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: f07510f7-7e34-4dc0-ad31-0496f06fa3ae
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: 10a12c9f-6118-4471-bde4-39e02ac833bf
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: 53a99381-2c37-4eb9-b2b6-c346e7b56dce and join code: X5LRRR
+
+🔍 Creating class: Physics Class...
+Created class with ID: 8ff66698-fefd-4aea-a563-d12e607b23e1 and join code: KXX2O6
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: X5LRRR
+Student 1 joined class with join code: KXX2O6
+Student 2 joined class with join code: X5LRRR
+Student 2 joined class with join code: KXX2O6
+Student 3 joined class with join code: X5LRRR
+Student 3 joined class with join code: KXX2O6
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: 42603b7f-d695-4e33-a6ba-b414168463bf and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 26\n}\n]"}
+Submitted test with ID: 2c74acfa-4785-4d7f-a0d5-5806a0bd0668 and score: 60%
+Submitted test with ID: d8d72511-5288-4902-84d6-9aa40b810163 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 26\n}\n]"}
+Submitted test with ID: 61935352-28f7-460c-a0d1-c986fe732bfa and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 25\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 25\n}\n]"}
+Submitted test with ID: 37bd9fa1-64b0-46b6-a542-f863061f34a1 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 25\n}\n]"}
+Submitted test with ID: ba0dd979-80c3-4acd-8de3-ef3961a1061c and score: 60%
+
+🔍 Testing Class Performance Analysis API (Invalid Class)...
+Class Performance Analysis (Invalid Class) Response: 403
+✅ Class performance analysis (invalid class) test passed
+.
+🔍 Setting up teacher account...
+Registered teacher with ID: fedddda8-e2c5-4552-9d17-6d282fd38ba3
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: f87b530e-982f-4e3d-ad37-766342144068
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: 759a6047-55eb-46d9-ae10-a168bdd3106e
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: 195bc8fe-2f6a-4f24-8b0d-3bf30efbf514
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: 64f6a7d8-e793-4b25-bef3-50ea4f1ad717 and join code: 2TL0BO
+
+🔍 Creating class: Physics Class...
+Created class with ID: e61e79b3-0f9d-4153-b699-fcb39f7c68d7 and join code: BLLJJC
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: 2TL0BO
+Student 1 joined class with join code: BLLJJC
+Student 2 joined class with join code: 2TL0BO
+Student 2 joined class with join code: BLLJJC
+Student 3 joined class with join code: 2TL0BO
+Student 3 joined class with join code: BLLJJC
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: bb80e2c9-9b01-4032-a232-a2995f43f0dc and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 23\n}\n]"}
+Submitted test with ID: b7ce78ef-99ad-49e6-bf05-808d8b08dc8c and score: 60%
+Submitted test with ID: 210656c8-7cdd-4d28-9af9-1531633736b7 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 23\n}\n]"}
+Submitted test with ID: 3d053da2-b580-4866-9d61-ee9b5c78608b and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 23\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 23\n}\n]"}
+Submitted test with ID: 60c3b1de-36fd-4218-9b9f-a95f26e61542 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 23\n}\n]"}
+Submitted test with ID: f6a3eecb-ba74-4aa5-88c3-058524f7d793 and score: 60%
+
+🔍 Testing Enhanced Overview Analytics API...
+Enhanced Overview Analytics Response: 200
+❌ Enhanced overview analytics test failed: 0 != 2 : Class summary count mismatch
+F
+🔍 Setting up teacher account...
+Registered teacher with ID: a1224671-b499-41ca-a8c1-9d8f7b0706fe
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: 0f40ac87-677e-4413-b2b9-df939558cac4
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: 216dc81b-c878-4656-b875-da7fc67dd560
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: ab94de8b-77af-4c65-8b01-f80944320ae1
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: a384a647-c322-45d5-b46a-387ed16ff1e7 and join code: 0XW0XF
+
+🔍 Creating class: Physics Class...
+Created class with ID: e204cc19-7e81-4f01-9052-6b00fadfd120 and join code: HQV5GD
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: 0XW0XF
+Student 1 joined class with join code: HQV5GD
+Student 2 joined class with join code: 0XW0XF
+Student 2 joined class with join code: HQV5GD
+Student 3 joined class with join code: 0XW0XF
+Student 3 joined class with join code: HQV5GD
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: a4328e8c-2ffa-492f-a025-87a9baf3d3ec and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 21\n}\n]"}
+Submitted test with ID: 7b8e8843-b8b3-4cc1-99fa-8c576548e2ab and score: 60%
+Submitted test with ID: b22b4e90-866f-4eb4-b68b-73a5a2b24eb1 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 21\n}\n]"}
+Submitted test with ID: 069196d3-2b3a-4563-a250-36d1c55db071 and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 20\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 20\n}\n]"}
+Submitted test with ID: 07356777-72a4-4437-be1a-c01c812b2a87 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 20\n}\n]"}
+Submitted test with ID: bbb133f9-b494-4813-b766-6ad92cd09342 and score: 60%
+
+🔍 Testing Authorization (Student Access Denied)...
+Student Access to https://42bacf43-e6df-4e28-85e1-ec60e41fbbde.preview.emergentagent.com/api/teacher/analytics/overview: 403
+Student Access to https://42bacf43-e6df-4e28-85e1-ec60e41fbbde.preview.emergentagent.com/api/teacher/analytics/test-results: 403
+Student Access to https://42bacf43-e6df-4e28-85e1-ec60e41fbbde.preview.emergentagent.com/api/teacher/analytics/class-performance/a384a647-c322-45d5-b46a-387ed16ff1e7: 403
+✅ Authorization (student access denied) test passed
+.
+🔍 Setting up teacher account...
+Registered teacher with ID: 7feaab3c-890c-41bf-9f29-c4cd095b9388
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: 04a41547-c2c4-470c-9b31-c3eee5326de6
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: 9db58455-8f70-4178-9aca-a85ed81b29b2
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: 6de0cbe6-0447-4ee2-b336-864392425b06
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: 8a76e16f-652d-4b91-82ed-1b7aa75b9419 and join code: KGJMD7
+
+🔍 Creating class: Physics Class...
+Created class with ID: 3acc407a-4aa5-4da9-ad10-a4d28be195ae and join code: WQTZZ8
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: KGJMD7
+Student 1 joined class with join code: WQTZZ8
+Student 2 joined class with join code: KGJMD7
+Student 2 joined class with join code: WQTZZ8
+Student 3 joined class with join code: KGJMD7
+Student 3 joined class with join code: WQTZZ8
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: f2b91e3d-0d52-482b-9005-396913c5096f and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 18\n}\n]"}
+Submitted test with ID: 31337e8f-1b68-48e9-976e-64633c9043d8 and score: 60%
+Submitted test with ID: ff2d45bc-ea1f-4181-8900-37442a592c6b and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 18\n}\n]"}
+Submitted test with ID: e2b830fa-a7f5-4c90-8cb8-98b48b432697 and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 18\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 18\n}\n]"}
+Submitted test with ID: 24f35c5c-06c9-4cce-b1f1-b019610fbd36 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 17\n}\n]"}
+Submitted test with ID: 5be66fb2-f74d-411e-bccd-77774edf27c1 and score: 60%
+
+🔍 Testing Data Isolation (Other Teacher)...
+Other Teacher Access to Class: 403
+✅ Data isolation (other teacher) test passed
+.
+🔍 Setting up teacher account...
+Registered teacher with ID: d8fb04e2-7815-4a75-882e-253967b7f090
+
+🔍 Setting up student account: Student 1...
+Registered student with ID: a6b5380a-3dda-4b01-86e0-c5392265a039
+
+🔍 Setting up student account: Student 2...
+Registered student with ID: 79c90755-6928-4955-943f-98f0325ab58b
+
+🔍 Setting up student account: Student 3...
+Registered student with ID: d87a86aa-a853-4928-9ca1-a2a8803f6f2e
+
+🔍 Creating class: Mathematics Class...
+Created class with ID: 12e38295-bf84-4a2e-9ebd-fab8cd481dd9 and join code: 7BVEGH
+
+🔍 Creating class: Physics Class...
+Created class with ID: 670d3c59-c9e5-45bb-83a9-7658cbda7a3a and join code: 5NOATW
+
+🔍 Joining students to classes...
+Student 1 joined class with join code: 7BVEGH
+Student 1 joined class with join code: 5NOATW
+Student 2 joined class with join code: 7BVEGH
+Student 2 joined class with join code: 5NOATW
+Student 3 joined class with join code: 7BVEGH
+Student 3 joined class with join code: 5NOATW
+
+🔍 Generating and submitting practice tests...
+Submitted test with ID: 7f022e16-e531-4bf0-abb9-7bf77c3793c5 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 15\n}\n]"}
+Submitted test with ID: a9c73985-6427-48a7-9961-65aae13158a0 and score: 60%
+Submitted test with ID: 26731153-aaba-486e-879a-3f3294df6e72 and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 15\n}\n]"}
+Submitted test with ID: e544b3aa-dabc-40d8-8aba-726513402b0b and score: 60%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 15\n}\n]"}
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 15\n}\n]"}
+Submitted test with ID: deaee100-bcc0-4cf5-a7ec-95b2fc17e5de and score: 90%
+Failed to generate test: 500 - {"detail":"Error generating practice test: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. [violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-1.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 50\n}\n, links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, retry_delay {\n  seconds: 14\n}\n]"}
+Submitted test with ID: 4b143b2b-337b-4430-8307-2b7a0dc9b2a6 and score: 60%
+
+🔍 Testing Edge Case (Empty Class)...
+Empty Class Performance Response: 403
+❌ Edge case (empty class) test failed: 403 != 200 : Should handle empty class gracefully
+F
+======================================================================
+FAIL: test_01_detailed_test_results_no_filters (__main__.TestTeacherAnalyticsAPI.test_01_detailed_test_results_no_filters)
+Test detailed test results endpoint with no filters
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 293, in test_01_detailed_test_results_no_filters
+    self.assertTrue(len(test_results) > 0, "Should have at least one test result")
+AssertionError: False is not true : Should have at least one test result
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 320, in test_01_detailed_test_results_no_filters
+    self.fail(str(e))
+AssertionError: False is not true : Should have at least one test result
+
+======================================================================
+FAIL: test_02_detailed_test_results_with_class_filter (__main__.TestTeacherAnalyticsAPI.test_02_detailed_test_results_with_class_filter)
+Test detailed test results endpoint with class filter
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 336, in test_02_detailed_test_results_with_class_filter
+    self.assertEqual(response.status_code, 200, "Failed to get detailed test results with class filter")
+AssertionError: 403 != 200 : Failed to get detailed test results with class filter
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 347, in test_02_detailed_test_results_with_class_filter
+    self.fail(str(e))
+AssertionError: 403 != 200 : Failed to get detailed test results with class filter
+
+======================================================================
+FAIL: test_03_detailed_test_results_with_student_filter (__main__.TestTeacherAnalyticsAPI.test_03_detailed_test_results_with_student_filter)
+Test detailed test results endpoint with student filter
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 363, in test_03_detailed_test_results_with_student_filter
+    self.assertEqual(response.status_code, 200, "Failed to get detailed test results with student filter")
+AssertionError: 403 != 200 : Failed to get detailed test results with student filter
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 380, in test_03_detailed_test_results_with_student_filter
+    self.fail(str(e))
+AssertionError: 403 != 200 : Failed to get detailed test results with student filter
+
+======================================================================
+FAIL: test_05_detailed_test_results_with_combined_filters (__main__.TestTeacherAnalyticsAPI.test_05_detailed_test_results_with_combined_filters)
+Test detailed test results endpoint with combined filters
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 429, in test_05_detailed_test_results_with_combined_filters
+    self.assertEqual(response.status_code, 200, "Failed to get detailed test results with combined filters")
+AssertionError: 403 != 200 : Failed to get detailed test results with combined filters
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 447, in test_05_detailed_test_results_with_combined_filters
+    self.fail(str(e))
+AssertionError: 403 != 200 : Failed to get detailed test results with combined filters
+
+======================================================================
+FAIL: test_06_class_performance_analysis (__main__.TestTeacherAnalyticsAPI.test_06_class_performance_analysis)
+Test class performance analysis endpoint
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 463, in test_06_class_performance_analysis
+    self.assertEqual(response.status_code, 200, "Failed to get class performance analysis")
+AssertionError: 403 != 200 : Failed to get class performance analysis
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 491, in test_06_class_performance_analysis
+    self.fail(str(e))
+AssertionError: 403 != 200 : Failed to get class performance analysis
+
+======================================================================
+FAIL: test_08_enhanced_overview_analytics (__main__.TestTeacherAnalyticsAPI.test_08_enhanced_overview_analytics)
+Test enhanced overview analytics endpoint
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 548, in test_08_enhanced_overview_analytics
+    self.assertEqual(len(class_summary), len(self.class_ids), "Class summary count mismatch")
+AssertionError: 0 != 2 : Class summary count mismatch
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 562, in test_08_enhanced_overview_analytics
+    self.fail(str(e))
+AssertionError: 0 != 2 : Class summary count mismatch
+
+======================================================================
+FAIL: test_11_edge_case_empty_class (__main__.TestTeacherAnalyticsAPI.test_11_edge_case_empty_class)
+Test analytics for a class with no students
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 658, in test_11_edge_case_empty_class
+    self.assertEqual(perf_response.status_code, 200, "Should handle empty class gracefully")
+AssertionError: 403 != 200 : Should handle empty class gracefully
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/teacher_analytics_test.py", line 670, in test_11_edge_case_empty_class
+    self.fail(str(e))
+AssertionError: 403 != 200 : Should handle empty class gracefully
+
+----------------------------------------------------------------------
+Ran 11 tests in 59.896s
+
+FAILED (failures=7)
