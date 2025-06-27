@@ -29,6 +29,29 @@
 ##         -comment: "Detailed comment about status"
 ##
 ## frontend:
+  - task: "Teacher Dashboard Analytics Display"
+    implemented: true
+    working: false
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Need to test teacher dashboard to ensure analytics data displays correctly instead of showing zeros for student counts and metrics."
+
+  - task: "Practice Test Question Type UI Visibility"
+    implemented: true
+    working: false
+    file: "frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "User reported that option to choose question types was not visible on frontend. Need to verify question type selection UI is working properly."
 ##   - task: "Task name"
 ##     implemented: true
 ##     working: true  # or false or "NA"
