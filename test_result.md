@@ -103,11 +103,11 @@ user_problem_statement: "Test the new enhanced Teacher Analytics API endpoints I
 backend:
   - task: "Detailed Test Results API"
     implemented: true
-    working: false
+    working: true
     file: "backend/server.py"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
@@ -118,6 +118,9 @@ backend:
         - working: "NA"
           agent: "main"
           comment: "Fixed ObjectId serialization issue by adding convert_objectid_to_str. Upon review, the endpoint already correctly uses joined_classes array. Need to investigate the 403 errors more deeply."
+        - working: true
+          agent: "testing"
+          comment: "The /api/teacher/analytics/test-results endpoint is now working correctly. The endpoint returns 200 OK with the expected data structure when filtering by class_id or student_id. The endpoint correctly uses the joined_classes array to find students in a class."
 
   - task: "Class Performance Analysis API"
     implemented: true
