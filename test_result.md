@@ -190,9 +190,7 @@ test_plan:
     - "Detailed Test Results API"
     - "Class Performance Analysis API"
     - "Enhanced Overview Analytics"
-  stuck_tasks:
-    - "Detailed Test Results API"
-    - "Class Performance Analysis API"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
