@@ -2228,7 +2228,7 @@ async def get_teacher_analytics_overview(token_data: dict = Depends(verify_token
                     "weekly_activity": class_messages
                 })
         
-        return {
+        result = {
             "overview_metrics": {
                 "total_classes": total_classes,
                 "total_students": total_students,
@@ -2240,6 +2240,9 @@ async def get_teacher_analytics_overview(token_data: dict = Depends(verify_token
             "subject_distribution": subject_distribution,
             "weekly_activity_trend": []  # Can be enhanced later
         }
+        
+        # Convert ObjectId to string for JSON serialization
+        return convert_objectid_to_str(result)
         
     except HTTPException:
         raise
