@@ -890,6 +890,236 @@ const StudentDashboard = ({ student, onNavigate, dashboardData, onLogout }) => {
   );
 };
 
+// Tutor Component (AI Chat)
+const TutorComponent = ({ student, onNavigate }) => {
+  const [selectedSubject, setSelectedSubject] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [currentMessage, setCurrentMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [sessionId, setSessionId] = useState('');
+
+  const subjects = [
+    { value: 'math', name: 'Mathematics', icon: '🔢' },
+    { value: 'physics', name: 'Physics', icon: '⚛️' },
+    { value: 'chemistry', name: 'Chemistry', icon: '🧪' },
+    { value: 'biology', name: 'Biology', icon: '🧬' },
+    { value: 'english', name: 'English', icon: '📚' },
+    { value: 'history', name: 'History', icon: '🏛️' },
+    { value: 'geography', name: 'Geography', icon: '🌍' }
+  ];
+
+  useEffect(() => {
+    if (selectedSubject) {
+      startNewSession();
+    }
+  }, [selectedSubject]);
+
+  const startNewSession = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+      const response = await axios.post(`${API_BASE}/api/tutor/session`, {
+        subject: selectedSubject
+      }, { headers });
+
+      setSessionId(response.data.session_id);
+      setMessages([
+        {
+          role: 'assistant',
+          content: `Hello! I'm your ${selectedSubject} tutor. I'm here to help you understand concepts, solve problems, and answer any questions you have. What would you like to learn about today?`,
+          timestamp: new Date()
+        }
+      ]);
+    } catch (error) {
+      console.error('Error starting tutor session:', error);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!currentMessage.trim() || loading) return;
+
+    const userMessage = {
+      role: 'user',
+      content: currentMessage,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setCurrentMessage('');
+    setLoading(true);
+
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+      const response = await axios.post(`${API_BASE}/api/tutor/chat`, {
+        message: currentMessage,
+        subject: selectedSubject,
+        session_id: sessionId
+      }, { headers });
+
+      const assistantMessage = {
+        role: 'assistant',
+        content: response.data.response,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      const errorMessage = {
+        role: 'assistant',
+        content: 'Sorry, I encountered an error. Please try again.',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  if (!selectedSubject) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <button
+              onClick={() => onNavigate('student-dashboard')}
+              className="mb-4 text-indigo-600 hover:text-indigo-800 flex items-center"
+            >
+              ← Back to Dashboard
+            </button>
+            <h1 className="text-3xl font-bold text-gray-900">🤖 AI Tutor</h1>
+            <p className="text-gray-600">Get personalized help from your AI tutor</p>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-lg p-8">
+            <h2 className="text-xl font-semibold mb-6 text-center">Choose a Subject to Get Started</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {subjects.map(subject => (
+                <button
+                  key={subject.value}
+                  onClick={() => setSelectedSubject(subject.value)}
+                  className="p-6 border border-gray-200 rounded-xl hover:border-indigo-300 hover:shadow-md transition-all duration-200 text-center group"
+                >
+                  <div className="text-4xl mb-3">{subject.icon}</div>
+                  <h3 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                    {subject.name}
+                  </h3>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const selectedSubjectData = subjects.find(s => s.value === selectedSubject);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-xl shadow-lg h-[600px] flex flex-col">
+          {/* Header */}
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setSelectedSubject('')}
+                  className="text-gray-600 hover:text-gray-800"
+                >
+                  ← Back
+                </button>
+                <div className="text-2xl">{selectedSubjectData?.icon}</div>
+                <div>
+                  <h1 className="text-xl font-semibold">{selectedSubjectData?.name} Tutor</h1>
+                  <p className="text-sm text-gray-600">Ask me anything about {selectedSubjectData?.name.toLowerCase()}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => onNavigate('student-dashboard')}
+                className="text-gray-600 hover:text-gray-800"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 p-6 overflow-y-auto space-y-4">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[80%] p-4 rounded-lg ${
+                    message.role === 'user'
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-gray-100 text-gray-900'
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap">{message.content}</div>
+                  <div className={`text-xs mt-2 ${
+                    message.role === 'user' ? 'text-indigo-200' : 'text-gray-500'
+                  }`}>
+                    {message.timestamp.toLocaleTimeString()}
+                  </div>
+                </div>
+              </div>
+            ))}
+            {loading && (
+              <div className="flex justify-start">
+                <div className="bg-gray-100 text-gray-900 p-4 rounded-lg">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Message Input */}
+          <div className="p-6 border-t border-gray-200">
+            <div className="flex space-x-4">
+              <textarea
+                value={currentMessage}
+                onChange={(e) => setCurrentMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder={`Ask your ${selectedSubjectData?.name.toLowerCase()} question here...`}
+                className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                rows="2"
+                disabled={loading}
+              />
+              <button
+                onClick={sendMessage}
+                disabled={!currentMessage.trim() || loading}
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Send
+              </button>
+            </div>
+            <div className="mt-2 text-xs text-gray-500">
+              Press Enter to send, Shift+Enter for new line
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Progress Component
 const ProgressComponent = ({ student, onNavigate }) => {
   const [progressData, setProgressData] = useState(null);
