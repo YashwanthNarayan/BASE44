@@ -1048,6 +1048,10 @@ function App() {
     return <NotesComponent student={user} onNavigate={navigate} />;
   }
 
+  if (currentView === 'practice') {
+    return <PracticeTestComponent student={user} onNavigate={navigate} />;
+  }
+
   // Other views coming soon
 
   return (
