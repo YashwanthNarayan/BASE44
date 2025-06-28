@@ -890,6 +890,200 @@ const StudentDashboard = ({ student, onNavigate, dashboardData, onLogout }) => {
   );
 };
 
+// Notifications Component
+const NotificationsComponent = ({ student, onNavigate }) => {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadNotifications();
+  }, []);
+
+  const loadNotifications = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      const response = await axios.get(`${API_BASE}/api/notifications`, { headers });
+      setNotifications(response.data);
+    } catch (error) {
+      console.error('Error loading notifications:', error);
+      setNotifications([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const markAsRead = async (notificationId) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      await axios.put(`${API_BASE}/api/notifications/${notificationId}/read`, {}, { headers });
+      
+      setNotifications(prev => 
+        prev.map(notif => 
+          notif.id === notificationId 
+            ? { ...notif, is_read: true }
+            : notif
+        )
+      );
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  };
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case 'achievement': return '🏆';
+      case 'reminder': return '⏰';
+      case 'message': return '💬';
+      case 'assignment': return '📝';
+      case 'grade': return '📊';
+      default: return '📢';
+    }
+  };
+
+  const getNotificationColor = (type) => {
+    switch (type) {
+      case 'achievement': return 'border-yellow-200 bg-yellow-50';
+      case 'reminder': return 'border-blue-200 bg-blue-50';
+      case 'message': return 'border-green-200 bg-green-50';
+      case 'assignment': return 'border-purple-200 bg-purple-50';
+      case 'grade': return 'border-indigo-200 bg-indigo-50';
+      default: return 'border-gray-200 bg-gray-50';
+    }
+  };
+
+  const formatTimeAgo = (timestamp) => {
+    const now = new Date();
+    const time = new Date(timestamp);
+    const diffInHours = Math.floor((now - time) / (1000 * 60 * 60));
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 7) return `${diffInDays}d ago`;
+    return time.toLocaleDateString();
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading notifications...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-8">
+          <button
+            onClick={() => onNavigate('student-dashboard')}
+            className="mb-4 text-indigo-600 hover:text-indigo-800 flex items-center"
+          >
+            ← Back to Dashboard
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">🔔 Notifications</h1>
+          <p className="text-gray-600">Stay updated with your learning progress and reminders</p>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-lg">
+          {notifications.length > 0 ? (
+            <div className="divide-y divide-gray-200">
+              {notifications.map((notification, index) => (
+                <div
+                  key={notification.id || index}
+                  className={`p-6 border-l-4 transition-colors ${getNotificationColor(notification.type)} ${
+                    !notification.is_read ? 'border-l-indigo-500' : 'border-l-gray-300'
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start space-x-4 flex-1">
+                      <div className="text-2xl">
+                        {getNotificationIcon(notification.type)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <h3 className={`font-semibold ${!notification.is_read ? 'text-gray-900' : 'text-gray-700'}`}>
+                            {notification.title}
+                          </h3>
+                          {!notification.is_read && (
+                            <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                          )}
+                        </div>
+                        <p className={`${!notification.is_read ? 'text-gray-700' : 'text-gray-600'} mb-2`}>
+                          {notification.message}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-500">
+                            {formatTimeAgo(notification.created_at)}
+                          </span>
+                          {!notification.is_read && (
+                            <button
+                              onClick={() => markAsRead(notification.id)}
+                              className="text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                            >
+                              Mark as read
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="p-12 text-center">
+              <div className="text-6xl mb-4">🔔</div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">No notifications yet</h2>
+              <p className="text-gray-600 mb-6">
+                You'll receive notifications about your progress, achievements, and reminders here.
+              </p>
+              <button
+                onClick={() => onNavigate('student-dashboard')}
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Quick Actions */}
+        {notifications.length > 0 && (
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => {
+                // Mark all as read
+                notifications.forEach(notif => {
+                  if (!notif.is_read) {
+                    markAsRead(notif.id);
+                  }
+                });
+              }}
+              className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors mr-4"
+            >
+              Mark All as Read
+            </button>
+            <button
+              onClick={() => onNavigate('student-dashboard')}
+              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Tutor Component (AI Chat)
 const TutorComponent = ({ student, onNavigate }) => {
   const [selectedSubject, setSelectedSubject] = useState('');
