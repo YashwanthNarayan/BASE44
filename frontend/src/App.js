@@ -890,6 +890,253 @@ const StudentDashboard = ({ student, onNavigate, dashboardData, onLogout }) => {
   );
 };
 
+// Mindfulness Component
+const MindfulnessComponent = ({ student, onNavigate }) => {
+  const [activeSession, setActiveSession] = useState(null);
+  const [sessionHistory, setSessionHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [moodBefore, setMoodBefore] = useState('');
+  const [moodAfter, setMoodAfter] = useState('');
+
+  const mindfulnessActivities = [
+    {
+      id: 'breathing',
+      name: 'Deep Breathing',
+      description: 'Focused breathing exercises to reduce stress',
+      duration: 5,
+      icon: '🫁',
+      instructions: 'Breathe in for 4 counts, hold for 4, breathe out for 6. Focus on your breath.'
+    },
+    {
+      id: 'meditation',
+      name: 'Guided Meditation',
+      description: 'Short meditation session for mental clarity',
+      duration: 10,
+      icon: '🧘‍♀️',
+      instructions: 'Close your eyes, sit comfortably, and focus on the present moment.'
+    },
+    {
+      id: 'body_scan',
+      name: 'Body Scan',
+      description: 'Progressive relaxation from head to toe',
+      duration: 8,
+      icon: '💆‍♀️',
+      instructions: 'Start from your head and slowly scan down to your toes, releasing tension.'
+    },
+    {
+      id: 'gratitude',
+      name: 'Gratitude Practice',
+      description: 'Reflect on things you are grateful for',
+      duration: 3,
+      icon: '🙏',
+      instructions: 'Think of 3 things you are grateful for today and why they matter to you.'
+    }
+  ];
+
+  const moods = ['😊 Great', '🙂 Good', '😐 Okay', '😔 Low', '😰 Stressed'];
+
+  useEffect(() => {
+    loadSessionHistory();
+  }, []);
+
+  useEffect(() => {
+    let interval;
+    if (activeSession && timeRemaining > 0) {
+      interval = setInterval(() => {
+        setTimeRemaining(prev => prev - 1);
+      }, 1000);
+    } else if (timeRemaining === 0 && activeSession) {
+      completeSession();
+    }
+    return () => clearInterval(interval);
+  }, [activeSession, timeRemaining]);
+
+  const loadSessionHistory = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      const response = await axios.get(`${API_BASE}/api/mindfulness/activities`, { headers });
+      setSessionHistory(response.data);
+    } catch (error) {
+      console.error('Error loading mindfulness history:', error);
+    }
+  };
+
+  const startSession = (activity) => {
+    if (!moodBefore) {
+      alert('Please select your current mood before starting the session.');
+      return;
+    }
+    
+    setActiveSession(activity);
+    setTimeRemaining(activity.duration * 60); // Convert minutes to seconds
+  };
+
+  const completeSession = async () => {
+    if (!activeSession || !moodAfter) return;
+
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+      await axios.post(`${API_BASE}/api/mindfulness/session`, {
+        activity_type: activeSession.id,
+        duration: activeSession.duration,
+        mood_before: moodBefore,
+        mood_after: moodAfter
+      }, { headers });
+
+      alert('Great job! Your mindfulness session has been completed.');
+      setActiveSession(null);
+      setMoodBefore('');
+      setMoodAfter('');
+      loadSessionHistory();
+    } catch (error) {
+      console.error('Error saving mindfulness session:', error);
+      alert('Session completed, but there was an error saving it.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  if (activeSession) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 p-6">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+            <div className="text-6xl mb-4">{activeSession.icon}</div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{activeSession.name}</h1>
+            <div className="text-5xl font-mono text-indigo-600 mb-6">
+              {formatTime(timeRemaining)}
+            </div>
+            
+            <div className="bg-gray-50 p-6 rounded-lg mb-6">
+              <p className="text-lg text-gray-700">{activeSession.instructions}</p>
+            </div>
+
+            {timeRemaining === 0 && (
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3">How do you feel after the session?</h3>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                  {moods.map((mood) => (
+                    <button
+                      key={mood}
+                      onClick={() => setMoodAfter(mood)}
+                      className={`p-3 rounded-lg border transition-colors ${
+                        moodAfter === mood
+                          ? 'border-green-500 bg-green-50'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      {mood}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={completeSession}
+                  disabled={!moodAfter || loading}
+                  className="mt-4 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                >
+                  {loading ? 'Saving...' : 'Complete Session'}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <button
+            onClick={() => onNavigate('student-dashboard')}
+            className="mb-4 text-indigo-600 hover:text-indigo-800 flex items-center"
+          >
+            ← Back to Dashboard
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">🧘 Mindfulness Center</h1>
+          <p className="text-gray-600">Take a moment to relax and recharge your mind</p>
+        </div>
+
+        {/* Mood Selection */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-4">How are you feeling right now?</h2>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            {moods.map((mood) => (
+              <button
+                key={mood}
+                onClick={() => setMoodBefore(mood)}
+                className={`p-4 rounded-lg border transition-colors ${
+                  moodBefore === mood
+                    ? 'border-indigo-500 bg-indigo-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                {mood}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Activities */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {mindfulnessActivities.map((activity) => (
+            <div key={activity.id} className="bg-white rounded-xl shadow-lg p-6">
+              <div className="text-4xl mb-4">{activity.icon}</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{activity.name}</h3>
+              <p className="text-gray-600 mb-4">{activity.description}</p>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-500">{activity.duration} minutes</span>
+                <button
+                  onClick={() => startSession(activity)}
+                  disabled={!moodBefore}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Start Session
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Session History */}
+        {sessionHistory.length > 0 && (
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold mb-4">Recent Sessions</h2>
+            <div className="space-y-3">
+              {sessionHistory.slice(0, 5).map((session, index) => (
+                <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <span className="font-medium capitalize">{session.activity_type.replace('_', ' ')}</span>
+                    <span className="text-sm text-gray-600 ml-2">
+                      {new Date(session.completed_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {session.duration} min
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Practice Test Component
 const PracticeTestComponent = ({ student, onNavigate }) => {
   const [selectedSubject, setSelectedSubject] = useState('');
