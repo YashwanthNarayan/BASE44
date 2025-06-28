@@ -115,7 +115,7 @@
 
   - task: "AI Tutor Component"
     implemented: true
-    working: true
+    working: false
     file: "frontend/src/App.js"
     stuck_count: 0
     priority: "medium"
@@ -124,6 +124,9 @@
         - working: "NA"
           agent: "main"
           comment: "Added TutorComponent with subject selection, real-time chat interface, and session management for AI tutoring."
+        - working: false
+          agent: "testing"
+          comment: "The AI Tutor component failed to load properly during testing. When clicking on 'Study with AI Tutor' from the student dashboard, the application did not navigate to the AI Tutor page. This appears to be an issue with the navigation or component rendering. Further investigation is needed to determine the cause of this failure."
 
   - task: "Notifications Component"
     implemented: true
