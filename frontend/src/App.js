@@ -2933,6 +2933,10 @@ function App() {
     return <NotificationsComponent student={user} onNavigate={navigate} />;
   }
 
+  if (currentView === 'classes') {
+    return <ClassesComponent student={user} onNavigate={navigate} />;
+  }
+
   // Other views coming soon
 
   return (
