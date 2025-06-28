@@ -1077,9 +1077,22 @@ const TeacherDashboard = ({ teacher, onNavigate }) => {
     try {
       console.log('Loading teacher dashboard data...');
       console.log('API_BASE:', API_BASE);
-      console.log('Auth token set:', !!axios.defaults.headers.common['Authorization']);
       
-      const response = await axios.get(`${API_BASE}/api/teacher/analytics/overview`);
+      const token = localStorage.getItem('access_token');
+      console.log('Token from localStorage:', token ? 'exists' : 'missing');
+      
+      if (!token) {
+        console.error('No access token found');
+        setLoading(false);
+        return;
+      }
+
+      const headers = {
+        'Authorization': `Bearer ${token}`
+      };
+      
+      console.log('Making API call with headers:', headers);
+      const response = await axios.get(`${API_BASE}/api/teacher/analytics/overview`, { headers });
       console.log('Teacher dashboard response:', response.data);
       setDashboardData(response.data);
     } catch (error) {
