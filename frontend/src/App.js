@@ -1087,12 +1087,11 @@ const TeacherDashboard = ({ teacher, onNavigate }) => {
         return;
       }
 
-      const headers = {
-        'Authorization': `Bearer ${token}`
-      };
+      // Ensure the global axios auth header is set
+      setupAxiosAuth(token);
       
-      console.log('Making API call with headers:', headers);
-      const response = await axios.get(`${API_BASE}/api/teacher/analytics/overview`, { headers });
+      console.log('Making API call with global authorization header');
+      const response = await axios.get(`${API_BASE}/api/teacher/analytics/overview`);
       console.log('Teacher dashboard response:', response.data);
       setDashboardData(response.data);
     } catch (error) {
