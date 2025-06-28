@@ -35,11 +35,14 @@
     file: "frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Need to test teacher dashboard to ensure analytics data displays correctly instead of showing zeros for student counts and metrics."
+        - working: false
+          agent: "testing"
+          comment: "The teacher dashboard is showing zeros for all analytics metrics (classes, students, tests taken, avg score). The API calls to /api/teacher/analytics/overview are being made, but they're returning 401 Unauthorized errors. The frontend is correctly handling the error by displaying zeros as fallback values. The issue is with the authentication - the API calls are not receiving the proper authorization token."
 
   - task: "Practice Test Question Type UI Visibility"
     implemented: true
