@@ -283,7 +283,11 @@ metadata:
 test_plan:
   current_focus:
     - "Teacher Dashboard Analytics Display"
-    - "Practice Test Question Type UI Visibility"
+    - "Mindfulness Component"
+    - "Calendar Component"
+    - "Progress Tracker Component"
+    - "AI Tutor Component"
+    - "Notifications Component"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
