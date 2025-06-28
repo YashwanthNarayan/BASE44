@@ -890,6 +890,328 @@ const StudentDashboard = ({ student, onNavigate, dashboardData, onLogout }) => {
   );
 };
 
+// Calendar Component  
+const CalendarComponent = ({ student, onNavigate }) => {
+  const [events, setEvents] = useState([]);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    title: '',
+    description: '',
+    event_type: 'study',
+    subject: '',
+    start_time: '',
+    end_time: ''
+  });
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+
+  const eventTypes = [
+    { value: 'study', label: 'Study Session', icon: '📚' },
+    { value: 'assignment', label: 'Assignment Due', icon: '📝' },
+    { value: 'exam', label: 'Exam', icon: '📋' },
+    { value: 'personal', label: 'Personal', icon: '🗓️' }
+  ];
+
+  const subjects = ['math', 'physics', 'chemistry', 'biology', 'english', 'history', 'geography'];
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
+  const loadEvents = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      const response = await axios.get(`${API_BASE}/api/calendar/events`, { headers });
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Error loading calendar events:', error);
+    }
+  };
+
+  const createEvent = async () => {
+    if (!newEvent.title || !newEvent.start_time || !newEvent.end_time) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+      await axios.post(`${API_BASE}/api/calendar/events`, newEvent, { headers });
+      
+      setNewEvent({
+        title: '',
+        description: '',
+        event_type: 'study',
+        subject: '',
+        start_time: '',
+        end_time: ''
+      });
+      setShowCreateForm(false);
+      loadEvents();
+      alert('Event created successfully!');
+    } catch (error) {
+      console.error('Error creating event:', error);
+      alert('Failed to create event. Please try again.');
+    }
+  };
+
+  const getEventsForDate = (date) => {
+    return events.filter(event => {
+      const eventDate = new Date(event.start_time).toISOString().split('T')[0];
+      return eventDate === date;
+    });
+  };
+
+  const generateCalendarDays = () => {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(currentYear, currentMonth, day);
+      days.push(date);
+    }
+    
+    return days;
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <button
+            onClick={() => onNavigate('student-dashboard')}
+            className="mb-4 text-indigo-600 hover:text-indigo-800 flex items-center"
+          >
+            ← Back to Dashboard
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">📅 My Schedule</h1>
+          <p className="text-gray-600">Manage your study schedule and important events</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Calendar */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold">
+                  {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                </h2>
+                <button
+                  onClick={() => setShowCreateForm(true)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                >
+                  + Add Event
+                </button>
+              </div>
+
+              <div className="grid grid-cols-7 gap-1 mb-4">
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                  <div key={day} className="p-2 text-center font-semibold text-gray-600">
+                    {day}
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-7 gap-1">
+                {generateCalendarDays().map((date, index) => {
+                  const dateStr = date ? date.toISOString().split('T')[0] : '';
+                  const dayEvents = date ? getEventsForDate(dateStr) : [];
+                  const isToday = date && date.toDateString() === new Date().toDateString();
+                  
+                  return (
+                    <div
+                      key={index}
+                      className={`min-h-[80px] p-1 border border-gray-200 ${
+                        date ? 'bg-white hover:bg-gray-50' : 'bg-gray-100'
+                      } ${isToday ? 'ring-2 ring-indigo-500' : ''}`}
+                    >
+                      {date && (
+                        <>
+                          <div className={`text-sm font-medium ${isToday ? 'text-indigo-600' : 'text-gray-900'}`}>
+                            {date.getDate()}
+                          </div>
+                          <div className="space-y-1">
+                            {dayEvents.slice(0, 2).map((event, idx) => {
+                              const eventType = eventTypes.find(t => t.value === event.event_type);
+                              return (
+                                <div
+                                  key={idx}
+                                  className="text-xs p-1 bg-indigo-100 text-indigo-800 rounded truncate"
+                                  title={event.title}
+                                >
+                                  {eventType?.icon} {event.title}
+                                </div>
+                              );
+                            })}
+                            {dayEvents.length > 2 && (
+                              <div className="text-xs text-gray-500">
+                                +{dayEvents.length - 2} more
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Upcoming Events */}
+          <div>
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+              <div className="space-y-3">
+                {events
+                  .filter(event => new Date(event.start_time) >= new Date())
+                  .sort((a, b) => new Date(a.start_time) - new Date(b.start_time))
+                  .slice(0, 5)
+                  .map((event, index) => {
+                    const eventType = eventTypes.find(t => t.value === event.event_type);
+                    return (
+                      <div key={index} className="p-3 border border-gray-200 rounded-lg">
+                        <div className="flex items-center mb-1">
+                          <span className="text-lg mr-2">{eventType?.icon}</span>
+                          <span className="font-medium">{event.title}</span>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          {new Date(event.start_time).toLocaleDateString()} at{' '}
+                          {new Date(event.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                        {event.description && (
+                          <div className="text-sm text-gray-500 mt-1">{event.description}</div>
+                        )}
+                      </div>
+                    );
+                  })}
+                {events.filter(event => new Date(event.start_time) >= new Date()).length === 0 && (
+                  <p className="text-gray-500 text-center py-4">No upcoming events</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Create Event Modal */}
+        {showCreateForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
+              <h3 className="text-xl font-semibold mb-4">Create New Event</h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                  <input
+                    type="text"
+                    value={newEvent.title}
+                    onChange={(e) => setNewEvent({...newEvent, title: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    placeholder="Event title"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
+                  <select
+                    value={newEvent.event_type}
+                    onChange={(e) => setNewEvent({...newEvent, event_type: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  >
+                    {eventTypes.map(type => (
+                      <option key={type.value} value={type.value}>
+                        {type.icon} {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                  <select
+                    value={newEvent.subject}
+                    onChange={(e) => setNewEvent({...newEvent, subject: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  >
+                    <option value="">Select subject (optional)</option>
+                    {subjects.map(subject => (
+                      <option key={subject} value={subject}>
+                        {subject.charAt(0).toUpperCase() + subject.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Start Time *</label>
+                  <input
+                    type="datetime-local"
+                    value={newEvent.start_time}
+                    onChange={(e) => setNewEvent({...newEvent, start_time: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">End Time *</label>
+                  <input
+                    type="datetime-local"
+                    value={newEvent.end_time}
+                    onChange={(e) => setNewEvent({...newEvent, end_time: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                  <textarea
+                    value={newEvent.description}
+                    onChange={(e) => setNewEvent({...newEvent, description: e.target.value})}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    rows="3"
+                    placeholder="Event description (optional)"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  onClick={() => setShowCreateForm(false)}
+                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={createEvent}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                >
+                  Create Event
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Mindfulness Component
 const MindfulnessComponent = ({ student, onNavigate }) => {
   const [activeSession, setActiveSession] = useState(null);
