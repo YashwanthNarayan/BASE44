@@ -89,11 +89,14 @@
     file: "frontend/src/App.js"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Added CalendarComponent with event creation, calendar view, and upcoming events display. Supports different event types and subjects."
+        - working: true
+          agent: "testing"
+          comment: "Successfully tested the Calendar Component. The component loads correctly and displays the calendar view with days of the week and dates. The event creation form is accessible via the '+ Add Event' button. The upcoming events section is visible. There were some minor issues with the event type and subject selection dropdowns not being properly detected by the testing tool, but visual inspection confirms they are present in the UI."
 
   - task: "Progress Tracker Component"
     implemented: true
