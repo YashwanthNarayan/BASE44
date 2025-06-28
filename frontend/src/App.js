@@ -890,6 +890,236 @@ const StudentDashboard = ({ student, onNavigate, dashboardData, onLogout }) => {
   );
 };
 
+// Progress Component
+const ProgressComponent = ({ student, onNavigate }) => {
+  const [progressData, setProgressData] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState('all');
+  const [loading, setLoading] = useState(true);
+
+  const subjects = ['all', 'math', 'physics', 'chemistry', 'biology', 'english', 'history', 'geography'];
+
+  useEffect(() => {
+    loadProgressData();
+  }, [selectedSubject]);
+
+  const loadProgressData = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      const endpoint = selectedSubject === 'all' 
+        ? `${API_BASE}/api/practice/results`
+        : `${API_BASE}/api/practice/stats/${selectedSubject}`;
+        
+      const response = await axios.get(endpoint, { headers });
+      setProgressData(response.data);
+    } catch (error) {
+      console.error('Error loading progress data:', error);
+      setProgressData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPerformanceColor = (score) => {
+    if (score >= 80) return 'text-green-600 bg-green-100';
+    if (score >= 60) return 'text-yellow-600 bg-yellow-100';
+    return 'text-red-600 bg-red-100';
+  };
+
+  const getProgressBarColor = (score) => {
+    if (score >= 80) return 'bg-green-500';
+    if (score >= 60) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your progress...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <button
+            onClick={() => onNavigate('student-dashboard')}
+            className="mb-4 text-indigo-600 hover:text-indigo-800 flex items-center"
+          >
+            ← Back to Dashboard
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">📊 Progress Tracker</h1>
+          <p className="text-gray-600">Monitor your learning journey and achievements</p>
+        </div>
+
+        {/* Subject Filter */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-4">Filter by Subject</h2>
+          <div className="flex flex-wrap gap-3">
+            {subjects.map(subject => (
+              <button
+                key={subject}
+                onClick={() => setSelectedSubject(subject)}
+                className={`px-4 py-2 rounded-lg border transition-colors ${
+                  selectedSubject === subject
+                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                {subject === 'all' ? 'All Subjects' : subject.charAt(0).toUpperCase() + subject.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {progressData ? (
+          <>
+            {/* Overview Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="text-3xl mb-2">📝</div>
+                <div className="text-2xl font-bold text-indigo-600">
+                  {Array.isArray(progressData) ? progressData.length : progressData.total_tests || 0}
+                </div>
+                <div className="text-sm text-gray-600">Tests Taken</div>
+              </div>
+              
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="text-3xl mb-2">📈</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {Array.isArray(progressData) 
+                    ? (progressData.reduce((acc, test) => acc + test.score, 0) / progressData.length || 0).toFixed(1)
+                    : (progressData.average_score || 0).toFixed(1)
+                  }%
+                </div>
+                <div className="text-sm text-gray-600">Average Score</div>
+              </div>
+              
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="text-3xl mb-2">🏆</div>
+                <div className="text-2xl font-bold text-yellow-600">
+                  {Array.isArray(progressData) 
+                    ? Math.max(...progressData.map(t => t.score), 0)
+                    : (progressData.best_score || 0)
+                  }%
+                </div>
+                <div className="text-sm text-gray-600">Best Score</div>
+              </div>
+              
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <div className="text-3xl mb-2">❓</div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {Array.isArray(progressData) 
+                    ? progressData.reduce((acc, test) => acc + (test.total_questions || 0), 0)
+                    : (progressData.total_questions_answered || 0)
+                  }
+                </div>
+                <div className="text-sm text-gray-600">Questions Answered</div>
+              </div>
+            </div>
+
+            {/* Recent Tests */}
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+              <h2 className="text-xl font-semibold mb-4">Recent Test Results</h2>
+              {(Array.isArray(progressData) ? progressData : progressData.recent_tests || []).length > 0 ? (
+                <div className="space-y-4">
+                  {(Array.isArray(progressData) ? progressData : progressData.recent_tests || [])
+                    .slice(0, 10)
+                    .map((test, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-3">
+                          <div className={`px-3 py-1 rounded-full text-sm font-medium ${getPerformanceColor(test.score)}`}>
+                            {test.score}%
+                          </div>
+                          <div>
+                            <div className="font-medium">
+                              {test.subject ? test.subject.charAt(0).toUpperCase() + test.subject.slice(1) : 'General'} Test
+                            </div>
+                            <div className="text-sm text-gray-600">
+                              {test.total_questions || test.question_count || 0} questions • {' '}
+                              {test.completed_at ? new Date(test.completed_at).toLocaleDateString() : 'Recent'}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="w-24">
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div 
+                            className={`h-2 rounded-full ${getProgressBarColor(test.score)}`}
+                            style={{ width: `${test.score}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-4xl mb-4">📝</div>
+                  <p className="text-gray-600">No practice tests have been taken yet.</p>
+                  <button
+                    onClick={() => onNavigate('practice')}
+                    className="mt-4 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    Take Your First Practice Test
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Performance Analysis */}
+            {!Array.isArray(progressData) && progressData.subject && (
+              <div className="bg-white rounded-xl shadow-lg p-6">
+                <h2 className="text-xl font-semibold mb-4">
+                  {progressData.subject.charAt(0).toUpperCase() + progressData.subject.slice(1)} Performance Analysis
+                </h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-semibold mb-3">Study Time</h3>
+                    <p className="text-2xl font-bold text-indigo-600">
+                      {Math.floor((progressData.total_time_spent || 0) / 60)} minutes
+                    </p>
+                    <p className="text-sm text-gray-600">Total time spent practicing</p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-semibold mb-3">Consistency</h3>
+                    <p className="text-2xl font-bold text-green-600">
+                      {progressData.total_tests > 5 ? 'Good' : progressData.total_tests > 2 ? 'Fair' : 'Needs Improvement'}
+                    </p>
+                    <p className="text-sm text-gray-600">Based on practice frequency</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+            <div className="text-4xl mb-4">📊</div>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">No Data Available</h2>
+            <p className="text-gray-600 mb-6">Start taking practice tests to see your progress here.</p>
+            <button
+              onClick={() => onNavigate('practice')}
+              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Take a Practice Test
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Calendar Component  
 const CalendarComponent = ({ student, onNavigate }) => {
   const [events, setEvents] = useState([]);
