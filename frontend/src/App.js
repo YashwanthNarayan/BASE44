@@ -743,7 +743,7 @@ const StudentDashboard = ({ student, onNavigate, dashboardData, onLogout }) => {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
           <button
-            onClick={() => onNavigate('subjects')}
+            onClick={() => onNavigate('tutor')}
             className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-6 rounded-xl hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 text-left"
           >
             <div className="text-3xl mb-3">🎓</div>
