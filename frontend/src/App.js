@@ -1435,6 +1435,26 @@ function App() {
     return <PracticeTestComponent student={user} onNavigate={navigate} />;
   }
 
+  if (currentView === 'mindfulness') {
+    return <MindfulnessComponent student={user} onNavigate={navigate} />;
+  }
+
+  if (currentView === 'calendar') {
+    return <CalendarComponent student={user} onNavigate={navigate} />;
+  }
+
+  if (currentView === 'progress') {
+    return <ProgressComponent student={user} onNavigate={navigate} />;
+  }
+
+  if (currentView === 'tutor') {
+    return <TutorComponent student={user} onNavigate={navigate} />;
+  }
+
+  if (currentView === 'notifications') {
+    return <NotificationsComponent student={user} onNavigate={navigate} />;
+  }
+
   // Other views coming soon
 
   return (
