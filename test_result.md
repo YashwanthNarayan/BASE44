@@ -33,9 +33,9 @@
     implemented: true
     working: false
     file: "frontend/src/App.js"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
@@ -43,6 +43,9 @@
         - working: false
           agent: "testing"
           comment: "The teacher dashboard is showing zeros for all analytics metrics (classes, students, tests taken, avg score). The API calls to /api/teacher/analytics/overview are being made, but they're returning 401 Unauthorized errors. The frontend is correctly handling the error by displaying zeros as fallback values. The issue is with the authentication - the API calls are not receiving the proper authorization token."
+        - working: false
+          agent: "testing"
+          comment: "Fixed the inconsistency in how API calls are made in the TeacherDashboard component. The component was using custom headers for API calls instead of relying on the global axios defaults set by setupAxiosAuth(). Modified the loadTeacherDashboard function to use setupAxiosAuth() to ensure consistent authorization headers. However, testing revealed that there are still issues with the authentication process itself - unable to successfully log in or register to test the dashboard. The fix for the API call headers is in place, but further testing is needed once the authentication issues are resolved."
 
   - task: "Practice Test Question Type UI Visibility"
     implemented: true
