@@ -1071,10 +1071,17 @@ const TeacherDashboard = ({ teacher, onNavigate }) => {
 
   const loadTeacherDashboard = async () => {
     try {
+      console.log('Loading teacher dashboard data...');
+      console.log('API_BASE:', API_BASE);
+      console.log('Auth token set:', !!axios.defaults.headers.common['Authorization']);
+      
       const response = await axios.get(`${API_BASE}/api/teacher/analytics/overview`);
+      console.log('Teacher dashboard response:', response.data);
       setDashboardData(response.data);
     } catch (error) {
       console.error('Error loading teacher dashboard:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
     } finally {
       setLoading(false);
     }
