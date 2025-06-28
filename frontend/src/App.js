@@ -890,6 +890,261 @@ const StudentDashboard = ({ student, onNavigate, dashboardData, onLogout }) => {
   );
 };
 
+// Classes Component (My Classes)
+const ClassesComponent = ({ student, onNavigate }) => {
+  const [joinedClasses, setJoinedClasses] = useState([]);
+  const [joinCode, setJoinCode] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [joining, setJoining] = useState(false);
+
+  useEffect(() => {
+    loadJoinedClasses();
+  }, []);
+
+  const loadJoinedClasses = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      
+      const response = await axios.get(`${API_BASE}/api/student/profile`, { headers });
+      setJoinedClasses(response.data.joined_classes || []);
+    } catch (error) {
+      console.error('Error loading joined classes:', error);
+      setJoinedClasses([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const joinClass = async () => {
+    if (!joinCode.trim()) {
+      alert('Please enter a join code.');
+      return;
+    }
+
+    setJoining(true);
+    try {
+      const token = localStorage.getItem('access_token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+      await axios.post(`${API_BASE}/api/student/join-class`, {
+        join_code: joinCode
+      }, { headers });
+
+      alert('Successfully joined the class!');
+      setJoinCode('');
+      loadJoinedClasses(); // Reload the classes
+    } catch (error) {
+      console.error('Error joining class:', error);
+      alert(error.response?.data?.detail || 'Failed to join class. Please check the join code and try again.');
+    } finally {
+      setJoining(false);
+    }
+  };
+
+  const getSubjectIcon = (subject) => {
+    const subjectIcons = {
+      math: '🔢',
+      physics: '⚛️',
+      chemistry: '🧪',
+      biology: '🧬',
+      english: '📚',
+      history: '🏛️',
+      geography: '🌍'
+    };
+    return subjectIcons[subject] || '📖';
+  };
+
+  const getSubjectColor = (subject) => {
+    const subjectColors = {
+      math: 'from-blue-500 to-blue-600',
+      physics: 'from-purple-500 to-purple-600',
+      chemistry: 'from-green-500 to-green-600',
+      biology: 'from-emerald-500 to-emerald-600',
+      english: 'from-red-500 to-red-600',
+      history: 'from-yellow-500 to-yellow-600',
+      geography: 'from-teal-500 to-teal-600'
+    };
+    return subjectColors[subject] || 'from-gray-500 to-gray-600';
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your classes...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-8">
+          <button
+            onClick={() => onNavigate('student-dashboard')}
+            className="mb-4 text-indigo-600 hover:text-indigo-800 flex items-center"
+          >
+            ← Back to Dashboard
+          </button>
+          <h1 className="text-3xl font-bold text-gray-900">🏫 My Classes</h1>
+          <p className="text-gray-600">View your joined classes and join new ones</p>
+        </div>
+
+        {/* Join New Class */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <h2 className="text-xl font-semibold mb-4">Join a New Class</h2>
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1">
+              <input
+                type="text"
+                value={joinCode}
+                onChange={(e) => setJoinCode(e.target.value)}
+                placeholder="Enter class join code"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                onKeyPress={(e) => e.key === 'Enter' && joinClass()}
+              />
+            </div>
+            <button
+              onClick={joinClass}
+              disabled={!joinCode.trim() || joining}
+              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {joining ? 'Joining...' : 'Join Class'}
+            </button>
+          </div>
+          <p className="text-sm text-gray-600 mt-2">
+            Ask your teacher for the class join code to join their class.
+          </p>
+        </div>
+
+        {/* Joined Classes */}
+        {joinedClasses.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {joinedClasses.map((classroom, index) => (
+              <div
+                key={classroom.class_id || index}
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+              >
+                <div className={`bg-gradient-to-r ${getSubjectColor(classroom.subject)} p-6 text-white`}>
+                  <div className="flex items-center justify-between">
+                    <div className="text-3xl">{getSubjectIcon(classroom.subject)}</div>
+                    <div className="text-right">
+                      <div className="text-sm opacity-90">
+                        {classroom.grade_level || 'Grade N/A'}
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-bold mt-3 mb-1">
+                    {classroom.class_name || 'Unnamed Class'}
+                  </h3>
+                  <p className="text-sm opacity-90 capitalize">
+                    {(classroom.subject || 'general').replace('_', ' ')}
+                  </p>
+                </div>
+
+                <div className="p-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Teacher:</span>
+                      <span className="font-medium">
+                        {classroom.teacher_name || 'Teacher Name'}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Class Code:</span>
+                      <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
+                        {classroom.join_code || 'N/A'}
+                      </span>
+                    </div>
+
+                    {classroom.description && (
+                      <div className="mt-4">
+                        <p className="text-sm text-gray-600">{classroom.description}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="mt-6 flex space-x-3">
+                    <button
+                      onClick={() => onNavigate('practice')}
+                      className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm"
+                    >
+                      Practice Tests
+                    </button>
+                    <button
+                      onClick={() => onNavigate('tutor')}
+                      className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                    >
+                      AI Tutor
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
+            <div className="text-6xl mb-6">🏫</div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">No Classes Joined Yet</h2>
+            <p className="text-gray-600 mb-8">
+              You haven't joined any classes yet. Ask your teacher for a join code to get started with your first class.
+            </p>
+            <div className="max-w-md mx-auto">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <input
+                  type="text"
+                  value={joinCode}
+                  onChange={(e) => setJoinCode(e.target.value)}
+                  placeholder="Enter class join code"
+                  className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  onKeyPress={(e) => e.key === 'Enter' && joinClass()}
+                />
+                <button
+                  onClick={joinClass}
+                  disabled={!joinCode.trim() || joining}
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {joining ? 'Joining...' : 'Join Class'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Quick Actions */}
+        {joinedClasses.length > 0 && (
+          <div className="mt-8 text-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+              <button
+                onClick={() => onNavigate('practice')}
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                📝 Take Practice Test
+              </button>
+              <button
+                onClick={() => onNavigate('tutor')}
+                className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                🤖 AI Tutor Help
+              </button>
+              <button
+                onClick={() => onNavigate('progress')}
+                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                📊 View Progress
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Notifications Component
 const NotificationsComponent = ({ student, onNavigate }) => {
   const [notifications, setNotifications] = useState([]);
