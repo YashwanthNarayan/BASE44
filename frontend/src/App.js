@@ -1066,6 +1066,10 @@ const TeacherDashboard = ({ teacher, onNavigate }) => {
   const [dashboardData, setDashboardData] = useState(null);
 
   useEffect(() => {
+    console.log('TeacherDashboard component mounted');
+    console.log('Teacher data:', teacher);
+    console.log('Stored token:', localStorage.getItem('access_token') ? 'exists' : 'missing');
+    console.log('Stored user_type:', localStorage.getItem('user_type'));
     loadTeacherDashboard();
   }, []);
 
