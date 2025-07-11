@@ -1,78 +1,49 @@
 /* Futuristic Cyberpunk Design System */
 
-/* Futuristic Color Palette */
+/* Color Variables - Toned Down */
 :root {
-  /* Neon Gradients */
-  --gradient-primary: linear-gradient(135deg, #00f5ff 0%, #0066ff 50%, #8a2be2 100%);
-  --gradient-secondary: linear-gradient(135deg, #ff00ff 0%, #ff6b6b 50%, #4ecdc4 100%);
-  --gradient-accent: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  --gradient-success: linear-gradient(135deg, #00ff88 0%, #00ccff 100%);
-  --gradient-warning: linear-gradient(135deg, #ffdd00 0%, #ff8800 100%);
-  --gradient-danger: linear-gradient(135deg, #ff0080 0%, #ff4040 100%);
-  
-  /* Holographic Effects */
-  --holographic: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
-  --neon-glow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 80px currentColor;
-  
-  /* Dark Theme Base */
-  --bg-primary: radial-gradient(ellipse at center, #0f0f23 0%, #000000 100%);
-  --bg-secondary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  --bg-card: rgba(20, 20, 40, 0.8);
-  --bg-glass: rgba(30, 30, 60, 0.3);
-  --bg-glass-strong: rgba(40, 40, 80, 0.5);
-  
-  /* Neon Colors */
-  --neon-cyan: #00ffff;
-  --neon-magenta: #ff00ff;
-  --neon-yellow: #ffff00;
-  --neon-green: #00ff88;
-  --neon-purple: #8a2be2;
-  --neon-pink: #ff0080;
-  --neon-blue: #0066ff;
+  /* Base Colors - More Subtle */
+  --bg-dark-space: #0a0b14;
+  --bg-glass: rgba(255, 255, 255, 0.08);
+  --bg-glass-strong: rgba(255, 255, 255, 0.12);
   
   /* Text Colors */
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.8);
-  --text-muted: rgba(255, 255, 255, 0.6);
-  --text-neon: var(--neon-cyan);
-  --text-accent: var(--neon-magenta);
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-accent: #64748b;
   
-  /* Border Colors */
-  --border-primary: rgba(0, 255, 255, 0.3);
-  --border-secondary: rgba(255, 0, 255, 0.3);
-  --border-glow: rgba(0, 255, 255, 0.8);
+  /* Neon Colors - Softer */
+  --neon-cyan: #67e8f9;
+  --neon-magenta: #f472b6;
+  --neon-yellow: #fbbf24;
+  --neon-green: #34d399;
+  --neon-pink: #ec4899;
   
-  /* Advanced Shadows */
-  --shadow-neon: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.3);
-  --shadow-deep: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-  --shadow-holographic: 0 8px 32px rgba(0, 255, 255, 0.3), 0 12px 48px rgba(255, 0, 255, 0.2);
+  /* Borders - More Subtle */
+  --border-primary: rgba(226, 232, 240, 0.1);
+  --border-glow: rgba(103, 232, 249, 0.2);
   
-  /* Advanced Border Radius */
-  --radius-neural: 12px;
-  --radius-interface: 16px;
-  --radius-pod: 24px;
-  --radius-capsule: 50px;
+  /* Gradients - Toned Down */
+  --gradient-primary: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+  --gradient-secondary: linear-gradient(135deg, var(--neon-magenta), var(--neon-yellow));
+  --gradient-accent: linear-gradient(135deg, var(--neon-yellow), var(--neon-green));
   
-  /* Futuristic Spacing */
-  --space-nano: 2px;
-  --space-micro: 4px;
-  --space-mini: 8px;
-  --space-small: 12px;
-  --space-medium: 16px;
-  --space-large: 24px;
-  --space-huge: 32px;
-  --space-massive: 48px;
+  /* Shadows - Much Softer */
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.2);
+  --shadow-holographic: 0 8px 32px rgba(103, 232, 249, 0.15);
+  --neon-glow: 0 0 10px currentColor;
   
-  /* Advanced Typography */
-  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  /* Spacing */
+  --space-small: 0.5rem;
+  --space-medium: 1rem;
+  --space-large: 1.5rem;
+  --space-xl: 2rem;
   
-  /* Dynamic Animations */
-  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  --spring-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  /* Border Radius */
+  --radius-small: 0.5rem;
+  --radius-medium: 0.75rem;
+  --radius-large: 1rem;
+  --radius-xl: 1.5rem;
 }
 
 /* Global Dark Theme */
