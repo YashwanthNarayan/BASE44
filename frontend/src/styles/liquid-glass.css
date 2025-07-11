@@ -544,3 +544,101 @@ body {
   background: linear-gradient(var(--bg-glass), var(--bg-glass)) padding-box,
               var(--holographic) border-box;
 }
+
+/* Advanced Animations & Effects */
+.quantum-loader {
+  width: 40px;
+  height: 40px;
+  border: 3px solid transparent;
+  border-top: 3px solid var(--neon-cyan);
+  border-radius: 50%;
+  animation: quantum-spin 1s linear infinite;
+  position: relative;
+}
+
+.quantum-loader::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border: 3px solid transparent;
+  border-bottom: 3px solid var(--neon-magenta);
+  border-radius: 50%;
+  animation: quantum-spin 2s linear infinite reverse;
+}
+
+@keyframes quantum-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.quantum-grid {
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: grid-flow 20s linear infinite;
+}
+
+@keyframes grid-flow {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+.holographic-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-medium);
+  backdrop-filter: blur(10px);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-green);
+  box-shadow: 0 0 10px var(--neon-green);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.hover-holographic {
+  transition: all 0.3s ease;
+}
+
+.hover-holographic:hover {
+  background: var(--gradient-primary);
+  box-shadow: var(--shadow-holographic);
+  transform: translateY(-2px);
+}
+
+.glow-cyan {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.glow-magenta {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 10px var(--neon-magenta);
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  .quantum-grid {
+    background-size: 25px 25px;
+  }
+  
+  .glass-holographic {
+    backdrop-filter: blur(15px);
+  }
+}
