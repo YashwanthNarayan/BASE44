@@ -7,6 +7,27 @@ const StudentDashboard = ({ student, onNavigate, onLogout }) => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    try {
+      const data = await studentAPI.getDashboard();
+      setDashboardData(data);
+    } catch (error) {
+      console.error('Error loading dashboard:', error);
+      setDashboardData({
+        recent_tests: [],
+        progress_summary: { total_tests: 0, average_score: 0 },
+        achievements: [],
+        upcoming_events: []
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -14,70 +35,78 @@ const StudentDashboard = ({ student, onNavigate, onLogout }) => {
     return 'Good evening';
   };
 
-  const quickActions = [
-    {
-      id: 'tutor',
-      title: 'AI Tutor',
-      description: 'Get personalized help in any subject',
-      icon: '🎓',
-      gradient: 'from-purple-500/20 to-indigo-500/20',
-      route: 'tutor'
-    },
+  // Organized main features into clean categories
+  const coreFeatures = [
     {
       id: 'practice',
       title: 'Practice Tests',
-      description: 'Take adaptive quizzes to test your knowledge',
+      description: 'Take adaptive assessments to test your knowledge',
       icon: '📝',
-      gradient: 'from-blue-500/20 to-cyan-500/20',
-      route: 'practice'
+      route: 'practice',
+      gradient: 'from-blue-500/10 to-cyan-500/10',
+      priority: 'high'
     },
     {
-      id: 'mindfulness',
-      title: 'Mindfulness',
-      description: 'Breathing exercises and stress management',
-      icon: '🧘‍♀️',
-      gradient: 'from-green-500/20 to-emerald-500/20',
-      route: 'mindfulness'
-    },
-    {
-      id: 'calendar',
-      title: 'My Schedule',
-      description: 'View your study schedule and events',
-      icon: '📅',
-      gradient: 'from-pink-500/20 to-rose-500/20',
-      route: 'calendar'
+      id: 'tutor', 
+      title: 'AI Tutor',
+      description: 'Get personalized help from AI tutors',
+      icon: '🤖',
+      route: 'tutor',
+      gradient: 'from-purple-500/10 to-indigo-500/10',
+      priority: 'high'
     },
     {
       id: 'progress',
-      title: 'Progress Tracker',
-      description: 'Monitor your learning journey',
+      title: 'Progress',
+      description: 'Monitor your learning analytics',
       icon: '📊',
-      gradient: 'from-yellow-500/20 to-orange-500/20',
-      route: 'progress'
-    },
-    {
-      id: 'notes',
-      title: 'My Notes',
-      description: 'Access your study notes library',
-      icon: '📚',
-      gradient: 'from-indigo-500/20 to-purple-500/20',
-      route: 'notes'
-    },
-    {
-      id: 'notifications',
-      title: 'Notifications',
-      description: 'Check updates and announcements',
-      icon: '🔔',
-      gradient: 'from-red-500/20 to-pink-500/20',
-      route: 'notifications'
+      route: 'progress',
+      gradient: 'from-green-500/10 to-emerald-500/10',
+      priority: 'high'
     },
     {
       id: 'classes',
       title: 'My Classes',
-      description: 'View joined classes and join new ones',
+      description: 'View and manage your enrolled classes',
       icon: '🏫',
-      gradient: 'from-teal-500/20 to-green-500/20',
-      route: 'classes'
+      route: 'classes',
+      gradient: 'from-orange-500/10 to-red-500/10',
+      priority: 'high'
+    }
+  ];
+
+  const secondaryFeatures = [
+    {
+      id: 'notes',
+      title: 'Notes Library',
+      description: 'AI-generated study materials',
+      icon: '📚',
+      route: 'notes',
+      gradient: 'from-indigo-500/10 to-purple-500/10'
+    },
+    {
+      id: 'calendar',
+      title: 'Schedule',
+      description: 'Manage your study calendar',
+      icon: '📅',
+      route: 'calendar',
+      gradient: 'from-pink-500/10 to-rose-500/10'
+    },
+    {
+      id: 'mindfulness',
+      title: 'Mindfulness',
+      description: 'Relaxation and focus exercises',
+      icon: '🧘‍♀️',
+      route: 'mindfulness',
+      gradient: 'from-teal-500/10 to-cyan-500/10'
+    },
+    {
+      id: 'notifications',
+      title: 'Notifications',
+      description: 'View your updates and alerts',
+      icon: '🔔',
+      route: 'notifications',
+      gradient: 'from-yellow-500/10 to-orange-500/10'
     }
   ];
 
