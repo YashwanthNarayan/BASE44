@@ -110,228 +110,186 @@ const StudentDashboard = ({ student, onNavigate, onLogout }) => {
     }
   ];
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-dark-space flex items-center justify-center">
+        <LiquidCard className="p-12 text-center">
+          <div className="quantum-loader mx-auto mb-6"></div>
+          <p className="text-secondary">Loading your dashboard...</p>
+        </LiquidCard>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="animated-bg" />
+    <div className="min-h-screen bg-dark-space text-primary">
+      {/* Subtle quantum grid - much less opacity */}
+      <div className="quantum-grid fixed inset-0 opacity-10" />
       
-      {/* Floating Orbs */}
-      <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-20 left-20 w-72 h-72 bg-gradient-to-r from-green-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
-
-      {/* Dynamic Navigation */}
-      <nav className="dynamic-nav">
-        <div className="flex items-center gap-4">
-          <LiquidNavItem active={true} onClick={() => onNavigate('student-dashboard')}>
-            Dashboard
-          </LiquidNavItem>
-          <div className="w-px h-6 bg-white/20" />
-          <LiquidNavItem onClick={onLogout}>
-            Logout
-          </LiquidNavItem>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <div className="relative z-10 pt-24 pb-12 px-6">
-        <div className="max-w-7xl mx-auto">
-          
-          {/* Header Section */}
-          <div className="mb-12">
-            <LiquidCard className="p-8 bg-gradient-to-br from-white/10 to-white/5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-4xl font-bold text-white mb-2">
-                    {getGreeting()}, {student?.name || 'Student'}! 
-                    <span className="inline-block ml-3 text-3xl animate-bounce">🌟</span>
-                  </h1>
-                  <p className="text-white/70 text-lg">Ready to continue your learning journey?</p>
-                </div>
-                
-                {/* Level & XP Display */}
-                <div className="text-right">
-                  <div className="glass-strong rounded-2xl px-6 py-4">
-                    <div className="text-3xl font-bold text-gradient mb-1">Level {level}</div>
-                    <div className="text-white/60 text-sm mb-3">{data.xp_points || 0} XP</div>
-                    <LiquidProgress 
-                      value={data.xp_points || 0} 
-                      max={(data.xp_points || 0) + xpForNext}
-                      className="w-32"
-                    />
-                    <div className="text-white/60 text-xs mt-2">{xpForNext} XP to next level</div>
-                  </div>
-                </div>
-              </div>
-            </LiquidCard>
+      <div className="relative z-10 p-8 max-w-7xl mx-auto">
+        
+        {/* Clean Header Section with Better Spacing */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-12">
+          <div className="space-y-3">
+            <h1 className="text-4xl lg:text-5xl font-bold text-primary mb-2">
+              {getGreeting()}, {student?.name || 'Student'}! 👋
+            </h1>
+            <p className="text-xl text-secondary">
+              Ready to continue your learning journey?
+            </p>
           </div>
+          
+          <div className="flex items-center space-x-4 mt-6 lg:mt-0">
+            <div className="flex items-center space-x-2 px-4 py-2 bg-glass/50 rounded-lg border border-primary/20">
+              <div className="w-2 h-2 bg-neon-green rounded-full"></div>
+              <span className="text-sm text-secondary">Online</span>
+            </div>
+            <LiquidButton 
+              variant="secondary" 
+              onClick={onLogout}
+              className="text-sm"
+            >
+              Logout
+            </LiquidButton>
+          </div>
+        </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        {/* Quick Stats - Cleaner Layout */}
+        {dashboardData?.progress_summary && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             <LiquidStatsCard
-              title="AI Conversations"
-              value={data.total_messages || 0}
-              icon="💬"
-              trend="+12%"
-              trendDirection="up"
-            />
-            <LiquidStatsCard
-              title="Practice Tests"
-              value={data.total_tests || 0}
+              title="Tests Completed"
+              value={dashboardData.progress_summary.total_tests || 0}
               icon="📝"
-              trend="+8%"
-              trendDirection="up"
+              gradient="from-blue-500/10 to-cyan-500/10"
+              className="text-center"
             />
             <LiquidStatsCard
               title="Average Score"
-              value={`${(data.average_score || 0).toFixed(1)}%`}
-              icon="📊"
-              trend="+5%"
-              trendDirection="up"
+              value={`${(dashboardData.progress_summary.average_score || 0).toFixed(1)}%`}
+              icon="🎯"
+              gradient="from-green-500/10 to-emerald-500/10"
+              className="text-center"
             />
             <LiquidStatsCard
               title="Study Streak"
-              value={`${data.study_streak || 0} days`}
+              value="5 days"
               icon="🔥"
-              trend="2 days"
-              trendDirection="up"
+              gradient="from-orange-500/10 to-red-500/10"
+              className="text-center"
             />
           </div>
+        )}
 
-          {/* Quick Actions Grid */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-              <span className="text-3xl">🚀</span>
-              Quick Actions
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {quickActions.map((action) => (
-                <div
-                  key={action.id}
-                  className={`
-                    group relative cursor-pointer transition-all duration-500 hover:scale-105
-                    ${activeQuickAction === action.id ? 'scale-105' : ''}
-                  `}
-                  onClick={() => {
-                    setActiveQuickAction(action.id);
-                    setTimeout(() => onNavigate(action.route), 300);
-                  }}
-                  onMouseEnter={() => setActiveQuickAction(action.id)}
-                  onMouseLeave={() => setActiveQuickAction(null)}
-                >
-                  <LiquidCard className={`h-full p-6 bg-gradient-to-br ${action.gradient} border-white/20 hover:border-white/40`}>
-                    <div className="text-center">
-                      <div className="text-4xl mb-4 transform transition-transform duration-300 group-hover:scale-110">
-                        {action.icon}
-                      </div>
-                      <h3 className="text-lg font-semibold text-white mb-2">
-                        {action.title}
-                      </h3>
-                      <p className="text-white/60 text-sm leading-relaxed">
-                        {action.description}
-                      </p>
-                    </div>
-                    
-                    {/* Floating Indicator */}
-                    {activeQuickAction === action.id && (
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 to-transparent border border-white/30 pointer-events-none" />
-                    )}
-                  </LiquidCard>
+        {/* Core Features - Much Cleaner Grid */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-semibold text-primary mb-8">Main Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {coreFeatures.map((feature) => (
+              <LiquidCard
+                key={feature.id}
+                className="group cursor-pointer hover:scale-[1.02] transform transition-all duration-300 p-6"
+                onClick={() => onNavigate(feature.route)}
+              >
+                <div className={`bg-gradient-to-br ${feature.gradient} rounded-xl p-6 h-full`}>
+                  {/* Clean Icon */}
+                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
+                  
+                  {/* Clean Typography */}
+                  <h3 className="text-lg font-semibold text-primary mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm text-secondary leading-relaxed">
+                    {feature.description}
+                  </p>
+                  
+                  {/* Subtle hover effect */}
+                  <div className="mt-4 text-neon-cyan opacity-0 group-hover:opacity-100 transition-opacity text-sm">
+                    Click to access →
+                  </div>
                 </div>
-              ))}
-            </div>
+              </LiquidCard>
+            ))}
           </div>
+        </div>
 
-          {/* Recent Activity & Achievements */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            
-            {/* Recent Performance */}
-            <LiquidCard className="p-6">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="text-2xl">📈</span>
-                Recent Performance
-              </h3>
-              {data.recent_scores && data.recent_scores.length > 0 ? (
-                <div className="space-y-4">
-                  {data.recent_scores.slice(0, 5).map((score, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 glass-dark rounded-xl">
-                      <div>
-                        <span className="font-medium text-white capitalize">
-                          {score.subject || 'General'}
-                        </span>
-                        <span className="text-white/60 text-sm ml-2">
-                          {score.date ? new Date(score.date).toLocaleDateString() : 'Recent'}
-                        </span>
-                      </div>
-                      <div className={`
-                        px-3 py-1 rounded-full text-sm font-semibold
-                        ${score.score >= 80 ? 'bg-green-500/20 text-green-300 border border-green-400/30' :
-                          score.score >= 60 ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-400/30' :
-                          'bg-red-500/20 text-red-300 border border-red-400/30'}
-                      `}>
-                        {score.score}%
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-4">📊</div>
-                  <p className="text-white/60 mb-4">No recent test scores</p>
-                  <LiquidButton 
-                    onClick={() => onNavigate('practice')}
-                    variant="secondary"
-                    size="sm"
-                  >
-                    Take a Practice Test
-                  </LiquidButton>
-                </div>
-              )}
-            </LiquidCard>
-
-            {/* Achievements */}
-            <LiquidCard className="p-6">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                <span className="text-2xl">🏆</span>
-                Recent Achievements
-              </h3>
-              {data.achievements && data.achievements.length > 0 ? (
-                <div className="space-y-4">
-                  {data.achievements.slice(0, 5).map((achievement, index) => (
-                    <div key={index} className="flex items-center p-4 glass-dark rounded-xl">
-                      <div className="text-2xl mr-3">🏆</div>
-                      <div>
-                        <span className="font-medium text-white block">
-                          {achievement.title}
-                        </span>
-                        <span className="text-white/60 text-sm">
-                          {achievement.description}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-4">🏆</div>
-                  <p className="text-white/60 mb-2">No achievements yet</p>
-                  <p className="text-white/40 text-sm">
-                    Start practicing to earn your first achievement!
+        {/* Secondary Features - Better Organized */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-semibold text-primary mb-8">Additional Tools</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {secondaryFeatures.map((feature) => (
+              <LiquidCard
+                key={feature.id}
+                className="group cursor-pointer hover:scale-[1.02] transform transition-all duration-300 p-4"
+                onClick={() => onNavigate(feature.route)}
+              >
+                <div className={`bg-gradient-to-br ${feature.gradient} rounded-lg p-4 h-full text-center`}>
+                  <div className="text-3xl mb-3">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-base font-medium text-primary mb-1">
+                    {feature.title}
+                  </h3>
+                  <p className="text-xs text-secondary">
+                    {feature.description}
                   </p>
                 </div>
-              )}
+              </LiquidCard>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Activity - Cleaner Section */}
+        {dashboardData?.recent_tests && dashboardData.recent_tests.length > 0 && (
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl font-semibold text-primary">Recent Activity</h2>
+              <LiquidButton 
+                variant="secondary" 
+                onClick={() => onNavigate('progress')}
+                className="text-sm"
+              >
+                View All
+              </LiquidButton>
+            </div>
+            
+            <LiquidCard className="p-6">
+              <div className="space-y-4">
+                {dashboardData.recent_tests.slice(0, 3).map((test, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 bg-glass/30 rounded-lg border border-primary/10">
+                    <div className="flex items-center space-x-4">
+                      <div className="text-2xl">📝</div>
+                      <div>
+                        <h3 className="font-medium text-primary">
+                          {test.subject} Test
+                        </h3>
+                        <p className="text-sm text-secondary">
+                          {new Date(test.completed_at).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-lg font-semibold text-neon-cyan">
+                        {test.score}%
+                      </div>
+                      <div className="text-xs text-secondary">
+                        {test.total_questions} questions
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </LiquidCard>
           </div>
+        )}
 
-          {/* Floating Action Button */}
-          <div className="fixed bottom-8 right-8 z-50">
-            <LiquidButton
-              onClick={() => onNavigate('tutor')}
-              className="rounded-full w-16 h-16 shadow-2xl hover:scale-110 transition-transform"
-              variant="primary"
-            >
-              <span className="text-2xl">🤖</span>
-            </LiquidButton>
-          </div>
+        {/* Clean Footer */}
+        <div className="text-center pt-8 border-t border-primary/10">
+          <p className="text-secondary text-sm">
+            Educational Platform • Version 3.0
+          </p>
         </div>
       </div>
     </div>
