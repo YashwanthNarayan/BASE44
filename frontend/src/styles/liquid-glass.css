@@ -54,13 +54,10 @@
 }
 
 body {
-  font-family: var(--font-primary);
-  line-height: 1.6;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-dark-space);
   color: var(--text-primary);
-  background: var(--bg-primary);
-  min-height: 100vh;
-  overflow-x: hidden;
-  position: relative;
+  line-height: 1.6;
 }
 
 /* Advanced Glassmorphism */
