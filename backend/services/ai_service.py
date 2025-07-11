@@ -16,7 +16,7 @@ class AIService:
     """Service for AI-powered educational content generation"""
     
     def __init__(self):
-        self.model = genai.GenerativeModel('gemini-pro')
+        self.model = genai.GenerativeModel('gemini-2.5-flash')  # Updated to current model
     
     async def generate_practice_questions(
         self,
