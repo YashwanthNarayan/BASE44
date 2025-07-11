@@ -76,7 +76,7 @@ class PracticeTestGenerationTester:
             
             response = requests.post(f"{self.api_url}/auth/register", json=student_data, timeout=15)
             
-            if response.status_code == 201:
+            if response.status_code in [200, 201]:
                 data = response.json()
                 self.student_token = data.get("access_token")
                 self.student_data = student_data
