@@ -6,7 +6,7 @@ import './styles/liquid-glass.css';
 import AuthPortal from './components/AuthPortal_Liquid';
 import StudentDashboard from './components/StudentDashboard_Liquid';
 import TeacherDashboard from './components/TeacherDashboard_Liquid';
-import NotesComponent from './components/NotesComponent';
+import NotesComponent from './components/NotesComponent_Liquid';
 import PracticeTestComponent from './components/PracticeTestComponent_Liquid';
 
 // Import lazy-loaded components (we'll create these next)
