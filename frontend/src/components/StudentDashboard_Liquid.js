@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-import { defaultDashboardData } from '../utils/constants';
-import { calculateLevel, getXPForNextLevel } from '../utils/helpers';
-import { LiquidCard, LiquidButton, LiquidStatsCard, LiquidProgress, LiquidNavItem } from './ui/LiquidComponents';
+import React, { useState, useEffect } from 'react';
+import { studentAPI } from '../services/api';
+import { LiquidCard, LiquidButton, LiquidStatsCard, LiquidProgress } from './ui/LiquidComponents';
 import '../styles/liquid-glass.css';
 
-const StudentDashboard = ({ student, onNavigate, dashboardData, onLogout }) => {
-  const data = dashboardData || defaultDashboardData;
-  const level = calculateLevel(data.xp_points || 0);
-  const xpForNext = getXPForNextLevel(data.xp_points || 0);
-  const [activeQuickAction, setActiveQuickAction] = useState(null);
+const StudentDashboard = ({ student, onNavigate, onLogout }) => {
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
