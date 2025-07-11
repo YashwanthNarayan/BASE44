@@ -217,7 +217,7 @@
 
 
 
-user_problem_statement: "Test the newly restructured modular backend of AIR-PROJECT-K to verify core functionality works correctly."
+user_problem_statement: "Test the newly implemented futuristic cyberpunk UI design in the AIR-PROJECT-K platform. Focus on the visual aesthetics and functionality of the liquid glass components."
 
 backend:
   - task: "Health Check & API Structure"
