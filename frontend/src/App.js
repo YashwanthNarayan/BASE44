@@ -9,14 +9,14 @@ import TeacherDashboard from './components/TeacherDashboard_Liquid';
 import NotesComponent from './components/NotesComponent_Liquid';
 import PracticeTestComponent from './components/PracticeTestComponent_Liquid';
 
-// Import lazy-loaded components (we'll create these next)
-const MindfulnessComponent = React.lazy(() => import('./components/MindfulnessComponent'));
-const CalendarComponent = React.lazy(() => import('./components/CalendarComponent'));
-const ProgressComponent = React.lazy(() => import('./components/ProgressComponent'));
-const TutorComponent = React.lazy(() => import('./components/TutorComponent'));
-const NotificationsComponent = React.lazy(() => import('./components/NotificationsComponent'));
-const ClassesComponent = React.lazy(() => import('./components/ClassesComponent'));
-const TeacherAnalyticsDashboard = React.lazy(() => import('./components/TeacherAnalyticsDashboard'));
+// Import lazy-loaded components (now with liquid versions)
+const MindfulnessComponent = React.lazy(() => import('./components/MindfulnessComponent_Liquid'));
+const CalendarComponent = React.lazy(() => import('./components/CalendarComponent_Liquid'));
+const ProgressComponent = React.lazy(() => import('./components/ProgressComponent_Liquid'));
+const TutorComponent = React.lazy(() => import('./components/TutorComponent_Liquid'));
+const NotificationsComponent = React.lazy(() => import('./components/NotificationsComponent_Liquid'));
+const ClassesComponent = React.lazy(() => import('./components/ClassesComponent_Liquid'));
+const TeacherAnalyticsDashboard = React.lazy(() => import('./components/TeacherAnalyticsDashboard_Liquid'));
 
 // Import services and utilities
 import { setupAxiosAuth, studentAPI } from './services/api';
