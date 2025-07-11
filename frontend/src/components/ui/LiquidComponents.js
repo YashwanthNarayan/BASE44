@@ -118,6 +118,7 @@ export const LiquidSelect = ({
   className = '', 
   label,
   error,
+  options = [],
   ...props 
 }) => {
   return (
@@ -138,6 +139,11 @@ export const LiquidSelect = ({
         `}
         {...props}
       >
+        {options.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
         {children}
       </select>
       {error && (
