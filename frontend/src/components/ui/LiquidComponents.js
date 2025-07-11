@@ -280,47 +280,37 @@ export const LiquidStatsCard = ({
   );
 };
 
-// Quantum Notification Toast
-export const LiquidToast = ({ 
-  message, 
-  type = 'info', 
-  isVisible, 
-  onClose,
-  duration = 3000 
+// Professional Badge Component
+export const LiquidBadge = ({ 
+  children, 
+  variant = 'default',
+  size = 'md',
+  className = '' 
 }) => {
-  const typeStyles = {
-    info: 'border-primary glow-cyan',
-    success: 'border-neon-green glow-cyan',
-    warning: 'border-neon-yellow glow-magenta',
-    error: 'border-neon-pink glow-magenta'
+  const sizeClasses = {
+    sm: 'px-2 py-1 text-xs',
+    md: 'px-3 py-1.5 text-sm',
+    lg: 'px-4 py-2 text-base'
   };
-
-  React.useEffect(() => {
-    if (isVisible && duration > 0) {
-      const timer = setTimeout(onClose, duration);
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, duration, onClose]);
-
-  if (!isVisible) return null;
-
+  
+  const variantClasses = {
+    default: 'bg-glass text-primary border border-primary/20',
+    primary: 'bg-accent-blue/20 text-accent-blue border border-accent-blue/30',
+    success: 'bg-accent-green/20 text-accent-green border border-accent-green/30',
+    warning: 'bg-accent-orange/20 text-accent-orange border border-accent-orange/30',
+    danger: 'bg-accent-pink/20 text-accent-pink border border-accent-pink/30'
+  };
+  
   return (
-    <div className={`
-      fixed top-4 right-4 z-50 max-w-sm w-full
-      glass-holographic rounded-xl p-4 border-2
-      ${typeStyles[type]}
-      transform transition-all duration-500 ease-out
-      ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
-    `}>
-      <div className="flex items-center justify-between">
-        <p className="text-primary text-sm font-medium">{message}</p>
-        <button
-          onClick={onClose}
-          className="text-secondary hover:text-neon-cyan ml-4 transition-colors"
-        >
-          ×
-        </button>
-      </div>
-    </div>
+    <span
+      className={`
+        inline-flex items-center font-medium rounded-lg
+        ${sizeClasses[size]}
+        ${variantClasses[variant]}
+        ${className}
+      `}
+    >
+      {children}
+    </span>
   );
 };
