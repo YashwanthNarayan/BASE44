@@ -147,28 +147,27 @@ export const LiquidSelect = ({
   );
 };
 
-// Holographic Progress Bar
+// Professional Progress Bar
 export const LiquidProgress = ({ 
-  value = 0, 
+  value, 
   max = 100, 
   className = '',
-  showLabel = false,
-  label = '',
-  ...props 
+  color = 'bg-gradient-primary',
+  showValue = false
 }) => {
-  const percentage = Math.min(100, Math.max(0, (value / max) * 100));
-
+  const percentage = Math.min((value / max) * 100, 100);
+  
   return (
-    <div className={`w-full ${className}`} {...props}>
-      {showLabel && (
-        <div className="flex justify-between items-center mb-3">
-          <span className="text-sm font-medium text-neon uppercase tracking-wide">{label}</span>
-          <span className="text-sm font-bold text-holographic">{Math.round(percentage)}%</span>
+    <div className={`space-y-2 ${className}`}>
+      {showValue && (
+        <div className="flex justify-between text-sm">
+          <span className="text-secondary">Progress</span>
+          <span className="text-primary font-medium">{value}/{max}</span>
         </div>
       )}
-      <div className="progress-holographic">
+      <div className="w-full bg-glass rounded-full h-2 overflow-hidden">
         <div 
-          className="progress-holographic-fill"
+          className={`h-full ${color} rounded-full transition-all duration-500 ease-out`}
           style={{ width: `${percentage}%` }}
         />
       </div>
