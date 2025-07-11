@@ -5,7 +5,7 @@ import './styles/liquid-glass.css';
 // Import components
 import AuthPortal from './components/AuthPortal_Liquid';
 import StudentDashboard from './components/StudentDashboard_Liquid';
-import TeacherDashboard from './components/TeacherDashboard';
+import TeacherDashboard from './components/TeacherDashboard_Liquid';
 import NotesComponent from './components/NotesComponent';
 import PracticeTestComponent from './components/PracticeTestComponent_Liquid';
 
