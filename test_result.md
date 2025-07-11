@@ -366,13 +366,12 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Practice Test Routes"
-    - "Service Layer Testing" 
-    - "JWT Token Validation"
-  stuck_tasks:
-    - "Practice Test Routes"
-    - "Service Layer Testing"
-    - "JWT Token Validation"
+    - "Futuristic AuthPortal Design"
+    - "Student Dashboard Liquid Design"
+    - "Teacher Dashboard Liquid Design"
+    - "Liquid Components Functionality"
+    - "Liquid Glass CSS Design System"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
