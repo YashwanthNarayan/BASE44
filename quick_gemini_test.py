@@ -15,8 +15,10 @@ API_URL = f"{BACKEND_URL}/api"
 # Create a student account and test practice generation
 def quick_test():
     # Register student
+    import uuid
+    unique_id = str(uuid.uuid4())[:8]
     student_data = {
-        "email": "quicktest@test.com",
+        "email": f"quicktest_{unique_id}@test.com",
         "password": "TestPassword123!",
         "name": "Quick Test Student",
         "user_type": "student",
