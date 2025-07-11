@@ -232,23 +232,7 @@ export const LiquidModal = ({
   );
 };
 
-// Cyberpunk Navigation Item
-export const LiquidNavItem = ({ 
-  children, 
-  active = false, 
-  onClick,
-  icon,
-  className = ''
-}) => {
-  return (
-    <button
-      onClick={onClick}
-      className={`nav-cyberpunk ${active ? 'active' : ''} ${className}`}
-    >
-      {icon && <span className="text-lg">{icon}</span>}
-      <span>{children}</span>
-    </button>
-  );
+
 };
 
 // Professional Stats Card
