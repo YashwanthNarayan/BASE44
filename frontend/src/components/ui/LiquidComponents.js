@@ -175,20 +175,6 @@ export const LiquidProgress = ({
   );
 };
 
-// Quantum Loading Component
-export const LiquidLoading = ({ message = "Loading...", className = '' }) => {
-  return (
-    <div className={`flex flex-col items-center justify-center p-8 ${className}`}>
-      <div className="loading-quantum mb-4">
-        <div className="loading-dot-quantum"></div>
-        <div className="loading-dot-quantum"></div>
-        <div className="loading-dot-quantum"></div>
-      </div>
-      <p className="text-secondary text-sm uppercase tracking-wider">{message}</p>
-    </div>
-  );
-};
-
 // Professional Modal Component
 export const LiquidModal = ({ 
   isOpen, 
