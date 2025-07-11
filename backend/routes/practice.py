@@ -31,14 +31,15 @@ async def generate_practice_test(
         db = get_database()
         for question in questions:
             question["created_at"] = datetime.utcnow()
-            await db[Collections.PRACTICE_QUESTIONS].insert_one(question)
+            await db[Collections.PRACTICE_QUESTIONS].insert_one(question.copy())  # Insert a copy to avoid modifying original
         
-        return {
+        # Convert any ObjectIds to strings before returning
+        return convert_objectid_to_str({
             "questions": questions,
             "total_count": len(questions),
             "subject": test_request.subject,
             "difficulty": test_request.difficulty
-        }
+        })
     
     except Exception as e:
         raise HTTPException(
