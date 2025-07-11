@@ -80,31 +80,34 @@ export const LiquidCard = ({
   );
 };
 
-// Neural Input Component
+// Professional Input Component
 export const LiquidInput = ({ 
-  label, 
-  type = 'text', 
-  value, 
-  onChange, 
-  placeholder = ' ',
-  required = false,
-  className = '',
+  className = '', 
+  label,
+  error,
   ...props 
 }) => {
   return (
-    <div className={`input-neural ${className}`}>
+    <div className="space-y-2">
+      {label && (
+        <label className="block text-sm font-medium text-secondary">
+          {label}
+        </label>
+      )}
       <input
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={required}
-        className="peer"
+        className={`
+          w-full px-4 py-3 bg-glass border border-primary/20 rounded-xl
+          text-primary placeholder-muted focus:outline-none
+          focus:ring-2 focus:ring-accent-blue/50 focus:border-accent/30
+          transition-all duration-200
+          ${error ? 'border-accent-pink/50' : ''}
+          ${className}
+        `}
         {...props}
       />
-      <label className="peer-focus:top-2 peer-focus:text-xs peer-[:not(:placeholder-shown)]:top-2 peer-[:not(:placeholder-shown)]:text-xs">
-        {label} {required && '*'}
-      </label>
+      {error && (
+        <p className="text-sm text-accent-pink">{error}</p>
+      )}
     </div>
   );
 };
