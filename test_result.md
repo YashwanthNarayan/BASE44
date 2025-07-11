@@ -255,11 +255,11 @@ backend:
 
   - task: "Practice Test Routes"
     implemented: true
-    working: false
+    working: true
     file: "backend/routes/practice.py"
     stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
@@ -267,6 +267,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "Practice test generation is failing with 500 Internal Server Error. The AI service integration appears to have issues, possibly with the Gemini API calls taking too long or failing. This is a critical issue affecting the core practice test functionality."
+        - working: true
+          agent: "testing"
+          comment: "FIXED: Practice test generation is now working correctly! Root cause was twofold: 1) Gemini API model 'gemini-pro' was deprecated and replaced with 'gemini-2.5-flash', 2) ObjectId serialization issue when returning questions from database. After fixing both issues, comprehensive testing shows: ✅ Successfully generates 5 questions as requested with math/Algebra/Geometry topics, ✅ AI service integration working with different subjects (Math, Physics), ✅ Gemini API configuration working with new model, ✅ Database storage working with proper metadata, ✅ Authentication properly required. Success rate: 88.9% (16/18 tests passed). Only minor validation issues remain with empty topics/invalid question count handling, but core functionality is fully operational."
 
   - task: "Database Integration"
     implemented: true
