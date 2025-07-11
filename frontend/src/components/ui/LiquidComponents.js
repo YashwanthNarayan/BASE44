@@ -251,41 +251,31 @@ export const LiquidNavItem = ({
   );
 };
 
-// Quantum Stats Card
+// Professional Stats Card
 export const LiquidStatsCard = ({ 
   title, 
   value, 
   icon, 
-  trend,
-  trendDirection = 'up',
+  trend, 
+  gradient = 'from-accent-blue/10 to-accent-purple/10',
   className = '' 
 }) => {
   return (
-    <LiquidCard className={`p-6 ${className}`} holographic={true}>
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-secondary text-xs font-medium uppercase tracking-widest mb-2">{title}</p>
-          <p className="text-3xl font-bold text-holographic mb-3">{value}</p>
+    <LiquidCard className={`p-6 ${className}`}>
+      <div className={`bg-gradient-to-br ${gradient} rounded-xl p-4`}>
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-2xl">{icon}</div>
           {trend && (
-            <div className={`flex items-center text-sm font-medium ${
-              trendDirection === 'up' ? 'text-neon-green' : 'text-neon-pink'
-            }`}>
-              <span className="mr-2 text-lg">
-                {trendDirection === 'up' ? '↗' : '↘'}
-              </span>
-              <span className="uppercase tracking-wide">{trend}</span>
-            </div>
+            <span className="text-xs text-secondary bg-glass px-2 py-1 rounded-md">
+              {trend}
+            </span>
           )}
         </div>
-        {icon && (
-          <div className="text-4xl opacity-80 glow-cyan">
-            {icon}
-          </div>
-        )}
+        <div className="space-y-1">
+          <div className="text-2xl font-bold text-primary">{value}</div>
+          <div className="text-sm text-secondary">{title}</div>
+        </div>
       </div>
-      
-      {/* Data flow animation */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-50" />
     </LiquidCard>
   );
 };
