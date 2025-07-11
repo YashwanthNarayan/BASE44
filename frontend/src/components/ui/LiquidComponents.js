@@ -233,7 +233,6 @@ export const LiquidModal = ({
 };
 
 
-};
 
 // Professional Stats Card
 export const LiquidStatsCard = ({ 
