@@ -283,3 +283,74 @@ export const LiquidBadge = ({
     </span>
   );
 };
+
+// Professional Toast Component
+export const LiquidToast = ({ 
+  message, 
+  type = 'info',
+  isVisible = false,
+  onClose,
+  duration = 5000
+}) => {
+  React.useEffect(() => {
+    if (isVisible && duration > 0) {
+      const timer = setTimeout(() => {
+        onClose && onClose();
+      }, duration);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, duration, onClose]);
+
+  if (!isVisible) return null;
+
+  const typeClasses = {
+    success: 'bg-accent-green/20 border-accent-green/30 text-accent-green',
+    error: 'bg-accent-pink/20 border-accent-pink/30 text-accent-pink',
+    warning: 'bg-accent-orange/20 border-accent-orange/30 text-accent-orange',
+    info: 'bg-accent-blue/20 border-accent-blue/30 text-accent-blue'
+  };
+
+  return (
+    <div className="fixed top-4 right-4 z-50">
+      <LiquidCard className={`p-4 ${typeClasses[type]} border`}>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">{message}</span>
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="ml-4 text-current hover:opacity-70 transition-opacity"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      </LiquidCard>
+    </div>
+  );
+};
+
+// Professional Navigation Item Component
+export const LiquidNavItem = ({ 
+  children, 
+  active = false,
+  onClick,
+  className = '',
+  ...props 
+}) => {
+  return (
+    <button
+      className={`
+        px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200
+        ${active 
+          ? 'bg-glass-strong text-primary border border-accent/20' 
+          : 'text-secondary hover:text-primary hover:bg-glass'
+        }
+        ${className}
+      `}
+      onClick={onClick}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
