@@ -112,35 +112,37 @@ export const LiquidInput = ({
   );
 };
 
-// Neural Select Component
+// Professional Select Component
 export const LiquidSelect = ({ 
-  label, 
-  value, 
-  onChange, 
-  options = [], 
-  placeholder = "Choose an option...",
-  required = false,
-  className = '',
+  children, 
+  className = '', 
+  label,
+  error,
   ...props 
 }) => {
   return (
-    <div className={`input-neural ${className}`}>
+    <div className="space-y-2">
+      {label && (
+        <label className="block text-sm font-medium text-secondary">
+          {label}
+        </label>
+      )}
       <select
-        value={value}
-        onChange={onChange}
-        required={required}
+        className={`
+          w-full px-4 py-3 bg-glass border border-primary/20 rounded-xl
+          text-primary focus:outline-none
+          focus:ring-2 focus:ring-accent-blue/50 focus:border-accent/30
+          transition-all duration-200
+          ${error ? 'border-accent-pink/50' : ''}
+          ${className}
+        `}
         {...props}
       >
-        <option value="">{placeholder}</option>
-        {options.map((option, index) => (
-          <option key={index} value={option.value}>
-            {option.label}
-          </option>
-        ))}
+        {children}
       </select>
-      <label>
-        {label} {required && '*'}
-      </label>
+      {error && (
+        <p className="text-sm text-accent-pink">{error}</p>
+      )}
     </div>
   );
 };
