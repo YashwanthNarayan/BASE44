@@ -288,11 +288,11 @@ backend:
 
   - task: "Service Layer Testing"
     implemented: true
-    working: false
+    working: true
     file: "backend/services/"
     stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
@@ -300,6 +300,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "Auth service is working correctly after fixing the database connection issue. However, AI service has critical issues - practice question generation is failing with 500 errors, likely due to Gemini API integration problems or timeout issues. Caching functionality appears to be implemented but untested due to AI service failures."
+        - working: true
+          agent: "testing"
+          comment: "FIXED: AI service is now working correctly! The issue was with the deprecated Gemini API model 'gemini-pro' which was replaced with 'gemini-2.5-flash'. After updating the model name in ai_service.py, the AI service successfully generates practice questions for multiple subjects (Math, Physics, Chemistry, etc.) with proper caching functionality. Auth service continues to work correctly. All service layer components are now functional."
 
   - task: "JWT Token Validation"
     implemented: true
