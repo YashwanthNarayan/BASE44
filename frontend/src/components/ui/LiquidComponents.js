@@ -30,19 +30,21 @@ export const LiquidButton = ({
   );
 };
 
-// Quantum Glass Card Component
+// Professional Liquid Card Component
 export const LiquidCard = ({ 
   children, 
-  hover = true, 
-  className = '',
-  holographic = false,
+  className = '', 
+  holographic = false, 
   ...props 
 }) => {
-  const cardClass = holographic ? 'glass-holographic' : 'card-quantum';
-  
   return (
     <div
-      className={`${cardClass} ${hover ? 'hover:scale-102' : ''} ${className}`}
+      className={`
+        bg-glass backdrop-blur-xl border border-primary/10 rounded-2xl
+        shadow-lg transition-all duration-300
+        ${holographic ? 'shadow-glow border-accent/20' : ''}
+        ${className}
+      `}
       {...props}
     >
       {children}
