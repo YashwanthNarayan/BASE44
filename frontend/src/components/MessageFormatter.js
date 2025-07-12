@@ -2,6 +2,11 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 const MessageFormatter = ({ content, className = "" }) => {
+  // Debug logging to see what content we're receiving
+  console.log('MessageFormatter received content:', content);
+  console.log('Content type:', typeof content);
+  console.log('Content length:', content?.length);
+
   // Custom components for markdown rendering with better styling
   const components = {
     // Custom paragraph styling
