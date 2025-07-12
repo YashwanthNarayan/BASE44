@@ -40,6 +40,9 @@
         - working: "NA"
           agent: "main"
           comment: "Enhanced TutorComponent_Liquid with comprehensive chat functionality including: chat history sidebar showing previous sessions, new chat functionality, delete chat with confirmation, session switching, mobile-responsive design with sidebar toggle, session management with titles and previews, and integrated with new tutorAPI endpoints. Updated tutorAPI in services/api.js to match new backend routes."
+        - working: "NA"
+          agent: "main" 
+          comment: "Fixed textarea visibility issue reported by user - text was white on transparent background. Updated textarea styling with better contrast: background rgba(30, 41, 59, 0.9), white text color, cyan focus borders, and added console logging for debugging input changes. Should now have proper text visibility when typing."
   - task: "Futuristic AuthPortal Design"
     implemented: true
     working: true
