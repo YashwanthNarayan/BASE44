@@ -182,7 +182,7 @@
 
 .chatbot-container .btn-secondary-luxury:hover {
   background: var(--premium-surface);
-  border-color: var(--premium-gold);
+  border-color: var(--premium-platinum);
   transform: translateY(-1px);
   box-shadow: var(--shadow-subtle);
 }
