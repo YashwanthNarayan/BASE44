@@ -106,6 +106,11 @@ export const practiceAPI = {
     return response.data;
   },
   
+  getDetailedResults: async (attemptId) => {
+    const response = await axios.get(`${API_BASE}/api/practice/results/${attemptId}`);
+    return response.data;
+  },
+  
   getStats: async (subject) => {
     const response = await axios.get(`${API_BASE}/api/practice/stats/${subject}`);
     return response.data;
