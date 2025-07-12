@@ -49,6 +49,7 @@ app.include_router(auth.router)
 app.include_router(student.router)
 app.include_router(practice.router)
 app.include_router(tutor.router)
+app.include_router(teacher.router)
 app.include_router(dashboard_router)
 
 # Health check endpoint
