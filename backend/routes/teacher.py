@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from pydantic import BaseModel
 from typing import Optional, List
-from backend.utils.security import get_current_student
+from backend.utils.security import get_current_teacher
 from backend.utils.database import get_database, Collections
 import uuid
 from datetime import datetime
@@ -30,7 +30,7 @@ class ClassResponse(BaseModel):
 @router.post("/classes")
 async def create_class(
     class_data: CreateClassRequest,
-    current_user: dict = Depends(get_current_student)
+    current_user: dict = Depends(get_current_teacher)
 ):
     """Create a new class"""
     try:
@@ -100,7 +100,7 @@ async def create_class(
 
 @router.get("/classes")
 async def get_teacher_classes(
-    current_user: dict = Depends(get_current_student)
+    current_user: dict = Depends(get_current_teacher)
 ):
     """Get all classes for the current teacher"""
     try:
@@ -158,7 +158,7 @@ async def get_teacher_classes(
 @router.delete("/classes/{class_id}")
 async def delete_class(
     class_id: str,
-    current_user: dict = Depends(get_current_student)
+    current_user: dict = Depends(get_current_teacher)
 ):
     """Delete a class"""
     try:
@@ -215,7 +215,7 @@ async def delete_class(
 # Analytics endpoints (moved from server_original.py)
 @router.get("/analytics/overview")
 async def get_teacher_analytics_overview(
-    current_user: dict = Depends(get_current_student)
+    current_user: dict = Depends(get_current_teacher)
 ):
     """Get teacher's overall analytics across all classes"""
     try:
