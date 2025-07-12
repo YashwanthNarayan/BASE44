@@ -36,29 +36,48 @@ const CalendarComponent = ({ student, onNavigate }) => {
     }
   };
 
-  const createEvent = async () => {
-    if (!newEvent.title || !newEvent.start_time || !newEvent.end_time) {
-      alert('Please fill in all quantum parameters.');
+  const handleDayClick = (date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    setSelectedDate(dateStr);
+    setQuickEvent({
+      title: '',
+      event_type: 'study',
+      start_time: '09:00',
+      end_time: '10:00'
+    });
+    setShowQuickForm(true);
+  };
+
+  const createQuickEvent = async () => {
+    if (!quickEvent.title.trim()) {
+      alert('Please enter an event title');
       return;
     }
 
     try {
-      await calendarAPI.createEvent(newEvent);
-      
-      setNewEvent({
-        title: '',
+      const eventData = {
+        title: quickEvent.title,
+        event_type: quickEvent.event_type,
+        start_time: `${selectedDate}T${quickEvent.start_time}:00`,
+        end_time: `${selectedDate}T${quickEvent.end_time}:00`,
         description: '',
+        subject: ''
+      };
+
+      await calendarAPI.createEvent(eventData);
+      
+      setQuickEvent({
+        title: '',
         event_type: 'study',
-        subject: '',
-        start_time: '',
-        end_time: ''
+        start_time: '09:00',
+        end_time: '10:00'
       });
-      setShowCreateForm(false);
+      setShowQuickForm(false);
+      setSelectedDate(null);
       loadEvents();
-      alert('Neural event synchronized successfully!');
     } catch (error) {
       console.error('Error creating event:', error);
-      alert('Failed to synchronize neural event. Please try again.');
+      alert('Failed to create event. Please try again.');
     }
   };
 
