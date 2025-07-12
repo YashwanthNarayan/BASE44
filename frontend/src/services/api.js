@@ -21,9 +21,21 @@ export const setupAxiosAuth = (token) => {
 
 // Auth API
 export const authAPI = {
-  login: async (formData) => {
-    const response = await axios.post(`${API_BASE}/api/auth/login`, formData);
-    return response.data;
+  login: async (credentials) => {
+    console.log('🔍 Login attempt:', { credentials: { email: credentials.email }, API_BASE });
+    try {
+      const response = await axios.post(`${API_BASE}/api/auth/login`, credentials);
+      console.log('✅ Login successful:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Login failed:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        url: `${API_BASE}/api/auth/login`
+      });
+      throw error;
+    }
   },
   
   register: async (formData) => {
