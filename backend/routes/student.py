@@ -9,6 +9,61 @@ router = APIRouter(prefix="/api/student", tags=["student"])
 # Add dashboard endpoint to main router (not under /student prefix)
 dashboard_router = APIRouter(prefix="/api", tags=["dashboard"])
 
+@router.get("/joined-classes")
+async def get_joined_classes(current_user: dict = Depends(get_current_student)):
+    """Get detailed information about classes the student has joined"""
+    try:
+        db = get_database()
+        student_id = current_user["sub"]
+        
+        # Get student profile to get joined class IDs
+        student_profile = await db[Collections.STUDENT_PROFILES].find_one({
+            "user_id": student_id
+        })
+        
+        if not student_profile:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Student profile not found"
+            )
+        
+        joined_class_ids = student_profile.get("joined_classes", [])
+        
+        if not joined_class_ids:
+            return []
+        
+        # Get full details of joined classes
+        classes_cursor = db[Collections.CLASSROOMS].find({
+            "class_id": {"$in": joined_class_ids},
+            "active": True
+        })
+        classes = await classes_cursor.to_list(100)
+        
+        # Format the response with all necessary details
+        detailed_classes = []
+        for classroom in classes:
+            detailed_class = {
+                "class_id": classroom["class_id"],
+                "class_name": classroom["class_name"],
+                "subject": classroom["subject"],
+                "description": classroom.get("description", ""),
+                "join_code": classroom["join_code"],
+                "teacher_id": classroom["teacher_id"],
+                "created_at": classroom["created_at"],
+                "student_count": len(classroom.get("student_ids", [])),
+            }
+            detailed_classes.append(detailed_class)
+        
+        return detailed_classes
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get joined classes: {str(e)}"
+        )
+
 @router.get("/profile")
 async def get_student_profile(current_user: dict = Depends(get_current_student)):
     """Get student profile"""
