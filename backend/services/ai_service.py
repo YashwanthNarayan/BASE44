@@ -110,43 +110,54 @@ class AIService:
         subject: Subject,
         context: Optional[Dict[str, Any]] = None
     ) -> str:
-        """Generate AI tutor response"""
+        """Generate AI tutor response with conversation context"""
         
-        cache_key = CacheUtils.get_cache_key(message, subject)
-        cached_response = CacheUtils.get_cached_response(cache_key)
-        if cached_response:
-            return cached_response
+        # Don't cache responses when we have context - each response should be contextual
+        use_cache = context is None or not context.get('conversation_history')
         
-        context_str = ""
-        if context:
-            context_str = f"Previous context: {context.get('learning_insights', [])} "
+        if use_cache:
+            cache_key = CacheUtils.get_cache_key(message, subject)
+            cached_response = CacheUtils.get_cached_response(cache_key)
+            if cached_response:
+                return cached_response
         
-        prompt = f"""
-        You are an expert {subject} tutor. A student has asked: "{message}"
+        # Build conversation context
+        conversation_context = ""
+        if context and context.get('conversation_history'):
+            conversation_context = "\n\nPrevious conversation in this session:\n"
+            for i, exchange in enumerate(context['conversation_history'][-3:]):  # Last 3 exchanges
+                conversation_context += f"Student: {exchange.get('user', '')}\n"
+                conversation_context += f"Tutor: {exchange.get('assistant', '')}\n\n"
         
-        {context_str}
-        
-        Provide a helpful, educational response that:
-        1. Directly answers their question
-        2. Explains concepts clearly
-        3. Gives examples if helpful
-        4. Encourages further learning
-        5. Is appropriate for their level
-        
-        Keep the response conversational and engaging, but educational.
-        """
+        prompt = f"""You are an expert {subject.value} tutor having a continuing conversation with a student.
+
+Current student question: "{message}"
+{conversation_context}
+Context: This is part of an ongoing tutoring session. Please refer to the previous conversation when relevant and build upon what has already been discussed. Maintain continuity in your explanations.
+
+Provide a helpful, educational response that:
+1. Takes into account the previous conversation context
+2. Directly answers their current question
+3. Explains concepts clearly with examples
+4. References previous topics discussed when relevant
+5. Encourages further learning and questions
+6. Maintains a conversational and engaging tone
+
+Remember: You are continuing an educational conversation, not starting fresh each time."""
         
         try:
             response = self.model.generate_content(prompt)
             content = response.text
             
-            # Cache the response
-            CacheUtils.cache_response(cache_key, content)
+            # Only cache responses without context
+            if use_cache:
+                CacheUtils.cache_response(cache_key, content)
             
             return content
         
         except Exception as e:
-            return f"I apologize, but I'm having trouble generating a response right now. Could you please rephrase your question about {subject}?"
+            print(f"Error generating tutor response: {e}")
+            return f"I apologize, but I'm having trouble generating a response right now. Could you please rephrase your question about {subject.value}?"
     
     async def generate_study_notes(
         self,
