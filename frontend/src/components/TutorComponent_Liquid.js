@@ -438,7 +438,7 @@ const TutorComponent = ({ student, onNavigate }) => {
                         setSessionId('');
                         setSelectedSessionId('');
                       }}
-                      className="mr-4 btn-holographic"
+                      className="mr-4 btn-domain-select"
                     >
                       ← Select Domain
                     </LiquidButton>
