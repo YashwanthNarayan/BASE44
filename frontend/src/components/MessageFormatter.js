@@ -2,19 +2,19 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 const MessageFormatter = ({ content, className = "" }) => {
-  // Custom components for markdown rendering
+  // Custom components for markdown rendering with better styling
   const components = {
     // Custom paragraph styling
     p: ({ children }) => (
-      <p className="mb-2 last:mb-0">{children}</p>
+      <p className="mb-3 text-gray-100 leading-relaxed">{children}</p>
     ),
     
-    // Custom code block styling
+    // Custom code styling
     code: ({ node, inline, className, children, ...props }) => {
       if (inline) {
         return (
           <code
-            className="bg-slate-700/50 text-cyan-300 px-1.5 py-0.5 rounded text-sm font-mono"
+            className="bg-slate-700/80 text-cyan-300 px-2 py-1 rounded-md text-sm font-mono border border-slate-600/50"
             {...props}
           >
             {children}
@@ -22,50 +22,63 @@ const MessageFormatter = ({ content, className = "" }) => {
         );
       }
       return (
-        <div className="bg-slate-800/70 rounded-lg p-3 my-2 border border-slate-600/50">
-          <code className="text-cyan-300 font-mono text-sm block whitespace-pre-wrap" {...props}>
-            {children}
-          </code>
-        </div>
+        <code
+          className="bg-slate-800/90 text-cyan-300 p-3 rounded-lg text-sm font-mono block whitespace-pre-wrap border border-slate-600/50"
+          {...props}
+        >
+          {children}
+        </code>
       );
     },
     
-    // Custom pre styling
+    // Custom pre styling for code blocks
     pre: ({ children }) => (
-      <div className="bg-slate-800/70 rounded-lg p-3 my-2 border border-slate-600/50 overflow-x-auto">
+      <div className="bg-slate-800/90 rounded-lg p-4 my-3 border border-slate-600/50 overflow-x-auto">
         {children}
       </div>
     ),
     
     // Custom list styling
     ul: ({ children }) => (
-      <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>
+      <ul className="list-disc ml-6 mb-3 space-y-1 text-gray-100">{children}</ul>
     ),
     
     ol: ({ children }) => (
-      <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>
+      <ol className="list-decimal ml-6 mb-3 space-y-1 text-gray-100">{children}</ol>
     ),
     
     li: ({ children }) => (
-      <li className="text-primary">{children}</li>
+      <li className="text-gray-100 leading-relaxed">{children}</li>
     ),
     
     // Custom heading styling
     h1: ({ children }) => (
-      <h1 className="text-xl font-bold text-cyan-300 mb-2">{children}</h1>
+      <h1 className="text-2xl font-bold text-cyan-300 mb-4 mt-6 border-b border-cyan-500/30 pb-2">
+        {children}
+      </h1>
     ),
     
     h2: ({ children }) => (
-      <h2 className="text-lg font-semibold text-cyan-300 mb-2">{children}</h2>
+      <h2 className="text-xl font-bold text-cyan-300 mb-3 mt-5">
+        {children}
+      </h2>
     ),
     
     h3: ({ children }) => (
-      <h3 className="text-md font-semibold text-cyan-300 mb-1">{children}</h3>
+      <h3 className="text-lg font-semibold text-cyan-300 mb-3 mt-4">
+        {children}
+      </h3>
+    ),
+    
+    h4: ({ children }) => (
+      <h4 className="text-base font-semibold text-cyan-300 mb-2 mt-3">
+        {children}
+      </h4>
     ),
     
     // Custom blockquote styling
     blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-cyan-500/50 pl-4 italic text-secondary my-2">
+      <blockquote className="border-l-4 border-cyan-500/70 pl-4 py-2 italic text-gray-300 my-3 bg-slate-800/30 rounded-r-lg">
         {children}
       </blockquote>
     ),
@@ -93,58 +106,60 @@ const MessageFormatter = ({ content, className = "" }) => {
     
     // Custom table styling
     table: ({ children }) => (
-      <div className="overflow-x-auto my-2">
-        <table className="min-w-full border border-slate-600/50 rounded-lg">
+      <div className="overflow-x-auto my-4">
+        <table className="min-w-full border border-slate-600/50 rounded-lg bg-slate-800/50">
           {children}
         </table>
       </div>
     ),
     
     thead: ({ children }) => (
-      <thead className="bg-slate-700/50">{children}</thead>
+      <thead className="bg-slate-700/70">{children}</thead>
     ),
     
     th: ({ children }) => (
-      <th className="border border-slate-600/50 px-3 py-2 text-left font-semibold text-cyan-300">
+      <th className="border border-slate-600/50 px-4 py-3 text-left font-semibold text-cyan-300">
         {children}
       </th>
     ),
     
     td: ({ children }) => (
-      <td className="border border-slate-600/50 px-3 py-2 text-primary">
+      <td className="border border-slate-600/50 px-4 py-3 text-gray-100">
         {children}
       </td>
     ),
     
     // Custom horizontal rule
     hr: () => (
-      <hr className="border-slate-600/50 my-4" />
+      <hr className="border-slate-600/50 my-6" />
     )
   };
 
-  // Preprocessing function to handle special formatting
+  // Clean and preprocess the content
   const preprocessContent = (text) => {
     if (!text) return '';
     
-    // Handle math expressions (basic support)
-    text = text.replace(/\*\*(.*?)\*\*/g, '**$1**'); // Bold
-    text = text.replace(/\*(.*?)\*/g, '*$1*'); // Italic
+    // Ensure proper line endings for markdown
+    let processedText = text.trim();
     
-    // Handle special mathematical symbols
-    text = text.replace(/\^(\d+)/g, '<sup>$1</sup>');
-    text = text.replace(/\_(\d+)/g, '<sub>$1</sub>');
+    // Fix common markdown issues
+    processedText = processedText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     
-    // Handle fraction notation (simple)
-    text = text.replace(/(\d+)\/(\d+)/g, '($1/$2)');
+    // Ensure headers have proper spacing
+    processedText = processedText.replace(/^(#{1,6})\s*(.+)$/gm, '$1 $2');
     
-    return text;
+    // Ensure list items have proper spacing
+    processedText = processedText.replace(/^\*\s+/gm, '* ');
+    processedText = processedText.replace(/^\-\s+/gm, '- ');
+    
+    return processedText;
   };
 
   return (
-    <div className={`message-content ${className}`}>
+    <div className={`message-content prose prose-invert max-w-none ${className}`}>
       <ReactMarkdown 
         components={components}
-        className="prose prose-sm max-w-none"
+        className="text-gray-100"
       >
         {preprocessContent(content)}
       </ReactMarkdown>
