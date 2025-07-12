@@ -529,14 +529,19 @@ const TutorComponent = ({ student, onNavigate }) => {
                   <div className="flex-1">
                     <textarea
                       value={currentMessage}
-                      onChange={(e) => setCurrentMessage(e.target.value)}
+                      onChange={(e) => {
+                        console.log('Textarea value changing:', e.target.value);
+                        setCurrentMessage(e.target.value);
+                      }}
                       onKeyPress={handleKeyPress}
                       placeholder={`Input your ${selectedSubjectData?.name.toLowerCase()} query here...`}
-                      className="w-full p-4 bg-slate-800/50 border border-primary/20 rounded-lg focus:ring-2 focus:ring-neon-cyan focus:border-transparent text-white placeholder-slate-400 resize-none backdrop-blur-sm"
+                      className="w-full p-4 bg-slate-800/50 border border-primary/20 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 text-white placeholder-slate-400 resize-none backdrop-blur-sm transition-all duration-200"
                       style={{
-                        backgroundColor: 'rgba(30, 41, 59, 0.8)',
+                        backgroundColor: 'rgba(30, 41, 59, 0.9)',
                         color: '#ffffff',
-                        borderColor: 'rgba(248, 250, 252, 0.2)'
+                        borderColor: 'rgba(248, 250, 252, 0.2)',
+                        fontSize: '14px',
+                        lineHeight: '1.5'
                       }}
                       rows="3"
                       disabled={loading}
