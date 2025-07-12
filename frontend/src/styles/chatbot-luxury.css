@@ -196,14 +196,14 @@
 }
 
 .chatbot-container .session-card-luxury:hover {
-  border-color: var(--premium-gold);
+  border-color: var(--premium-platinum);
   transform: translateY(-1px);
   box-shadow: var(--shadow-elevated);
 }
 
 .chatbot-container .session-card-luxury.active {
-  border-color: var(--premium-gold);
-  background: rgba(212, 175, 55, 0.05);
+  border-color: var(--premium-platinum);
+  background: rgba(229, 229, 229, 0.05);
   box-shadow: var(--shadow-subtle);
 }
 
