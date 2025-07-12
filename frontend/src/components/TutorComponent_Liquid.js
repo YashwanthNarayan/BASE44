@@ -162,6 +162,9 @@ const TutorComponent = ({ student, onNavigate }) => {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+      
+      // Reload sessions to update message count
+      loadChatSessions();
     } catch (error) {
       console.error('Error sending message:', error);
       const errorMessage = {
