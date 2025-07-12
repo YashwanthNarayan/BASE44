@@ -7,6 +7,9 @@ const ProgressComponent = ({ student, onNavigate }) => {
   const [progressData, setProgressData] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [viewingDetails, setViewingDetails] = useState(null);
+  const [detailedResults, setDetailedResults] = useState(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
 
   const subjects = ['all', 'math', 'physics', 'chemistry', 'biology', 'english', 'history', 'geography'];
 
