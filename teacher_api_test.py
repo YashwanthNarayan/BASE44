@@ -238,7 +238,7 @@ class TestTeacherAPIRoutes(unittest.TestCase):
                     class_info = data[0]
                     expected_fields = [
                         "class_id", "class_name", "subject", "description", 
-                        "class_code", "teacher_id", "created_at", 
+                        "join_code", "teacher_id", "created_at", 
                         "student_count", "test_count", "average_score"
                     ]
                     
