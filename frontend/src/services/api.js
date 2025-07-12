@@ -99,17 +99,33 @@ export const practiceAPI = {
 
 // Tutor API
 export const tutorAPI = {
-  startSession: async (subject) => {
-    const response = await axios.post(`${API_BASE}/api/tutor/session`, { subject });
+  createSession: async (data) => {
+    const response = await axios.post(`${API_BASE}/api/tutor/session`, data);
     return response.data;
   },
   
-  sendMessage: async (message, subject, sessionId) => {
-    const response = await axios.post(`${API_BASE}/api/tutor/chat`, {
-      message,
-      subject,
-      session_id: sessionId
-    });
+  sendMessage: async (data) => {
+    const response = await axios.post(`${API_BASE}/api/tutor/chat`, data);
+    return response.data;
+  },
+  
+  getSessions: async () => {
+    const response = await axios.get(`${API_BASE}/api/tutor/sessions`);
+    return response.data;
+  },
+  
+  getSessionMessages: async (sessionId) => {
+    const response = await axios.get(`${API_BASE}/api/tutor/session/${sessionId}/messages`);
+    return response.data;
+  },
+  
+  deleteSession: async (sessionId) => {
+    const response = await axios.delete(`${API_BASE}/api/tutor/session/${sessionId}`);
+    return response.data;
+  },
+  
+  updateSessionTitle: async (sessionId, title) => {
+    const response = await axios.patch(`${API_BASE}/api/tutor/session/${sessionId}/title?title=${encodeURIComponent(title)}`);
     return response.data;
   }
 };
