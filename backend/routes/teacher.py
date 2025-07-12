@@ -13,7 +13,7 @@ class CreateClassRequest(BaseModel):
     class_name: str
     subject: str
     description: Optional[str] = ""
-    class_code: Optional[str] = None
+    join_code: Optional[str] = None
 
 class ClassResponse(BaseModel):
     class_id: str
