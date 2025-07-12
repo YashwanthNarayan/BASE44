@@ -118,19 +118,19 @@ const CalendarComponent = ({ student, onNavigate }) => {
       <div className="quantum-grid fixed inset-0 opacity-30" />
       
       <div className="relative z-10 p-6 max-w-7xl mx-auto">
-        {/* Neural Header */}
+        {/* Header */}
         <div className="text-center mb-8">
           <LiquidButton
             variant="secondary"
             onClick={() => onNavigate('student-dashboard')}
             className="mb-4"
           >
-            ← Neural Dashboard
+            ← Back to Dashboard
           </LiquidButton>
           <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-            📅 Temporal Synchronization Matrix
+            📅 Calendar & Events
           </h1>
-          <p className="text-secondary">Manage your quantum learning schedule and neural events</p>
+          <p className="text-secondary">Manage your schedule and upcoming events</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
