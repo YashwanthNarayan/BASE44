@@ -389,7 +389,7 @@ class TestTeacherAPIRoutes(unittest.TestCase):
             "class_name": "Test Class for Deletion",
             "subject": Subject.BIOLOGY.value,
             "description": "This class will be deleted in the test",
-            "class_code": None
+            "join_code": None
         }
         
         try:
