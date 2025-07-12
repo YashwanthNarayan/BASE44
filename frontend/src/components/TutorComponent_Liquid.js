@@ -492,7 +492,14 @@ const TutorComponent = ({ student, onNavigate }) => {
                           }
                         `}
                       >
-                        <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
+                        {message.role === 'user' ? (
+                          <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
+                        ) : (
+                          <MessageFormatter 
+                            content={message.content} 
+                            className="leading-relaxed"
+                          />
+                        )}
                         <div className={`text-xs mt-3 ${
                           message.role === 'user' ? 'text-neon-cyan/70' : 'text-secondary'
                         }`}>
