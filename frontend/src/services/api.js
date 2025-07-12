@@ -10,15 +10,20 @@ const getApiBaseUrl = () => {
   // Otherwise, determine dynamically based on current URL
   const currentHost = window.location.hostname;
   const currentProtocol = window.location.protocol;
+  const currentOrigin = window.location.origin;
   
   // For localhost development
   if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
     return 'http://localhost:8001';
   }
   
-  // For Emergent platform (or any HTTPS site), use HTTPS backend
+  // For Emergent platform, try the same origin (no port change)
+  if (currentHost.includes('emergentagent.com') || currentHost.includes('preview')) {
+    return currentOrigin; // Same domain, backend is routed via /api prefix
+  }
+  
+  // For HTTPS sites, use HTTPS backend
   if (currentProtocol === 'https:') {
-    // Use the same domain but different port for backend
     return `https://${currentHost}:8001`;
   }
   
