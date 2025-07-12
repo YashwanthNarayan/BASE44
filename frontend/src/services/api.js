@@ -68,6 +68,16 @@ export const teacherAPI = {
   createClass: async (classData) => {
     const response = await axios.post(`${API_BASE}/api/teacher/classes`, classData);
     return response.data;
+  },
+  
+  getClasses: async () => {
+    const response = await axios.get(`${API_BASE}/api/teacher/classes`);
+    return response.data;
+  },
+  
+  deleteClass: async (classId) => {
+    const response = await axios.delete(`${API_BASE}/api/teacher/classes/${classId}`);
+    return response.data;
   }
 };
 
