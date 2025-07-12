@@ -21,8 +21,6 @@ const CalendarComponent = ({ student, onNavigate }) => {
     { value: 'personal', label: 'Personal', icon: '🗓️', color: 'bg-purple-500/20 border-purple-500/40' }
   ];
 
-  const subjects = ['math', 'physics', 'chemistry', 'biology', 'english', 'history', 'geography'];
-
   useEffect(() => {
     loadEvents();
   }, []);
