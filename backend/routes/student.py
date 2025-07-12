@@ -6,6 +6,9 @@ from backend.services.auth_service import auth_service
 
 router = APIRouter(prefix="/api/student", tags=["student"])
 
+# Add dashboard endpoint to main router (not under /student prefix)
+dashboard_router = APIRouter(prefix="/api", tags=["dashboard"])
+
 @router.get("/profile")
 async def get_student_profile(current_user: dict = Depends(get_current_student)):
     """Get student profile"""
