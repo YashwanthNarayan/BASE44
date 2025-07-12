@@ -432,7 +432,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Tutor API Routes Implementation"
     - "Enhanced Tutor Component with Chat History"
   stuck_tasks: []
   test_all: false
@@ -441,6 +440,8 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Implemented comprehensive chatbot enhancement with backend API routes for tutor functionality and frontend chat history management. Need to test backend API endpoints first to ensure they work correctly before testing frontend integration. Key features implemented: chat session creation, message sending with AI responses, chat history retrieval, session deletion, and full chat session management."
+  - agent: "testing"
+    message: "🎯 TUTOR API ROUTES TESTING COMPLETED SUCCESSFULLY! Identified and fixed critical JWT token field mismatch issue. The tutor API routes were accessing current_user['user_id'] but JWT tokens contain user ID in 'sub' field. After fixing this in all 5 endpoints, comprehensive testing confirms all tutor API functionality is working correctly: ✅ Session creation for multiple subjects (math/physics/chemistry), ✅ Message sending with AI responses using Gemini API, ✅ Chat history retrieval with proper sorting, ✅ Session message retrieval with authorization, ✅ Session deletion with cleanup verification, ✅ Proper authentication enforcement, ✅ Error handling for invalid sessions, ✅ AI service integration working, ✅ Database operations with MongoDB collections, ✅ Session management with message count tracking. The backend tutor API is now fully operational and ready for frontend integration. Main agent should focus on frontend tutor component testing next."
   - agent: "testing"
     message: "I've tested the Teacher Analytics API endpoints and found a critical issue affecting multiple endpoints. The problem is a mismatch in data structure - the analytics endpoints are looking for students with a class_id field in their profile, but when students join a class, the class ID is added to a joined_classes array instead. This causes the endpoints to not find any students in the class, resulting in 403 Access Denied errors for the detailed test results and class performance endpoints. The overview endpoint works in terms of returning a 200 response, but it shows empty data due to the same issue. The authorization checks are working correctly - students are properly denied access to teacher endpoints, and teachers can't access other teachers' classes. To fix this issue, the analytics endpoints need to be updated to look for class IDs in the joined_classes array instead of a class_id field."
   - agent: "main"
