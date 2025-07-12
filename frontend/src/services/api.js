@@ -40,7 +40,7 @@ console.log('🔍 API Configuration:', {
   hostname: window.location.hostname
 });
 
-// Setup axios authentication
+// Setup axios authentication and interceptors
 export const setupAxiosAuth = (token) => {
   if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -48,6 +48,19 @@ export const setupAxiosAuth = (token) => {
     delete axios.defaults.headers.common['Authorization'];
   }
 };
+
+// Add response interceptor to handle token expiration
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && error.response?.data?.detail?.includes('expired')) {
+      // Token expired, clear storage and reload page to trigger login
+      localStorage.clear();
+      window.location.reload();
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Auth API
 export const authAPI = {
