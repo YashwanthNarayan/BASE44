@@ -29,6 +29,18 @@
 ##         -comment: "Detailed comment about status"
 ##
 ## frontend:
+  - task: "Enhanced Calendar Component with Click-to-Add Events"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/CalendarComponent_Liquid.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CALENDAR UX ENHANCEMENT: Completely redesigned calendar component to address user feedback about hectic event scheduling. Removed complex modal form and implemented intuitive click-to-add functionality. Key improvements: 1) Click directly on calendar days to add events, 2) Simple inline quick-add form with minimal fields (title, type, time), 3) Visual event type selection with colored buttons, 4) Simplified event types (Study, Assignment, Exam, Personal), 5) Cleaner calendar grid with better day highlighting, 6) Selected day visual indication, 7) Professional header text (removed 'neural' terminology), 8) Better visual separation of events by type with color coding, 9) Quick event creation with Enter key support, 10) Streamlined user experience - no more hectic forms. The calendar now makes full use of the visual calendar grid for intuitive event scheduling."
+
   - task: "Enhanced Tutor Component with Chat History"
     implemented: true
     working: true
