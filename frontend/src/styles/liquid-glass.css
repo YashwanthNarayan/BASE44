@@ -220,6 +220,38 @@
   color: #a5f3fc;
   font-size: 0.75rem;
 }
+
+/* KaTeX math styling */
+.message-content .katex {
+  color: #22d3ee !important;
+  font-size: 1em;
+}
+
+.message-content .katex-display {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.message-content .katex .mord {
+  color: #22d3ee;
+}
+
+.message-content .katex .mop {
+  color: #67e8f9;
+}
+
+.message-content .katex .mbin {
+  color: #a5f3fc;
+}
+
+.message-content .katex .mrel {
+  color: #a5f3fc;
+}
+
+/* Override KaTeX default colors for dark theme */
+.message-content .katex .base {
+  color: #22d3ee;
+}
   
   /* Professional Spacing */
   --space-1: 0.25rem;
