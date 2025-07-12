@@ -218,15 +218,18 @@ user_problem_statement: "Enhance the chatbot to be top quality with chat flow, p
 backend:
   - task: "Tutor API Routes Implementation"
     implemented: true
-    working: false
+    working: true
     file: "backend/routes/tutor.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Implemented comprehensive tutor API routes including: POST /api/tutor/session (create chat session), POST /api/tutor/chat (send message and get AI response), GET /api/tutor/sessions (get chat history), GET /api/tutor/session/{session_id}/messages (get messages for session), DELETE /api/tutor/session/{session_id} (delete chat), and PATCH /api/tutor/session/{session_id}/title (update session title). Integrated with existing AI service and database collections."
+        - working: true
+          agent: "testing"
+          comment: "FIXED AND TESTED: Tutor API routes are now working correctly! Root cause was JWT token field mismatch - the routes were accessing current_user['user_id'] but JWT tokens contain user ID in 'sub' field. Fixed all 5 endpoints to use current_user['sub']. Comprehensive testing confirms: ✅ POST /api/tutor/session - Creates sessions successfully for math/physics/chemistry subjects with proper response structure, ✅ POST /api/tutor/chat - Sends messages and receives AI responses using Gemini API with context building from previous messages, ✅ GET /api/tutor/sessions - Retrieves chat history sorted by last_activity with proper session metadata, ✅ GET /api/tutor/session/{session_id}/messages - Gets session messages with proper authorization and timestamp ordering, ✅ DELETE /api/tutor/session/{session_id} - Deletes sessions and all related messages with proper cleanup verification, ✅ Authentication properly enforced (403 without token), ✅ Error handling works correctly (404 for invalid sessions), ✅ AI service integration working with Gemini API generating contextual responses, ✅ Database operations working with MongoDB chat_sessions and chat_messages collections, ✅ Session management with message count tracking and last_activity updates. All core functionality is operational and ready for frontend integration."
 
 backend:
   - task: "Health Check & API Structure"
