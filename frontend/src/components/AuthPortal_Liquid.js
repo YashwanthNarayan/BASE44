@@ -238,6 +238,19 @@ const AuthPortal = ({ onAuthSuccess }) => {
               </LiquidButton>
             </form>
 
+            {/* Clear Auth Button for Testing */}
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => {
+                  localStorage.clear();
+                  window.location.reload();
+                }}
+                className="text-sm text-white/60 hover:text-white underline"
+              >
+                🔄 Clear Auth & Refresh
+              </button>
+            </div>
+
             {/* Footer */}
             <div className="mt-8 text-center">
               <p className="text-white/60 text-sm">
