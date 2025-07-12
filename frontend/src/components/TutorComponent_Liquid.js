@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { tutorAPI } from '../services/api';
 import { LiquidCard, LiquidButton, LiquidInput } from './ui/LiquidComponents';
+import MessageFormatter from './MessageFormatter';
 import '../styles/liquid-glass.css';
 
 const TutorComponent = ({ student, onNavigate }) => {
