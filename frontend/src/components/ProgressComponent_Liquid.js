@@ -287,7 +287,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
         {/* Detailed Results Modal */}
         {viewingDetails && detailedResults && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-dark-space border border-primary/20 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <div className="bg-dark-space border border-primary/20 rounded-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden">
               <div className="p-6 border-b border-primary/20">
                 <div className="flex items-center justify-between">
                   <h2 className="text-2xl font-bold text-primary">Detailed Test Results</h2>
@@ -296,78 +296,155 @@ const ProgressComponent = ({ student, onNavigate }) => {
                       setViewingDetails(null);
                       setDetailedResults(null);
                     }}
-                    className="text-secondary hover:text-primary transition-colors"
+                    className="text-secondary hover:text-primary transition-colors text-xl"
                   >
                     ✕
                   </button>
                 </div>
-                <div className="flex items-center gap-4 mt-2 text-sm text-secondary">
-                  <span>{detailedResults.subject?.charAt(0).toUpperCase() + detailedResults.subject?.slice(1)} Test</span>
-                  <span>•</span>
-                  <span>{detailedResults.score}% Score</span>
-                  <span>•</span>
-                  <span>{detailedResults.correct_count}/{detailedResults.total_questions} Correct</span>
-                  <span>•</span>
-                  <span>{new Date(detailedResults.completed_at).toLocaleDateString()}</span>
+                
+                {/* Summary Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4 p-4 bg-glass rounded-lg">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-white">{detailedResults.score}%</div>
+                    <div className="text-xs text-secondary">Score</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-400">{detailedResults.correct_count}</div>
+                    <div className="text-xs text-secondary">Correct</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-red-400">{detailedResults.total_questions - detailedResults.correct_count}</div>
+                    <div className="text-xs text-secondary">Incorrect</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-400 capitalize">{detailedResults.subject}</div>
+                    <div className="text-xs text-secondary">Subject</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-400">{new Date(detailedResults.completed_at).toLocaleDateString()}</div>
+                    <div className="text-xs text-secondary">Date</div>
+                  </div>
                 </div>
               </div>
               
-              <div className="overflow-y-auto max-h-[calc(90vh-140px)] p-6">
-                <div className="space-y-4">
+              <div className="overflow-y-auto max-h-[calc(95vh-180px)] p-6">
+                <div className="space-y-6">
                   {detailedResults.detailed_results?.map((result, index) => (
                     <div 
                       key={result.question_id} 
-                      className={`p-4 rounded-lg border ${
+                      className={`p-6 rounded-lg border-l-4 ${
                         result.is_correct 
-                          ? 'border-green-400/30 bg-green-500/5' 
-                          : 'border-red-400/30 bg-red-500/5'
+                          ? 'border-green-400 bg-green-500/5' 
+                          : 'border-red-400 bg-red-500/5'
                       }`}
                     >
                       {/* Question Header */}
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                          result.is_correct 
-                            ? 'bg-green-400 text-green-900' 
-                            : 'bg-red-400 text-red-900'
-                        }`}>
-                          {result.is_correct ? '✓' : '✗'}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                            result.is_correct 
+                              ? 'bg-green-400 text-green-900' 
+                              : 'bg-red-400 text-red-900'
+                          }`}>
+                            {result.is_correct ? '✓' : '✗'}
+                          </div>
+                          <span className="text-lg font-semibold text-white">Question {index + 1}</span>
+                          <span className="text-sm text-white/60 bg-white/10 px-3 py-1 rounded capitalize">
+                            {result.topic}
+                          </span>
                         </div>
-                        <span className="font-semibold text-primary">Question {index + 1}</span>
-                        <span className="text-xs text-secondary bg-white/10 px-2 py-1 rounded capitalize">
-                          {result.topic}
-                        </span>
+                        <div className={`text-sm font-medium px-3 py-1 rounded ${
+                          result.is_correct 
+                            ? 'text-green-400 bg-green-500/20' 
+                            : 'text-red-400 bg-red-500/20'
+                        }`}>
+                          {result.is_correct ? 'Correct' : 'Incorrect'}
+                        </div>
                       </div>
 
                       {/* Question Text */}
-                      <div className="mb-3">
-                        <p className="text-primary text-sm">{result.question_text}</p>
+                      <div className="mb-6">
+                        <h3 className="text-lg text-white mb-4 leading-relaxed">{result.question_text}</h3>
+                        
+                        {/* MCQ Options */}
+                        {result.question_type === 'mcq' && result.options && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                            {result.options.map((option, optIndex) => (
+                              <div 
+                                key={optIndex}
+                                className={`p-4 rounded-lg border text-sm ${
+                                  option === result.correct_answer
+                                    ? 'border-green-400 bg-green-500/10 text-green-300'
+                                    : option === result.student_answer && !result.is_correct
+                                    ? 'border-red-400 bg-red-500/10 text-red-300'
+                                    : 'border-white/20 text-white/70'
+                                }`}
+                              >
+                                <span className="font-medium">{String.fromCharCode(65 + optIndex)}.</span> {option}
+                                {option === result.correct_answer && (
+                                  <span className="ml-2 text-green-400 font-bold">✓ Correct Answer</span>
+                                )}
+                                {option === result.student_answer && !result.is_correct && (
+                                  <span className="ml-2 text-red-400 font-bold">Your Choice</span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
-                      {/* Answers */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 text-sm">
-                        <div>
-                          <span className="text-secondary">Your Answer: </span>
-                          <span className={result.is_correct ? 'text-green-400' : 'text-red-400'}>
-                            {result.student_answer || 'No answer'}
-                          </span>
+                      {/* Answer Comparison */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div className="p-4 bg-white/5 rounded-lg">
+                          <div className="text-sm text-white/60 mb-2">Your Answer:</div>
+                          <div className={`font-medium text-lg ${
+                            result.is_correct ? 'text-green-400' : 'text-red-400'
+                          }`}>
+                            {result.student_answer || 'No answer provided'}
+                          </div>
                         </div>
-                        <div>
-                          <span className="text-secondary">Correct Answer: </span>
-                          <span className="text-green-400">{result.correct_answer}</span>
+                        <div className="p-4 bg-white/5 rounded-lg">
+                          <div className="text-sm text-white/60 mb-2">Correct Answer:</div>
+                          <div className="font-medium text-lg text-green-400">
+                            {result.correct_answer}
+                          </div>
                         </div>
                       </div>
 
                       {/* Explanation */}
-                      <div className="bg-white/5 rounded p-3">
-                        <div className="text-xs text-secondary mb-1">💡 Explanation:</div>
-                        <p className="text-primary/90 text-xs">{result.explanation}</p>
+                      <div className="bg-white/10 rounded-lg p-5">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-xl">💡</span>
+                          <div className="text-sm font-medium text-white/80">Explanation:</div>
+                        </div>
+                        <div className="text-white/90 leading-relaxed">
+                          {result.explanation}
+                        </div>
                       </div>
                     </div>
                   )) || (
-                    <div className="text-center py-8">
-                      <p className="text-secondary">No detailed results available for this test.</p>
+                    <div className="text-center py-12">
+                      <div className="text-6xl mb-4">📊</div>
+                      <h3 className="text-xl font-bold text-primary mb-2">No Detailed Results Available</h3>
+                      <p className="text-secondary">This test was taken before detailed results were implemented.</p>
                     </div>
                   )}
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex justify-center gap-4 mt-8 pt-6 border-t border-primary/20">
+                  <LiquidButton 
+                    onClick={() => {
+                      setViewingDetails(null);
+                      setDetailedResults(null);
+                    }}
+                    variant="secondary"
+                  >
+                    Close
+                  </LiquidButton>
+                  <LiquidButton onClick={() => onNavigate('practice')} variant="primary">
+                    Take Another Test
+                  </LiquidButton>
                 </div>
               </div>
             </div>
