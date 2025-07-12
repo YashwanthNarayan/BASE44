@@ -16,6 +16,9 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
   const [userAnswers, setUserAnswers] = useState({});
   const [showResults, setShowResults] = useState(false);
   const [testStarted, setTestStarted] = useState(false);
+  const [testResults, setTestResults] = useState(null);
+  const [detailedResults, setDetailedResults] = useState([]);
+  const [showDetailedResults, setShowDetailedResults] = useState(false);
 
   const handleTopicToggle = (topic) => {
     setSelectedTopics(prev => 
