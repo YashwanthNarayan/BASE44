@@ -16,8 +16,14 @@ const getApiBaseUrl = () => {
     return 'http://localhost:8001';
   }
   
-  // For any other host, use the same host with port 8001
-  return `${currentProtocol}//${currentHost}:8001`;
+  // For Emergent platform (or any HTTPS site), use HTTPS backend
+  if (currentProtocol === 'https:') {
+    // Use the same domain but different port for backend
+    return `https://${currentHost}:8001`;
+  }
+  
+  // Fallback to HTTP for other cases
+  return `http://${currentHost}:8001`;
 };
 
 const API_BASE = getApiBaseUrl();
