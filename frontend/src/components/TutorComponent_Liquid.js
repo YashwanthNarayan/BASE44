@@ -442,7 +442,7 @@ const TutorComponent = ({ student, onNavigate }) => {
                     >
                       ← Select Domain
                     </LiquidButton>
-                    <div className={`avatar-premium w-14 h-14 rounded-lg bg-premium-gold flex items-center justify-center`}>
+                    <div className={`avatar-premium w-14 h-14 rounded-lg bg-premium-platinum flex items-center justify-center`}>
                       <span className="text-3xl">{selectedSubjectData?.icon}</span>
                     </div>
                     <div>
