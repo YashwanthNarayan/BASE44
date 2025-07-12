@@ -53,14 +53,30 @@ export const setupAxiosAuth = (token) => {
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401 && error.response?.data?.detail?.includes('expired')) {
-      // Token expired, clear storage and reload page to trigger login
-      localStorage.clear();
+    if (error.response?.status === 401) {
+      // Clear all authentication data
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('user_type');
+      localStorage.removeItem('user');
+      
+      // Remove authorization header
+      delete axios.defaults.headers.common['Authorization'];
+      
+      // Show alert and reload page
+      alert('Authentication expired. Please log in again.');
       window.location.reload();
     }
     return Promise.reject(error);
   }
 );
+
+// Function to clear all authentication
+export const clearAuth = () => {
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('user_type');
+  localStorage.removeItem('user');
+  delete axios.defaults.headers.common['Authorization'];
+};
 
 // Auth API
 export const authAPI = {
