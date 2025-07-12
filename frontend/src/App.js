@@ -47,15 +47,26 @@ function App() {
 
       if (token && userType && user) {
         setupAxiosAuth(token);
-        setIsAuthenticated(true);
-        setUserType(userType);
-        setUser(user);
         
-        if (userType === 'student') {
-          await loadDashboardData();
-          setCurrentView('student-dashboard');
-        } else {
-          setCurrentView('teacher-dashboard');
+        // Validate token with backend by making a test API call
+        try {
+          await axios.get(`${import.meta.env.REACT_APP_BACKEND_URL || window.location.origin}/api/dashboard`);
+          
+          // Token is valid, set auth state
+          setIsAuthenticated(true);
+          setUserType(userType);
+          setUser(user);
+          
+          if (userType === 'student') {
+            await loadDashboardData();
+            setCurrentView('student-dashboard');
+          } else {
+            setCurrentView('teacher-dashboard');
+          }
+        } catch (apiError) {
+          // Token is invalid, clear auth
+          console.warn('Token validation failed, clearing auth');
+          handleLogout();
         }
       }
     } catch (error) {
