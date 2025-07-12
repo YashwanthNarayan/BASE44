@@ -202,10 +202,10 @@ const TutorComponent = ({ student, onNavigate }) => {
             >
               ← Neural Dashboard
             </LiquidButton>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-luxury-gold via-neon-cyan to-luxury-platinum bg-clip-text text-transparent mb-4">
-              🤖 Neural Cognitive Enhancement System
+            <h1 className="text-4xl font-bold text-luxury-gold mb-4">
+              AI Learning Assistant
             </h1>
-            <p className="text-luxury-platinum text-lg">Connect with specialized AI tutors for personalized learning protocols</p>
+            <p className="text-luxury-platinum text-lg">Premium educational experience powered by advanced AI</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
