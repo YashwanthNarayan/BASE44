@@ -95,6 +95,17 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
 
   const submitTest = async () => {
     try {
+      // Get token from localStorage and set up axios auth
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        alert('Authentication required. Please log in again.');
+        onNavigate('auth');
+        return;
+      }
+
+      // Ensure axios has the authorization header
+      setupAxiosAuth(token);
+
       await practiceAPI.submit({
         questions: currentQuestions.map(q => q.id),
         student_answers: userAnswers,
@@ -104,7 +115,16 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
       setShowResults(true);
     } catch (error) {
       console.error('Error submitting test:', error);
-      alert('Failed to submit test. Please try again.');
+      
+      // Handle specific error types
+      if (error.response?.status === 401) {
+        alert('Authentication expired. Please log in again.');
+        onNavigate('auth');
+      } else if (error.response?.status === 403) {
+        alert('Access denied. Student account required.');
+      } else {
+        alert(`Failed to submit test: ${error.response?.data?.detail || error.message}`);
+      }
     }
   };
 
