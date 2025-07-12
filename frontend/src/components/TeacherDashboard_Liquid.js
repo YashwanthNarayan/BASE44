@@ -332,35 +332,36 @@ const TeacherDashboard = ({ teacher, onNavigate, onLogout }) => {
         {/* Quick Actions Section */}
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-primary mb-6">Quick Actions</h2>
-                  
-                  <div className="p-4 rounded-lg bg-glass border border-primary/20">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-warning flex items-center justify-center text-sm">
-                        👥
-                      </div>
-                      <div>
-                        <p className="text-primary font-medium">New student joined</p>
-                        <p className="text-sm text-secondary">Maria Garcia joined Chemistry 101</p>
-                      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {quickActions.map((action) => (
+              <LiquidCard
+                key={action.id}
+                className={`
+                  cursor-pointer transition-all duration-300 group hover:scale-105
+                  ${activeQuickAction === action.id ? 'ring-2 ring-neon-cyan' : ''}
+                `}
+                onClick={() => {
+                  setActiveQuickAction(action.id);
+                  setTimeout(() => onNavigate(action.route), 200);
+                }}
+              >
+                <div className={`p-6 bg-gradient-to-br ${action.gradient} h-full`}>
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="text-4xl">{action.icon}</div>
+                    <div>
+                      <h3 className="text-lg font-bold text-primary">{action.title}</h3>
+                      <p className="text-sm text-secondary">{action.description}</p>
                     </div>
                   </div>
                   
-                  <div className="p-4 rounded-lg bg-glass border border-primary/20">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-sm">
-                        🎯
-                      </div>
-                      <div>
-                        <p className="text-primary font-medium">Performance milestone</p>
-                        <p className="text-sm text-secondary">Class average increased by 12%</p>
-                      </div>
-                    </div>
+                  <div className="absolute bottom-0 left-0 right-0 h-px">
+                    <div className="h-full bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
                 </div>
-              </div>
-            </LiquidCard>
+              </LiquidCard>
+            ))}
           </div>
-        )}
+        </div>
 
         {/* Neural Footer */}
         <div className="text-center mt-12">
