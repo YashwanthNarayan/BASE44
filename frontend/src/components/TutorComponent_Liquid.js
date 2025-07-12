@@ -446,8 +446,8 @@ const TutorComponent = ({ student, onNavigate }) => {
                       <span className="text-3xl">{selectedSubjectData?.icon}</span>
                     </div>
                     <div>
-                      <h1 className="text-2xl font-bold text-luxury-gold">{selectedSubjectData?.name} Neural Tutor</h1>
-                      <p className="text-sm text-luxury-platinum">
+                      <h1 className="text-2xl font-bold text-luxury-platinum">{selectedSubjectData?.name} Neural Tutor</h1>
+                      <p className="text-sm text-luxury-silver">
                         {sessionId ? 'Active neural session' : 'Establishing neural link...'}
                       </p>
                     </div>
