@@ -144,8 +144,21 @@ export const practiceAPI = {
   },
   
   getDetailedResults: async (attemptId) => {
-    const response = await axios.get(`${API_BASE}/api/practice/results/${attemptId}`);
-    return response.data;
+    const url = `${API_BASE}/api/practice/results/${attemptId}`;
+    console.log('🔍 Calling detailed results API:', url);
+    try {
+      const response = await axios.get(url);
+      console.log('✅ Detailed results API success');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Detailed results API failed:', {
+        url,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data
+      });
+      throw error;
+    }
   },
   
   getStats: async (subject) => {
