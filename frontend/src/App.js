@@ -214,6 +214,30 @@ function App() {
     );
   }
 
+  if (currentView === 'create-class') {
+    return (
+      <React.Suspense fallback={<LoadingFallback message="Loading Create Class..." />}>
+        <CreateClassComponent teacher={user} onNavigate={navigate} />
+      </React.Suspense>
+    );
+  }
+
+  if (currentView === 'manage-classes') {
+    return (
+      <React.Suspense fallback={<LoadingFallback message="Loading Class Management..." />}>
+        <ManageClassesComponent teacher={user} onNavigate={navigate} />
+      </React.Suspense>
+    );
+  }
+
+  if (currentView === 'assignments') {
+    return (
+      <React.Suspense fallback={<LoadingFallback message="Loading Assignments..." />}>
+        <AssignmentsComponent teacher={user} onNavigate={navigate} />
+      </React.Suspense>
+    );
+  }
+
   // Default fallback
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
