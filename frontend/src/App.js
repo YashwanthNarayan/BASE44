@@ -76,7 +76,6 @@ function App() {
   };
 
   const handleAuthSuccess = (userType, user) => {
-    console.log('handleAuthSuccess called with:', { userType, user });
     setIsAuthenticated(true);
     setUserType(userType);
     setUser(user);
@@ -87,7 +86,6 @@ function App() {
     } else {
       setCurrentView('teacher-dashboard');
     }
-    console.log('Auth success completed, currentView set to:', userType === 'student' ? 'student-dashboard' : 'teacher-dashboard');
   };
 
   const handleLogout = () => {
