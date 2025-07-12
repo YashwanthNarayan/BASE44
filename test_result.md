@@ -43,6 +43,9 @@
         - working: "NA"
           agent: "main" 
           comment: "Fixed textarea visibility issue reported by user - text was white on transparent background. Updated textarea styling with better contrast: background rgba(30, 41, 59, 0.9), white text color, cyan focus borders, and added console logging for debugging input changes. Should now have proper text visibility when typing."
+        - working: "NA"
+          agent: "main"
+          comment: "MAJOR FIX: Enhanced MessageFormatter component to properly handle markdown rendering. User reported markdown formatting issues (headers showing as ###, bold as **, etc.). Updated MessageFormatter with: better ReactMarkdown configuration, improved component styling for headers/lists/code, enhanced preprocessing for markdown syntax, debug logging for troubleshooting, and comprehensive CSS styling for all markdown elements. Should now properly render headers, bold text, code blocks, lists, and all markdown formatting instead of showing raw markdown syntax."
   - task: "Futuristic AuthPortal Design"
     implemented: true
     working: true
