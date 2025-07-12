@@ -35,9 +35,12 @@ async def join_class(
     db = get_database()
     
     try:
+        # Normalize the join code (trim whitespace and convert to uppercase)
+        normalized_join_code = join_request.join_code.strip().upper()
+        
         # Find classroom by join code
         classroom = await db[Collections.CLASSROOMS].find_one({
-            "join_code": join_request.join_code,
+            "join_code": normalized_join_code,
             "active": True  # Note: using 'active' to match teacher routes
         })
         
