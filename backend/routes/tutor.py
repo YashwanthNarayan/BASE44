@@ -206,7 +206,7 @@ async def get_session_messages(
         # Verify session belongs to user
         session = await db[Collections.CHAT_SESSIONS].find_one({
             "id": session_id,
-            "user_id": current_user["user_id"]
+            "user_id": current_user["sub"]
         })
         
         if not session:
