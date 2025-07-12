@@ -6,6 +6,7 @@ import '../styles/liquid-glass.css';
 const TeacherDashboard = ({ teacher, onNavigate, onLogout }) => {
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
+  const [classes, setClasses] = useState([]);
   const [activeQuickAction, setActiveQuickAction] = useState(null);
 
   useEffect(() => {
@@ -14,8 +15,14 @@ const TeacherDashboard = ({ teacher, onNavigate, onLogout }) => {
 
   const loadTeacherDashboard = async () => {
     try {
-      const response = await teacherAPI.getAnalyticsOverview();
-      setDashboardData(response);
+      // Load both analytics and classes data
+      const [analyticsResponse, classesResponse] = await Promise.all([
+        teacherAPI.getAnalyticsOverview(),
+        teacherAPI.getClasses()
+      ]);
+      
+      setDashboardData(analyticsResponse);
+      setClasses(classesResponse);
     } catch (error) {
       console.error('Error loading teacher dashboard:', error);
       setDashboardData({
@@ -28,6 +35,7 @@ const TeacherDashboard = ({ teacher, onNavigate, onLogout }) => {
         class_summary: [],
         subject_distribution: []
       });
+      setClasses([]);
     } finally {
       setLoading(false);
     }
