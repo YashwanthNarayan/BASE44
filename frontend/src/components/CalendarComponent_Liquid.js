@@ -5,21 +5,20 @@ import '../styles/liquid-glass.css';
 
 const CalendarComponent = ({ student, onNavigate }) => {
   const [events, setEvents] = useState([]);
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [newEvent, setNewEvent] = useState({
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [showQuickForm, setShowQuickForm] = useState(false);
+  const [quickEvent, setQuickEvent] = useState({
     title: '',
-    description: '',
     event_type: 'study',
-    subject: '',
-    start_time: '',
-    end_time: ''
+    start_time: '09:00',
+    end_time: '10:00'
   });
 
   const eventTypes = [
-    { value: 'study', label: 'Neural Study Session', icon: '📚', gradient: 'from-blue-500/20 to-cyan-500/20' },
-    { value: 'assignment', label: 'Data Assignment', icon: '📝', gradient: 'from-green-500/20 to-emerald-500/20' },
-    { value: 'exam', label: 'Neural Assessment', icon: '📋', gradient: 'from-red-500/20 to-pink-500/20' },
-    { value: 'personal', label: 'Personal Matrix', icon: '🗓️', gradient: 'from-purple-500/20 to-indigo-500/20' }
+    { value: 'study', label: 'Study Session', icon: '📚', color: 'bg-blue-500/20 border-blue-500/40' },
+    { value: 'assignment', label: 'Assignment', icon: '📝', color: 'bg-green-500/20 border-green-500/40' },
+    { value: 'exam', label: 'Exam', icon: '📋', color: 'bg-red-500/20 border-red-500/40' },
+    { value: 'personal', label: 'Personal', icon: '🗓️', color: 'bg-purple-500/20 border-purple-500/40' }
   ];
 
   const subjects = ['math', 'physics', 'chemistry', 'biology', 'english', 'history', 'geography'];
