@@ -189,7 +189,7 @@ const TutorComponent = ({ student, onNavigate }) => {
 
   if (!selectedSubject) {
     return (
-      <div className="min-h-screen bg-dark-space text-primary relative">
+      <div className="chatbot-container min-h-screen bg-dark-space text-primary relative">
         <div className="quantum-grid fixed inset-0 opacity-40" />
         
         {/* Floating Particles */}
