@@ -144,6 +144,8 @@ const MessageFormatter = ({ content, className = "" }) => {
   const preprocessContent = (text) => {
     if (!text) return '';
     
+    console.log('Before preprocessing:', text);
+    
     // Ensure proper line endings for markdown
     let processedText = text.trim();
     
@@ -156,6 +158,8 @@ const MessageFormatter = ({ content, className = "" }) => {
     // Ensure list items have proper spacing
     processedText = processedText.replace(/^\*\s+/gm, '* ');
     processedText = processedText.replace(/^\-\s+/gm, '- ');
+    
+    console.log('After preprocessing:', processedText);
     
     return processedText;
   };
