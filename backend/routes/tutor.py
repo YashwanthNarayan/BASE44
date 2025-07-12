@@ -173,7 +173,7 @@ async def get_chat_sessions(
         db = get_database()
         
         sessions = await db[Collections.CHAT_SESSIONS].find({
-            "user_id": current_user["user_id"]
+            "user_id": current_user["sub"]
         }).sort("last_activity", -1).to_list(length=100)
         
         result = []
