@@ -294,7 +294,7 @@ const TutorComponent = ({ student, onNavigate }) => {
                       <div
                         key={subject.value}
                         onClick={() => setSelectedSubject(subject.value)}
-                        className="relative p-8 rounded-lg border transition-all duration-300 cursor-pointer bg-premium-surface border-premium-border hover:border-premium-gold hover:scale-105 transform group"
+                        className="relative p-8 rounded-lg border transition-all duration-300 cursor-pointer bg-premium-surface border-premium-border hover:border-premium-platinum hover:scale-105 transform group"
                       >
                         <div className="relative z-10 text-center">
                           <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">
