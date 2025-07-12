@@ -209,9 +209,11 @@ async def get_practice_results(
                 "id": attempt["id"],
                 "subject": attempt["subject"],
                 "score": attempt["score"],
+                "correct_count": attempt.get("correct_count", 0),
                 "total_questions": attempt["total_questions"],
                 "difficulty": attempt["difficulty"],
                 "completed_at": attempt["completed_at"],
+                "time_taken": attempt.get("time_taken", 0),
                 "grade": ScoreUtils.get_grade_from_percentage(attempt["score"])
             })
         
