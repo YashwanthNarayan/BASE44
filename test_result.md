@@ -429,14 +429,15 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Professional UI Transformation"
+    - "Tutor API Routes Implementation"
+    - "Enhanced Tutor Component with Chat History"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
-    message: "I've implemented enhanced Teacher Analytics API endpoints including detailed test results with question-level analysis, class performance analysis, and improved overview analytics. Please test these endpoints thoroughly, especially the filtering options and data quality."
+    message: "Implemented comprehensive chatbot enhancement with backend API routes for tutor functionality and frontend chat history management. Need to test backend API endpoints first to ensure they work correctly before testing frontend integration. Key features implemented: chat session creation, message sending with AI responses, chat history retrieval, session deletion, and full chat session management."
   - agent: "testing"
     message: "I've tested the Teacher Analytics API endpoints and found a critical issue affecting multiple endpoints. The problem is a mismatch in data structure - the analytics endpoints are looking for students with a class_id field in their profile, but when students join a class, the class ID is added to a joined_classes array instead. This causes the endpoints to not find any students in the class, resulting in 403 Access Denied errors for the detailed test results and class performance endpoints. The overview endpoint works in terms of returning a 200 response, but it shows empty data due to the same issue. The authorization checks are working correctly - students are properly denied access to teacher endpoints, and teachers can't access other teachers' classes. To fix this issue, the analytics endpoints need to be updated to look for class IDs in the joined_classes array instead of a class_id field."
   - agent: "main"
