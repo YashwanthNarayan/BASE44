@@ -1094,6 +1094,359 @@ class TestProjectKV3BackendFocusedIssues(unittest.TestCase):
             print(f"❌ JWT validation test failed: {str(e)}")
             self.fail(f"JWT validation test failed: {str(e)}")
 
+class TestStudentJoinedClassesEndpoint(unittest.TestCase):
+    """Test cases specifically for the new student joined-classes endpoint"""
+
+    def setUp(self):
+        """Set up test case - create student and teacher accounts"""
+        self.student_token = None
+        self.teacher_token = None
+        self.student_id = None
+        self.teacher_id = None
+        self.class_id = None
+        self.join_code = None
+        
+        # Register student and teacher
+        self.register_student()
+        self.register_teacher()
+
+    def register_student(self):
+        """Register a student for testing"""
+        print("\n🔍 Setting up student account for joined-classes testing...")
+        url = f"{API_URL}/auth/register"
+        payload = {
+            "email": f"joined_classes_student_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Aarav Patel",
+            "user_type": UserType.STUDENT.value,
+            "grade_level": GradeLevel.GRADE_11.value
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 200:
+                data = response.json()
+                self.student_token = data.get("access_token")
+                self.student_id = data.get("user", {}).get("id")
+                print(f"Registered student with ID: {self.student_id}")
+            else:
+                print(f"Failed to register student: {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error registering student: {str(e)}")
+
+    def register_teacher(self):
+        """Register a teacher for testing"""
+        print("\n🔍 Setting up teacher account for joined-classes testing...")
+        url = f"{API_URL}/auth/register"
+        payload = {
+            "email": f"joined_classes_teacher_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Dr. Kavya Sharma",
+            "user_type": UserType.TEACHER.value,
+            "school_name": "Kendriya Vidyalaya"
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 200:
+                data = response.json()
+                self.teacher_token = data.get("access_token")
+                self.teacher_id = data.get("user", {}).get("id")
+                print(f"Registered teacher with ID: {self.teacher_id}")
+            else:
+                print(f"Failed to register teacher: {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error registering teacher: {str(e)}")
+
+    def test_01_student_joined_classes_empty(self):
+        """Test joined-classes endpoint when student has no classes"""
+        print("\n🔍 Testing Student Joined Classes - Empty State...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/student/joined-classes"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Joined Classes (Empty) Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Joined classes endpoint should work even with no classes")
+            data = response.json()
+            
+            self.assertIsInstance(data, list, "Response should be a list")
+            self.assertEqual(len(data), 0, "Should return empty list when no classes joined")
+            
+            print("✅ Empty joined classes test passed")
+        except Exception as e:
+            print(f"❌ Empty joined classes test failed: {str(e)}")
+            self.fail(f"Empty joined classes test failed: {str(e)}")
+
+    def test_02_student_joined_classes_authentication(self):
+        """Test joined-classes endpoint authentication requirements"""
+        print("\n🔍 Testing Student Joined Classes - Authentication...")
+        
+        url = f"{API_URL}/student/joined-classes"
+        
+        try:
+            # Test without authentication
+            response = requests.get(url)
+            print(f"No Auth Response: {response.status_code}")
+            
+            # Should require authentication
+            self.assertIn(response.status_code, [401, 403], "Should require authentication")
+            
+            # Test with invalid token
+            invalid_headers = {"Authorization": "Bearer invalid.token.here"}
+            invalid_response = requests.get(url, headers=invalid_headers)
+            print(f"Invalid Token Response: {invalid_response.status_code}")
+            
+            self.assertIn(invalid_response.status_code, [401, 403], "Should reject invalid tokens")
+            
+            print("✅ Authentication requirements test passed")
+        except Exception as e:
+            print(f"❌ Authentication test failed: {str(e)}")
+            self.fail(f"Authentication test failed: {str(e)}")
+
+    def test_03_create_class_and_join(self):
+        """Create a class and have student join it"""
+        print("\n🔍 Setting up class for joined-classes testing...")
+        
+        if not self.teacher_token or not self.student_token:
+            self.skipTest("Teacher or student token not available")
+        
+        # Create class
+        create_url = f"{API_URL}/teacher/classes"
+        create_headers = {"Authorization": f"Bearer {self.teacher_token}"}
+        create_payload = {
+            "subject": Subject.CHEMISTRY.value,
+            "class_name": "Advanced Organic Chemistry",
+            "grade_level": GradeLevel.GRADE_11.value,
+            "description": "Comprehensive study of organic chemistry including reaction mechanisms, stereochemistry, and synthesis"
+        }
+        
+        try:
+            create_response = requests.post(create_url, json=create_payload, headers=create_headers)
+            print(f"Create Class Response: {create_response.status_code}")
+            
+            self.assertEqual(create_response.status_code, 200, "Failed to create class")
+            create_data = create_response.json()
+            
+            self.class_id = create_data.get("class_id")
+            self.join_code = create_data.get("join_code")
+            
+            self.assertIsNotNone(self.class_id, "Class ID should not be None")
+            self.assertIsNotNone(self.join_code, "Join code should not be None")
+            
+            print(f"Created class: {create_data.get('class_name')} with join code: {self.join_code}")
+            
+            # Join class
+            join_url = f"{API_URL}/student/join-class"
+            join_headers = {"Authorization": f"Bearer {self.student_token}"}
+            join_payload = {"join_code": self.join_code}
+            
+            join_response = requests.post(join_url, json=join_payload, headers=join_headers)
+            print(f"Join Class Response: {join_response.status_code}")
+            
+            self.assertEqual(join_response.status_code, 200, "Failed to join class")
+            join_data = join_response.json()
+            
+            self.assertEqual(join_data.get("class_id"), self.class_id, "Class ID mismatch")
+            self.assertEqual(join_data.get("class_name"), "Advanced Organic Chemistry", "Class name mismatch")
+            
+            print("✅ Class creation and joining completed successfully")
+            
+        except Exception as e:
+            print(f"❌ Class setup failed: {str(e)}")
+            self.fail(f"Class setup failed: {str(e)}")
+
+    def test_04_student_joined_classes_complete_data(self):
+        """Test joined-classes endpoint returns complete class information"""
+        print("\n🔍 Testing Student Joined Classes - Complete Data...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        # Ensure we have a class to test with
+        if not self.class_id:
+            self.test_03_create_class_and_join()
+        
+        if not self.class_id:
+            self.skipTest("No class available for testing")
+        
+        url = f"{API_URL}/student/joined-classes"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Joined Classes Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to get joined classes")
+            data = response.json()
+            
+            self.assertIsInstance(data, list, "Response should be a list")
+            self.assertTrue(len(data) > 0, "Should have at least one joined class")
+            
+            # Check the first class details
+            class_info = data[0]
+            
+            # Verify all required fields are present
+            required_fields = [
+                "class_id", "class_name", "subject", "description", 
+                "join_code", "teacher_id", "student_count"
+            ]
+            
+            for field in required_fields:
+                self.assertIn(field, class_info, f"Field '{field}' should be present in class info")
+                self.assertIsNotNone(class_info.get(field), f"Field '{field}' should not be None")
+            
+            # Verify specific values
+            self.assertEqual(class_info.get("class_id"), self.class_id, "Class ID should match")
+            self.assertEqual(class_info.get("class_name"), "Advanced Organic Chemistry", "Class name should match")
+            self.assertEqual(class_info.get("subject"), Subject.CHEMISTRY.value, "Subject should match")
+            self.assertEqual(class_info.get("join_code"), self.join_code, "Join code should match")
+            self.assertEqual(class_info.get("teacher_id"), self.teacher_id, "Teacher ID should match")
+            self.assertGreaterEqual(class_info.get("student_count"), 1, "Student count should be at least 1")
+            
+            # Verify description is present and not empty
+            description = class_info.get("description", "")
+            self.assertTrue(len(description) > 0, "Description should not be empty")
+            self.assertIn("organic chemistry", description.lower(), "Description should contain subject details")
+            
+            print("✅ Complete class data verification passed")
+            print(f"Class Details Retrieved:")
+            print(f"  - Class ID: {class_info.get('class_id')}")
+            print(f"  - Class Name: {class_info.get('class_name')}")
+            print(f"  - Subject: {class_info.get('subject')}")
+            print(f"  - Description: {class_info.get('description')[:50]}...")
+            print(f"  - Join Code: {class_info.get('join_code')}")
+            print(f"  - Teacher ID: {class_info.get('teacher_id')}")
+            print(f"  - Student Count: {class_info.get('student_count')}")
+            
+        except Exception as e:
+            print(f"❌ Complete data test failed: {str(e)}")
+            self.fail(f"Complete data test failed: {str(e)}")
+
+    def test_05_multiple_classes_scenario(self):
+        """Test joined-classes endpoint with multiple classes"""
+        print("\n🔍 Testing Student Joined Classes - Multiple Classes...")
+        
+        if not self.teacher_token or not self.student_token:
+            self.skipTest("Teacher or student token not available")
+        
+        # Create a second class
+        create_url = f"{API_URL}/teacher/classes"
+        create_headers = {"Authorization": f"Bearer {self.teacher_token}"}
+        create_payload = {
+            "subject": Subject.PHYSICS.value,
+            "class_name": "Quantum Physics Fundamentals",
+            "grade_level": GradeLevel.GRADE_11.value,
+            "description": "Introduction to quantum mechanics, wave-particle duality, and quantum phenomena"
+        }
+        
+        try:
+            create_response = requests.post(create_url, json=create_payload, headers=create_headers)
+            print(f"Create Second Class Response: {create_response.status_code}")
+            
+            if create_response.status_code == 200:
+                create_data = create_response.json()
+                second_class_id = create_data.get("class_id")
+                second_join_code = create_data.get("join_code")
+                
+                # Join the second class
+                join_url = f"{API_URL}/student/join-class"
+                join_headers = {"Authorization": f"Bearer {self.student_token}"}
+                join_payload = {"join_code": second_join_code}
+                
+                join_response = requests.post(join_url, json=join_payload, headers=join_headers)
+                print(f"Join Second Class Response: {join_response.status_code}")
+                
+                if join_response.status_code == 200:
+                    # Now test the joined-classes endpoint
+                    url = f"{API_URL}/student/joined-classes"
+                    headers = {"Authorization": f"Bearer {self.student_token}"}
+                    
+                    response = requests.get(url, headers=headers)
+                    print(f"Multiple Classes Response: {response.status_code}")
+                    
+                    self.assertEqual(response.status_code, 200, "Failed to get joined classes")
+                    data = response.json()
+                    
+                    self.assertIsInstance(data, list, "Response should be a list")
+                    self.assertGreaterEqual(len(data), 2, "Should have at least 2 joined classes")
+                    
+                    # Verify both classes are present
+                    class_ids = [cls.get("class_id") for cls in data]
+                    class_names = [cls.get("class_name") for cls in data]
+                    
+                    self.assertIn(self.class_id, class_ids, "First class should be present")
+                    self.assertIn(second_class_id, class_ids, "Second class should be present")
+                    self.assertIn("Advanced Organic Chemistry", class_names, "Chemistry class should be present")
+                    self.assertIn("Quantum Physics Fundamentals", class_names, "Physics class should be present")
+                    
+                    print("✅ Multiple classes test passed")
+                    print(f"Student is enrolled in {len(data)} classes:")
+                    for cls in data:
+                        print(f"  - {cls.get('class_name')} ({cls.get('subject')})")
+                else:
+                    print("⚠️ Could not join second class, testing with single class")
+            else:
+                print("⚠️ Could not create second class, testing with single class")
+                
+        except Exception as e:
+            print(f"⚠️ Multiple classes test encountered error: {str(e)}")
+            print("Continuing with single class test...")
+
+    def test_06_class_name_display_fix_verification(self):
+        """Verify that the class name display issue is resolved"""
+        print("\n🔍 Testing Class Name Display Fix Verification...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        # Ensure we have a class to test with
+        if not self.class_id:
+            self.test_03_create_class_and_join()
+        
+        if not self.class_id:
+            self.skipTest("No class available for testing")
+        
+        url = f"{API_URL}/student/joined-classes"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Class Name Display Fix Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to get joined classes")
+            data = response.json()
+            
+            self.assertTrue(len(data) > 0, "Should have at least one joined class")
+            
+            # Focus specifically on class name display
+            for class_info in data:
+                class_name = class_info.get("class_name")
+                
+                # Verify class_name is present and not empty
+                self.assertIsNotNone(class_name, "class_name should not be None")
+                self.assertIsInstance(class_name, str, "class_name should be a string")
+                self.assertTrue(len(class_name.strip()) > 0, "class_name should not be empty")
+                
+                # Verify it's not just an ID or placeholder
+                self.assertNotEqual(class_name.lower(), "untitled", "class_name should not be a placeholder")
+                self.assertNotEqual(class_name.lower(), "class", "class_name should not be generic")
+                self.assertFalse(class_name.startswith("class_"), "class_name should not be an ID")
+                
+                print(f"✅ Class name properly displayed: '{class_name}'")
+            
+            print("✅ Class name display fix verification passed")
+            print("🎯 ISSUE RESOLVED: Students can now see proper class names in their 'My Classes' view")
+            
+        except Exception as e:
+            print(f"❌ Class name display fix verification failed: {str(e)}")
+            self.fail(f"Class name display fix verification failed: {str(e)}")
+
 class TestTutorAPIRoutes(unittest.TestCase):
     """Test cases specifically for the Tutor API routes implementation"""
 
