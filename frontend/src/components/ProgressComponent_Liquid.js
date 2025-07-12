@@ -234,17 +234,6 @@ const ProgressComponent = ({ student, onNavigate }) => {
                                 {loadingDetails && viewingDetails === test.id ? 'Loading...' : 'Click for Details →'}
                               </div>
                             )}
-                            {/* Debug test button */}
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                console.log('🧪 Debug button clicked for test:', test);
-                                loadDetailedResults(test.id);
-                              }}
-                              className="px-2 py-1 bg-blue-600 text-white text-xs rounded"
-                            >
-                              🧪 TEST
-                            </button>
                           </div>
                         </div>
                         
