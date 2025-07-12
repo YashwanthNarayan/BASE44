@@ -99,9 +99,10 @@
 
 /* Simple Premium Avatar */
 .chatbot-container .avatar-premium {
-  background: var(--premium-gold);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: var(--premium-platinum);
+  border: 1px solid rgba(229, 229, 229, 0.3);
   box-shadow: var(--shadow-subtle);
+  color: var(--premium-dark);
 }
 
 /* Remove glow animation */
