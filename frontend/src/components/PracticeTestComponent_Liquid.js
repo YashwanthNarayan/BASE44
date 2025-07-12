@@ -109,12 +109,14 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
       // Ensure axios has the authorization header
       setupAxiosAuth(token);
 
-      await practiceAPI.submit({
+      const results = await practiceAPI.submit({
         questions: currentQuestions.map(q => q.id),
         student_answers: userAnswers,
         time_taken: 300 // placeholder
       });
 
+      setTestResults(results);
+      setDetailedResults(results.detailed_results || []);
       setShowResults(true);
     } catch (error) {
       console.error('Error submitting test:', error);
