@@ -342,17 +342,24 @@ const TutorComponent = ({ student, onNavigate }) => {
                   </button>
                 </div>
                 
-                <button
-                  onClick={() => {
-                    setMessages([]);
-                    setSessionId('');
-                    setSelectedSessionId('');
-                    setSelectedSubject('');
-                  }}
-                  className="w-full btn-new-session"
-                >
-                  ⚡ New Neural Session
-                </button>
+                <div className="space-y-4">
+                  <button
+                    onClick={() => {
+                      setMessages([]);
+                      setSessionId('');
+                      setSelectedSessionId('');
+                      setSelectedSubject('');
+                    }}
+                    className="w-full btn-new-session"
+                  >
+                    ⚡ New Neural Session
+                  </button>
+                  
+                  <div className="text-center">
+                    <div className="w-full h-px bg-gradient-to-r from-transparent via-premium-border to-transparent my-4"></div>
+                    <p className="text-xs text-luxury-platinum/60 uppercase tracking-wider">Previous Sessions</p>
+                  </div>
+                </div>
               </div>
               
               <div className="flex-1 p-6 overflow-y-auto">
