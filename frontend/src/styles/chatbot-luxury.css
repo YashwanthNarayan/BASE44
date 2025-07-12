@@ -213,12 +213,16 @@
 }
 
 /* Simple Text Colors */
-.chatbot-container .text-luxury-gold { 
-  color: var(--premium-gold); 
+.chatbot-container .text-luxury-platinum { 
+  color: var(--premium-platinum); 
 }
 
-.chatbot-container .text-luxury-platinum { 
-  color: var(--premium-text-secondary); 
+.chatbot-container .text-luxury-silver { 
+  color: var(--premium-silver); 
+}
+
+.chatbot-container .text-luxury-graphite { 
+  color: var(--premium-graphite); 
 }
 
 .chatbot-container .text-professional-blue { 
