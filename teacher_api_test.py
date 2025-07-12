@@ -459,10 +459,10 @@ class TestTeacherAPIRoutes(unittest.TestCase):
                 data = response.json()
                 class_code = data.get("join_code")
                 self.assertIsNotNone(class_code, "Join code should be generated")
-                self.assertTrue(len(class_code) >= 6, "Class code should be at least 6 characters")
+                self.assertTrue(len(class_code) >= 6, "Join code should be at least 6 characters")
                 
                 # Check uniqueness
-                self.assertNotIn(class_code, generated_codes, "Class codes should be unique")
+                self.assertNotIn(class_code, generated_codes, "Join codes should be unique")
                 generated_codes.append(class_code)
                 
                 print(f"✅ Generated unique class code: {class_code}")
