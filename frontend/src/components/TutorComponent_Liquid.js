@@ -349,7 +349,7 @@ const TutorComponent = ({ student, onNavigate }) => {
                     setSelectedSessionId('');
                     setSelectedSubject('');
                   }}
-                  className="w-full btn-holographic"
+                  className="w-full btn-new-session"
                 >
                   ⚡ New Neural Session
                 </button>
