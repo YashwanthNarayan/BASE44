@@ -239,26 +239,33 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
                       key={index}
                       onClick={() => handleAnswerSubmit(currentQuestion.id, option)}
                       className={`
-                        w-full text-left p-6 rounded-2xl transition-all duration-300
+                        w-full text-left p-6 rounded-2xl transition-all duration-300 relative
                         ${userAnswers[currentQuestion.id] === option
-                          ? 'glass-strong border-white/40 text-white scale-105'
-                          : 'glass border-white/20 text-white/80 hover:glass-strong hover:scale-102'
+                          ? 'glass-strong border-2 border-green-400 text-white scale-102 bg-green-400/10 ring-2 ring-green-400/30'
+                          : 'glass border-white/20 text-white/80 hover:glass-strong hover:scale-101 hover:border-white/40'
                         }
                       `}
                     >
+                      {userAnswers[currentQuestion.id] === option && (
+                        <div className="absolute -top-2 -right-2 w-8 h-8 bg-green-400 rounded-full flex items-center justify-center">
+                          <span className="text-black font-bold">✓</span>
+                        </div>
+                      )}
                       <div className="flex items-center gap-4">
                         <div className={`
-                          w-6 h-6 rounded-full border-2 flex items-center justify-center
+                          w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-300
                           ${userAnswers[currentQuestion.id] === option
-                            ? 'border-white bg-white/20'
-                            : 'border-white/40'
+                            ? 'border-green-400 bg-green-400 scale-110'
+                            : 'border-white/40 hover:border-white/60'
                           }
                         `}>
                           {userAnswers[currentQuestion.id] === option && (
                             <div className="w-3 h-3 rounded-full bg-white" />
                           )}
                         </div>
-                        <span className="text-lg">{option}</span>
+                        <span className={`text-lg ${userAnswers[currentQuestion.id] === option ? 'font-semibold' : ''}`}>
+                          {String.fromCharCode(65 + index)}. {option}
+                        </span>
                       </div>
                     </button>
                   ))}
