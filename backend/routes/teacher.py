@@ -87,7 +87,7 @@ async def create_class(
         return {
             "message": "Class created successfully",
             "class_id": class_id,
-            "class_code": class_data.class_code
+            "join_code": class_data.join_code
         }
         
     except HTTPException:
