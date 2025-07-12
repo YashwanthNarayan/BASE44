@@ -41,6 +41,17 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
 
     setIsGenerating(true);
     try {
+      // Get token from localStorage and set up axios auth
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        alert('Authentication required. Please log in again.');
+        onNavigate('auth');
+        return;
+      }
+
+      // Ensure axios has the authorization header
+      setupAxiosAuth(token);
+
       const response = await practiceAPI.generate({
         subject: selectedSubject,
         topics: selectedTopics,
@@ -55,7 +66,16 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
       setTestStarted(true);
     } catch (error) {
       console.error('Error generating practice test:', error);
-      alert('Failed to generate practice test. Please try again.');
+      
+      // Handle specific error types
+      if (error.response?.status === 401) {
+        alert('Authentication expired. Please log in again.');
+        onNavigate('auth');
+      } else if (error.response?.status === 403) {
+        alert('Access denied. Student account required.');
+      } else {
+        alert(`Failed to generate practice test: ${error.response?.data?.detail || error.message}`);
+      }
     } finally {
       setIsGenerating(false);
     }
