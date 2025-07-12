@@ -122,7 +122,7 @@ const ClassesComponent = ({ student, onNavigate }) => {
                   type="text"
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value)}
-                  placeholder="Enter neural access code"
+                  placeholder="Enter class code (e.g., ABC123)"
                   className="w-full"
                   onKeyPress={(e) => e.key === 'Enter' && joinClass()}
                 />
@@ -135,15 +135,15 @@ const ClassesComponent = ({ student, onNavigate }) => {
                 {joining ? (
                   <>
                     <div className="quantum-loader w-4 h-4 mr-2" />
-                    Establishing Link...
+                    Joining...
                   </>
                 ) : (
-                  '⚡ Establish Connection'
+                  '⚡ Join Class'
                 )}
               </LiquidButton>
             </div>
             <p className="text-sm text-secondary mt-3">
-              Request neural access code from your cognitive enhancement instructor to establish class connection.
+              Enter the class code provided by your teacher. Case doesn't matter and spaces will be automatically removed.
             </p>
           </div>
         </LiquidCard>
