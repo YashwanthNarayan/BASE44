@@ -483,6 +483,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Teacher Dashboard Navigation Issues Fixed"
     - "Enhanced Calendar Component with Click-to-Add Events"
     - "Enhanced Tutor Component with Chat History"
   stuck_tasks: []
