@@ -86,8 +86,14 @@ const CalendarComponent = ({ student, onNavigate }) => {
 
   const getEventsForDate = (date) => {
     return events.filter(event => {
-      const eventDate = new Date(event.start_time).toISOString().split('T')[0];
-      return eventDate === date;
+      // Use local date comparison to avoid timezone issues
+      const eventDate = new Date(event.start_time);
+      const eventYear = eventDate.getFullYear();
+      const eventMonth = String(eventDate.getMonth() + 1).padStart(2, '0');
+      const eventDay = String(eventDate.getDate()).padStart(2, '0');
+      const eventDateStr = `${eventYear}-${eventMonth}-${eventDay}`;
+      
+      return eventDateStr === date;
     });
   };
 
