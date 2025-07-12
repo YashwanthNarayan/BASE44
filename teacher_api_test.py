@@ -179,24 +179,24 @@ class TestTeacherAPIRoutes(unittest.TestCase):
                     # Verify response structure
                     self.assertIn("message", data, "Message should be present")
                     self.assertIn("class_id", data, "Class ID should be present")
-                    self.assertIn("class_code", data, "Class code should be present")
+                    self.assertIn("join_code", data, "Join code should be present")
                     
                     # Verify data values
                     self.assertIsNotNone(data.get("class_id"), "Class ID should not be None")
-                    self.assertIsNotNone(data.get("class_code"), "Class code should not be None")
+                    self.assertIsNotNone(data.get("join_code"), "Join code should not be None")
                     
                     # Store first class for further tests
                     if i == 0:
                         self.class_id = data.get("class_id")
-                        self.class_code = data.get("class_code")
+                        self.class_code = data.get("join_code")
                     
                     created_classes.append({
                         "class_id": data.get("class_id"),
-                        "class_code": data.get("class_code"),
+                        "join_code": data.get("join_code"),
                         "class_name": class_data["class_name"]
                     })
                     
-                    print(f"✅ Successfully created class: {data.get('class_id')} with code: {data.get('class_code')}")
+                    print(f"✅ Successfully created class: {data.get('class_id')} with code: {data.get('join_code')}")
                 else:
                     print(f"❌ Failed to create class: {response.status_code} - {response.text}")
                     self.fail(f"Failed to create class: {response.status_code}")
