@@ -343,52 +343,60 @@ const TutorComponent = ({ student, onNavigate }) => {
   const selectedSubjectData = subjects.find(s => s.value === selectedSubject);
 
   return (
-    <div className="min-h-screen bg-dark-space text-primary">
-      <div className="quantum-grid fixed inset-0 opacity-30" />
+    <div className="min-h-screen bg-dark-space text-primary relative">
+      <div className="quantum-grid fixed inset-0 opacity-40" />
+      
+      {/* Floating Particles */}
+      <div className="floating-particles">
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+      </div>
       
       <div className="relative z-10 p-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-3rem)]">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 h-[calc(100vh-3rem)]">
           
-          {/* Chat History Sidebar */}
+          {/* Enhanced Chat History Sidebar */}
           <div className={`lg:col-span-1 ${showSidebar ? 'block' : 'hidden lg:block'}`}>
-            <LiquidCard className="h-full flex flex-col">
-              <div className="p-4 border-b border-primary/20">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold text-primary">Neural Sessions</h2>
+            <div className="liquid-card-premium h-full flex flex-col">
+              <div className="p-6 border-b border-luxury-gold/20">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-bold text-luxury-gold">Neural Sessions</h2>
                   <button
                     onClick={() => setShowSidebar(!showSidebar)}
-                    className="lg:hidden text-secondary hover:text-primary"
+                    className="lg:hidden text-luxury-platinum hover:text-luxury-gold transition-colors"
                   >
                     ✕
                   </button>
                 </div>
                 
-                <LiquidButton
+                <button
                   onClick={() => {
                     setMessages([]);
                     setSessionId('');
                     setSelectedSessionId('');
                     setSelectedSubject('');
                   }}
-                  className="w-full"
-                  variant="primary"
+                  className="w-full btn-holographic"
                 >
                   ⚡ New Neural Session
-                </LiquidButton>
+                </button>
               </div>
               
-              <div className="flex-1 p-4 overflow-y-auto">
+              <div className="flex-1 p-6 overflow-y-auto">
                 {loadingHistory ? (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {[...Array(4)].map((_, i) => (
-                      <div key={i} className="bg-glass rounded-lg p-3 animate-pulse">
-                        <div className="h-4 bg-primary/20 rounded mb-2"></div>
-                        <div className="h-3 bg-secondary/20 rounded w-2/3"></div>
+                      <div key={i} className="session-card-luxury p-4 animate-pulse">
+                        <div className="h-4 bg-luxury-gold/20 rounded mb-2"></div>
+                        <div className="h-3 bg-luxury-platinum/20 rounded w-2/3"></div>
                       </div>
                     ))}
                   </div>
                 ) : chatSessions.length > 0 ? (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {chatSessions.map(session => (
                       <div
                         key={session.session_id}
@@ -397,30 +405,30 @@ const TutorComponent = ({ student, onNavigate }) => {
                           loadSessionMessages(session.session_id);
                         }}
                         className={`
-                          bg-glass hover:bg-glass-hover border rounded-lg p-3 cursor-pointer transition-all duration-200 group
-                          ${selectedSessionId === session.session_id ? 'border-neon-cyan/50 bg-neon-cyan/10' : 'border-primary/20'}
+                          session-card-luxury p-4 cursor-pointer transition-all duration-300 group
+                          ${selectedSessionId === session.session_id ? 'active' : ''}
                         `}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <span className="text-lg">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <span className="text-2xl">
                                 {subjects.find(s => s.value === session.subject)?.icon || '🤖'}
                               </span>
-                              <h3 className="text-sm font-medium text-primary truncate">
+                              <h3 className="text-sm font-semibold text-luxury-gold truncate">
                                 {session.subject.charAt(0).toUpperCase() + session.subject.slice(1)}
                               </h3>
                             </div>
-                            <p className="text-xs text-secondary">
+                            <p className="text-xs text-luxury-platinum">
                               {getSessionPreview(session)}
                             </p>
-                            <p className="text-xs text-secondary/70 mt-1">
+                            <p className="text-xs text-luxury-platinum/70 mt-1">
                               {new Date(session.last_activity).toLocaleDateString()}
                             </p>
                           </div>
                           <button
                             onClick={(e) => deleteSession(session.session_id, e)}
-                            className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all duration-200 p-1"
+                            className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all duration-200 p-1 text-lg"
                           >
                             🗑️
                           </button>
@@ -429,26 +437,26 @@ const TutorComponent = ({ student, onNavigate }) => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <div className="text-4xl mb-4">💭</div>
-                    <p className="text-secondary">No previous neural sessions</p>
-                    <p className="text-xs text-secondary/70 mt-1">Create your first cognitive enhancement session</p>
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-6">💭</div>
+                    <p className="text-luxury-platinum text-lg">No previous neural sessions</p>
+                    <p className="text-xs text-luxury-platinum/70 mt-2">Create your first cognitive enhancement session</p>
                   </div>
                 )}
               </div>
-            </LiquidCard>
+            </div>
           </div>
 
-          {/* Main Chat Interface */}
+          {/* Enhanced Main Chat Interface */}
           <div className="lg:col-span-3">
-            <LiquidCard className="h-full flex flex-col">
-              {/* Neural Header */}
-              <div className="p-6 border-b border-primary/20">
+            <div className="liquid-card-premium h-full flex flex-col">
+              {/* Premium Neural Header */}
+              <div className="p-6 border-b border-luxury-gold/20">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
                     <button
                       onClick={() => setShowSidebar(!showSidebar)}
-                      className="lg:hidden text-secondary hover:text-primary mr-2"
+                      className="lg:hidden text-luxury-platinum hover:text-luxury-gold transition-colors mr-2 text-xl"
                     >
                       ☰
                     </button>
@@ -460,65 +468,65 @@ const TutorComponent = ({ student, onNavigate }) => {
                         setSessionId('');
                         setSelectedSessionId('');
                       }}
-                      className="mr-2"
+                      className="mr-4 btn-holographic"
                     >
                       ← Select Domain
                     </LiquidButton>
-                    <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${selectedSubjectData?.gradient} flex items-center justify-center`}>
-                      <span className="text-2xl">{selectedSubjectData?.icon}</span>
+                    <div className={`avatar-premium w-14 h-14 rounded-full bg-gradient-to-br ${selectedSubjectData?.gradient} flex items-center justify-center`}>
+                      <span className="text-3xl">{selectedSubjectData?.icon}</span>
                     </div>
                     <div>
-                      <h1 className="text-xl font-bold text-primary">{selectedSubjectData?.name} Neural Tutor</h1>
-                      <p className="text-sm text-secondary">
+                      <h1 className="text-2xl font-bold text-luxury-gold">{selectedSubjectData?.name} Neural Tutor</h1>
+                      <p className="text-sm text-luxury-platinum">
                         {sessionId ? 'Active neural session' : 'Establishing neural link...'}
                       </p>
                     </div>
                   </div>
                   <div className="holographic-status">
                     <span className="status-indicator"></span>
-                    <span className="text-sm text-neon-cyan">Neural Link Active</span>
+                    <span className="text-sm text-neon-cyan font-semibold">Neural Link Active</span>
                   </div>
                 </div>
               </div>
 
-              {/* Neural Messages Stream */}
-              <div className="flex-1 p-6 overflow-y-auto space-y-6">
+              {/* Enhanced Neural Messages Stream */}
+              <div className="flex-1 p-6 overflow-y-auto space-y-8">
                 {messages.map((message, index) => (
                   <div
                     key={index}
                     className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
-                    <div className="flex items-start space-x-3 max-w-[80%]">
+                    <div className="flex items-start space-x-4 max-w-[85%]">
                       {message.role === 'assistant' && (
-                        <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center text-sm">
+                        <div className="avatar-premium w-10 h-10 rounded-full bg-gradient-luxury flex items-center justify-center text-lg">
                           🤖
                         </div>
                       )}
                       <div
                         className={`
-                          p-4 rounded-xl border backdrop-blur-sm
+                          p-6 rounded-2xl border backdrop-blur-md transition-all duration-300
                           ${message.role === 'user'
-                            ? 'bg-gradient-to-br from-neon-cyan/20 to-neon-magenta/20 border-neon-cyan/50 text-primary'
-                            : 'bg-glass border-primary/20 text-primary'
+                            ? 'chat-bubble-user text-white'
+                            : 'chat-bubble-assistant text-luxury-platinum'
                           }
                         `}
                       >
                         {message.role === 'user' ? (
-                          <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
+                          <div className="whitespace-pre-wrap leading-relaxed text-lg">{message.content}</div>
                         ) : (
                           <MessageFormatter 
                             content={message.content} 
-                            className="leading-relaxed"
+                            className="leading-relaxed text-base"
                           />
                         )}
-                        <div className={`text-xs mt-3 ${
-                          message.role === 'user' ? 'text-neon-cyan/70' : 'text-secondary'
+                        <div className={`text-xs mt-4 ${
+                          message.role === 'user' ? 'text-neon-cyan/80' : 'text-luxury-gold/80'
                         }`}>
                           {message.timestamp.toLocaleTimeString()}
                         </div>
                       </div>
                       {message.role === 'user' && (
-                        <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-sm">
+                        <div className="avatar-premium w-10 h-10 rounded-full bg-gradient-holographic flex items-center justify-center text-lg">
                           👤
                         </div>
                       )}
@@ -527,14 +535,14 @@ const TutorComponent = ({ student, onNavigate }) => {
                 ))}
                 {loading && (
                   <div className="flex justify-start">
-                    <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center text-sm">
+                    <div className="flex items-start space-x-4">
+                      <div className="avatar-premium w-10 h-10 rounded-full bg-gradient-luxury flex items-center justify-center text-lg">
                         🤖
                       </div>
-                      <div className="bg-glass border border-primary/20 p-4 rounded-xl">
-                        <div className="flex items-center space-x-2">
-                          <div className="quantum-loader w-4 h-4"></div>
-                          <span className="text-secondary">Processing neural pathways...</span>
+                      <div className="chat-bubble-assistant p-6">
+                        <div className="flex items-center space-x-3">
+                          <div className="quantum-loader w-5 h-5"></div>
+                          <span className="text-luxury-platinum">Processing neural pathways...</span>
                         </div>
                       </div>
                     </div>
@@ -542,8 +550,8 @@ const TutorComponent = ({ student, onNavigate }) => {
                 )}
               </div>
 
-              {/* Neural Input Interface */}
-              <div className="p-6 border-t border-primary/20">
+              {/* Enhanced Neural Input Interface */}
+              <div className="p-6 border-t border-luxury-gold/20">
                 <div className="flex space-x-4">
                   <div className="flex-1">
                     <textarea
@@ -554,12 +562,9 @@ const TutorComponent = ({ student, onNavigate }) => {
                       }}
                       onKeyPress={handleKeyPress}
                       placeholder={`Input your ${selectedSubjectData?.name.toLowerCase()} query here...`}
-                      className="w-full p-4 bg-slate-800/50 border border-primary/20 rounded-lg focus:ring-2 focus:ring-cyan-400 focus:border-cyan-400 text-white placeholder-slate-400 resize-none backdrop-blur-sm transition-all duration-200"
+                      className="w-full p-6 input-luxury resize-none text-lg"
                       style={{
-                        backgroundColor: 'rgba(30, 41, 59, 0.9)',
-                        color: '#ffffff',
-                        borderColor: 'rgba(248, 250, 252, 0.2)',
-                        fontSize: '14px',
+                        fontSize: '16px',
                         lineHeight: '1.5'
                       }}
                       rows="3"
@@ -567,20 +572,20 @@ const TutorComponent = ({ student, onNavigate }) => {
                     />
                   </div>
                   <div className="flex flex-col justify-end">
-                    <LiquidButton
+                    <button
                       onClick={sendMessage}
                       disabled={!currentMessage.trim() || loading || !sessionId}
-                      className="whitespace-nowrap"
+                      className="btn-holographic px-8 py-4 text-lg font-bold"
                     >
                       {loading ? '⚡ Processing...' : '⚡ Send Neural Query'}
-                    </LiquidButton>
+                    </button>
                   </div>
                 </div>
-                <div className="mt-3 text-xs text-secondary">
+                <div className="mt-4 text-sm text-luxury-platinum/70 text-center">
                   Press Enter to transmit • Shift+Enter for new line • Neural protocols active
                 </div>
               </div>
-            </LiquidCard>
+            </div>
           </div>
         </div>
       </div>
