@@ -181,45 +181,51 @@ const ProgressComponent = ({ student, onNavigate }) => {
                     {(Array.isArray(progressData) ? progressData : progressData.recent_tests || [])
                       .slice(0, 10)
                       .map((test, index) => (
-                      <div key={test.id || index} className="flex items-center justify-between p-4 bg-glass border border-primary/20 rounded-lg hover:border-neon-cyan/50 transition-colors">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-4">
-                            <div className={`px-4 py-2 rounded-lg text-sm font-medium border ${getPerformanceColor(test.score)}`}>
-                              {test.score}%
-                            </div>
-                            <div>
-                              <div className="font-medium text-primary">
-                                {test.subject ? `${test.subject.charAt(0).toUpperCase() + test.subject.slice(1)} Test` : 'General Assessment'}
+                      <div 
+                        key={test.id || index} 
+                        className="p-4 bg-glass border border-primary/20 rounded-lg hover:border-neon-cyan/50 transition-all duration-300 cursor-pointer hover:scale-102 hover:bg-glass/70"
+                        onClick={() => test.id && loadDetailedResults(test.id)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-4">
+                              <div className={`px-4 py-2 rounded-lg text-sm font-medium border ${getPerformanceColor(test.score)}`}>
+                                {test.score}%
                               </div>
-                              <div className="text-sm text-secondary">
-                                {test.correct_count || 0}/{test.total_questions || test.question_count || 0} correct • {' '}
-                                {test.completed_at ? new Date(test.completed_at).toLocaleDateString() : 'Recent session'}
-                                {test.time_taken && (
-                                  <span> • {Math.round(test.time_taken / 60)} min</span>
-                                )}
+                              <div>
+                                <div className="font-medium text-primary">
+                                  {test.subject ? `${test.subject.charAt(0).toUpperCase() + test.subject.slice(1)} Test` : 'General Assessment'}
+                                </div>
+                                <div className="text-sm text-secondary">
+                                  {test.correct_count || 0}/{test.total_questions || test.question_count || 0} correct • {' '}
+                                  {test.completed_at ? new Date(test.completed_at).toLocaleDateString() : 'Recent session'}
+                                  {test.time_taken && (
+                                    <span> • {Math.round(test.time_taken / 60)} min</span>
+                                  )}
+                                </div>
                               </div>
                             </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="w-32">
+                              <LiquidProgress 
+                                value={test.score} 
+                                max={100}
+                                className="h-3"
+                                color={getProgressBarColor(test.score)}
+                              />
+                            </div>
+                            {test.id && (
+                              <div className="text-neon-cyan text-sm font-medium">
+                                {loadingDetails && viewingDetails === test.id ? 'Loading...' : 'Click for Details →'}
+                              </div>
+                            )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <div className="w-32">
-                            <LiquidProgress 
-                              value={test.score} 
-                              max={100}
-                              className="h-3"
-                              color={getProgressBarColor(test.score)}
-                            />
-                          </div>
-                          {test.id && (
-                            <LiquidButton
-                              variant="secondary"
-                              onClick={() => loadDetailedResults(test.id)}
-                              className="text-xs px-3 py-1"
-                              disabled={loadingDetails}
-                            >
-                              {loadingDetails && viewingDetails === test.id ? '...' : '📊 Details'}
-                            </LiquidButton>
-                          )}
+                        
+                        {/* Visual indicator that item is clickable */}
+                        <div className="mt-3 text-xs text-secondary/60 text-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          💡 Click to view question-by-question breakdown with explanations
                         </div>
                       </div>
                     ))}
