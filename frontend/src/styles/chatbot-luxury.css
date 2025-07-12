@@ -146,7 +146,7 @@
 }
 
 .chatbot-container .btn-holographic:hover {
-  background: #e4c547;
+  background: var(--premium-silver);
   transform: translateY(-1px);
   box-shadow: var(--shadow-elevated);
 }
