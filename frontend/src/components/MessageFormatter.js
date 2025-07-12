@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css'; // Import KaTeX CSS
+import '../styles/message-formatting.css'; // Import message formatting styles
 
 const MessageFormatter = ({ content, className = "" }) => {
   // Debug logging to see what content we're receiving
