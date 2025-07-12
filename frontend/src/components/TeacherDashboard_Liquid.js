@@ -328,19 +328,10 @@ const TeacherDashboard = ({ teacher, onNavigate, onLogout }) => {
             </LiquidCard>
           </div>
         )}
-                
-                <div className="space-y-4">
-                  <div className="p-4 rounded-lg bg-glass border border-primary/20">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-success flex items-center justify-center text-sm">
-                        📊
-                      </div>
-                      <div>
-                        <p className="text-primary font-medium">New test submissions</p>
-                        <p className="text-sm text-secondary">3 students completed Physics Test #2</p>
-                      </div>
-                    </div>
-                  </div>
+
+        {/* Quick Actions Section */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-primary mb-6">Quick Actions</h2>
                   
                   <div className="p-4 rounded-lg bg-glass border border-primary/20">
                     <div className="flex items-center space-x-3">
