@@ -188,15 +188,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
                             ? 'border-blue-400/50 bg-blue-500/10 cursor-wait' 
                             : 'hover:border-neon-cyan/50'
                         }`}
-                        onClick={() => {
-                          console.log('🖱️ Test card clicked:', test);
-                          if (test.id && !loadingDetails) {
-                            console.log('✅ Calling loadDetailedResults with ID:', test.id);
-                            loadDetailedResults(test.id);
-                          } else {
-                            console.log('❌ Cannot load details:', { id: test.id, loadingDetails });
-                          }
-                        }}
+                        onClick={() => test.id && !loadingDetails && loadDetailedResults(test.id)}
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
