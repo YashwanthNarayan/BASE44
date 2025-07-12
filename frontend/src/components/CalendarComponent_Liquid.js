@@ -167,7 +167,14 @@ const CalendarComponent = ({ student, onNavigate }) => {
 
                 <div className="grid grid-cols-7 gap-1">
                   {generateCalendarDays().map((date, index) => {
-                    const dateStr = date ? date.toISOString().split('T')[0] : '';
+                    let dateStr = '';
+                    if (date) {
+                      const year = date.getFullYear();
+                      const month = String(date.getMonth() + 1).padStart(2, '0');
+                      const day = String(date.getDate()).padStart(2, '0');
+                      dateStr = `${year}-${month}-${day}`;
+                    }
+                    
                     const dayEvents = date ? getEventsForDate(dateStr) : [];
                     const isToday = date && date.toDateString() === new Date().toDateString();
                     const isSelected = selectedDate === dateStr;
