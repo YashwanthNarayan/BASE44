@@ -468,7 +468,7 @@ const TutorComponent = ({ student, onNavigate }) => {
                   >
                     <div className="flex items-start space-x-4 max-w-[85%]">
                       {message.role === 'assistant' && (
-                        <div className="avatar-premium w-10 h-10 rounded-full bg-gradient-luxury flex items-center justify-center text-lg">
+                        <div className="avatar-premium w-10 h-10 rounded-lg bg-premium-gold flex items-center justify-center text-lg">
                           🤖
                         </div>
                       )}
