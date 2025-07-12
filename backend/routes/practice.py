@@ -145,6 +145,47 @@ async def submit_practice_test(
             detail=f"Failed to submit practice test: {str(e)}"
         )
 
+@router.get("/results/{attempt_id}")
+async def get_detailed_results(
+    attempt_id: str,
+    current_user: dict = Depends(get_current_student)
+):
+    """Get detailed results for a specific practice attempt"""
+    db = get_database()
+    
+    try:
+        # Get attempt from database
+        attempt = await db[Collections.PRACTICE_ATTEMPTS].find_one({
+            "id": attempt_id,
+            "student_id": current_user["sub"]
+        })
+        
+        if not attempt:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Practice attempt not found"
+            )
+        
+        return convert_objectid_to_str({
+            "attempt_id": attempt["id"],
+            "score": attempt["score"],
+            "correct_count": attempt.get("correct_count", 0),
+            "total_questions": attempt["total_questions"],
+            "subject": attempt["subject"],
+            "difficulty": attempt["difficulty"],
+            "time_taken": attempt.get("time_taken", 0),
+            "completed_at": attempt["completed_at"],
+            "detailed_results": attempt.get("detailed_results", [])
+        })
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get detailed results: {str(e)}"
+        )
+
 @router.get("/results")
 async def get_practice_results(
     subject: Optional[str] = None,
