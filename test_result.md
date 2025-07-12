@@ -46,6 +46,9 @@
         - working: "NA"
           agent: "main"
           comment: "MAJOR FIX: Enhanced MessageFormatter component to properly handle markdown rendering. User reported markdown formatting issues (headers showing as ###, bold as **, etc.). Updated MessageFormatter with: better ReactMarkdown configuration, improved component styling for headers/lists/code, enhanced preprocessing for markdown syntax, debug logging for troubleshooting, and comprehensive CSS styling for all markdown elements. Should now properly render headers, bold text, code blocks, lists, and all markdown formatting instead of showing raw markdown syntax."
+        - working: "NA"
+          agent: "main"
+          comment: "CRITICAL FIX: Added LaTeX/mathematical expression support to resolve special character issues. User reported problems with math notation like $x$, $x^2 - 5x + 6 = 0$ showing as raw LaTeX instead of formatted math. Installed remark-math, rehype-katex, and katex dependencies. Updated MessageFormatter with math plugins and KaTeX CSS styling. Enhanced preprocessing to handle LaTeX expressions with proper spacing. Mathematical expressions should now render as properly formatted equations instead of raw LaTeX syntax."
   - task: "Futuristic AuthPortal Design"
     implemented: true
     working: true
