@@ -181,18 +181,21 @@
   outline: none;
 }
 
-/* Holographic Button */
+/* Professional Luxury Button */
 .chatbot-container .btn-holographic {
-  background: var(--gradient-holographic);
-  border: none;
+  background: linear-gradient(135deg, var(--luxury-gold) 0%, #b8860b 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
   border-radius: 0.75rem;
-  color: #000;
+  color: #1a1a1a;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+  box-shadow: 
+    0 4px 12px rgba(212, 175, 55, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
 }
 
 .chatbot-container .btn-holographic::before {
@@ -202,8 +205,8 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.5s ease;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
 }
 
 .chatbot-container .btn-holographic:hover::before {
@@ -212,7 +215,54 @@
 
 .chatbot-container .btn-holographic:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(0, 255, 255, 0.4);
+  box-shadow: 
+    0 8px 20px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #f4d03f 0%, var(--luxury-gold) 100%);
+  border-color: var(--luxury-gold);
+}
+
+.chatbot-container .btn-holographic:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 8px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.chatbot-container .btn-holographic:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  background: linear-gradient(135deg, #666 0%, #555 100%);
+  color: #ccc;
+  border-color: #555;
+}
+
+.chatbot-container .btn-holographic:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Secondary Professional Button */
+.chatbot-container .btn-secondary-luxury {
+  background: linear-gradient(145deg, rgba(229, 228, 226, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+  border: 1px solid rgba(229, 228, 226, 0.3);
+  border-radius: 0.75rem;
+  color: var(--luxury-platinum);
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chatbot-container .btn-secondary-luxury:hover {
+  background: linear-gradient(145deg, rgba(229, 228, 226, 0.15) 0%, rgba(212, 175, 55, 0.1) 100%);
+  border-color: var(--luxury-platinum);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: white;
 }
 
 /* Luxury Session Cards */
