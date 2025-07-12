@@ -216,36 +216,6 @@ const AuthPortal = ({ onAuthSuccess }) => {
               </LiquidButton>
             </form>
 
-            {/* Quick Test Login */}
-            <div className="mt-4 p-4 bg-blue-500/20 rounded-lg border border-blue-400/30">
-              <p className="text-white/80 text-sm mb-2">Quick Test Access:</p>
-              <button
-                onClick={async () => {
-                  setIsLoading(true);
-                  setError('');
-                  try {
-                    const payload = { email: "testlogin@test.com", password: "TestPassword123!" };
-                    const response = await authAPI.login(payload);
-                    
-                    storage.set('access_token', response.access_token);
-                    storage.set('user_type', response.user_type);
-                    storage.set('user', response.user);
-                    
-                    setupAxiosAuth(response.access_token);
-                    onAuthSuccess(response.user_type, response.user);
-                  } catch (error) {
-                    setError('Quick login failed. Try the regular form above.');
-                  } finally {
-                    setIsLoading(false);
-                  }
-                }}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
-                disabled={isLoading}
-              >
-                🚀 Quick Login (Test User)
-              </button>
-            </div>
-
             {/* Footer */}
             <div className="mt-8 text-center">
               <p className="text-white/60 text-sm">
