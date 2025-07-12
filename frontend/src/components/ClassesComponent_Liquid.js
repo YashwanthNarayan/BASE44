@@ -230,7 +230,7 @@ const ClassesComponent = ({ student, onNavigate }) => {
             <div className="text-6xl mb-6">🏫</div>
             <h2 className="text-2xl font-bold text-primary mb-4">No Neural Class Connections Detected</h2>
             <p className="text-secondary mb-8">
-              Your learning matrix is currently uninitialized. Request a neural access code from your cognitive enhancement instructor to establish your first class connection.
+              You haven't joined any classes yet. Enter a class code from your teacher to get started.
             </p>
             <div className="max-w-md mx-auto">
               <div className="flex flex-col sm:flex-row gap-4">
@@ -238,7 +238,7 @@ const ClassesComponent = ({ student, onNavigate }) => {
                   type="text"
                   value={joinCode}
                   onChange={(e) => setJoinCode(e.target.value)}
-                  placeholder="Enter neural access code"
+                  placeholder="Enter class code (e.g., ABC123)"
                   className="flex-1"
                   onKeyPress={(e) => e.key === 'Enter' && joinClass()}
                 />
@@ -250,13 +250,16 @@ const ClassesComponent = ({ student, onNavigate }) => {
                   {joining ? (
                     <>
                       <div className="quantum-loader w-4 h-4 mr-2" />
-                      Connecting...
+                      Joining...
                     </>
                   ) : (
-                    '⚡ Establish Connection'
+                    '⚡ Join Class'
                   )}
                 </LiquidButton>
               </div>
+              <p className="text-xs text-secondary mt-2 text-center">
+                Case doesn't matter and spaces will be automatically removed
+              </p>
             </div>
           </LiquidCard>
         )}
