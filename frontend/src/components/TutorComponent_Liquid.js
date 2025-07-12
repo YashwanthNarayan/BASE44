@@ -294,31 +294,18 @@ const TutorComponent = ({ student, onNavigate }) => {
                       <div
                         key={subject.value}
                         onClick={() => setSelectedSubject(subject.value)}
-                        className={`
-                          relative p-8 rounded-2xl border-2 transition-all duration-500 cursor-pointer
-                          bg-gradient-to-br ${subject.gradient}
-                          border-luxury-gold/20 hover:border-luxury-gold hover:scale-105
-                          transform group overflow-hidden
-                        `}
+                        className="relative p-8 rounded-lg border transition-all duration-300 cursor-pointer bg-premium-surface border-premium-border hover:border-premium-gold hover:scale-105 transform group"
                       >
-                        {/* Holographic Glow Effect */}
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-neon-cyan/10 via-luxury-gold/10 to-neon-purple/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        
                         <div className="relative z-10 text-center">
-                          <div className="text-5xl mb-6 group-hover:scale-125 transition-transform duration-500">
+                          <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">
                             {subject.icon}
                           </div>
-                          <h3 className="font-bold text-xl text-luxury-gold mb-3 group-hover:text-neon-cyan transition-colors duration-300">
+                          <h3 className="font-bold text-xl text-luxury-gold mb-3 group-hover:text-white transition-colors duration-300">
                             {subject.name}
                           </h3>
                           <p className="text-sm text-luxury-platinum group-hover:text-white transition-colors duration-300">
-                            Neural Enhancement Protocol
+                            Premium Learning Experience
                           </p>
-                        </div>
-                        
-                        {/* Premium Border Animation */}
-                        <div className="absolute bottom-0 left-0 right-0 h-1">
-                          <div className="h-full bg-gradient-to-r from-transparent via-luxury-gold to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         </div>
                       </div>
                     ))}
