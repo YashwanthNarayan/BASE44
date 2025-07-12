@@ -40,6 +40,11 @@ export const studentAPI = {
   joinClass: async (joinData) => {
     const response = await axios.post(`${API_BASE}/api/student/join-class`, joinData);
     return response.data;
+  },
+  
+  getJoinedClasses: async () => {
+    const response = await axios.get(`${API_BASE}/api/student/joined-classes`);
+    return response.data;
   }
 };
 
