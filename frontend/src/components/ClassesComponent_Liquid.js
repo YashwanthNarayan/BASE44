@@ -15,8 +15,8 @@ const ClassesComponent = ({ student, onNavigate }) => {
 
   const loadJoinedClasses = async () => {
     try {
-      const response = await studentAPI.getProfile();
-      setJoinedClasses(response.joined_classes || []);
+      const response = await studentAPI.getJoinedClasses();
+      setJoinedClasses(response);
     } catch (error) {
       console.error('Error loading joined classes:', error);
       setJoinedClasses([]);
