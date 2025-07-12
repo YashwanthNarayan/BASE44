@@ -291,33 +291,43 @@ const TeacherDashboard = ({ teacher, onNavigate, onLogout }) => {
                 </div>
               </div>
             </LiquidCard>
-                          </div>
-                          <div className="text-xs text-secondary">avg score</div>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-3">
-                        <LiquidProgress 
-                          value={classData.average_score || 0} 
-                          max={100}
-                          className="h-2"
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </LiquidCard>
 
-            {/* Recent Activity */}
+            {/* Subject Distribution */}
             <LiquidCard>
               <div className="p-6">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="w-8 h-8 rounded-full bg-gradient-accent flex items-center justify-center">
-                    <span className="text-sm font-bold">⚡</span>
+                    <span className="text-sm font-bold">📊</span>
                   </div>
-                  <h2 className="text-xl font-bold text-primary">Neural Activity Stream</h2>
+                  <h2 className="text-xl font-bold text-primary">Subject Distribution</h2>
                 </div>
+                
+                {dashboardData?.subject_distribution && dashboardData.subject_distribution.length > 0 ? (
+                  <div className="space-y-4">
+                    {dashboardData.subject_distribution.slice(0, 4).map((subject, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-medium text-primary capitalize">{subject.subject}</h3>
+                          <p className="text-sm text-secondary">{subject.test_count} tests</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-bold text-neon-cyan">
+                            {subject.average_score.toFixed(1)}%
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="text-4xl mb-4">📊</div>
+                    <p className="text-secondary">No test data available yet</p>
+                  </div>
+                )}
+              </div>
+            </LiquidCard>
+          </div>
+        )}
                 
                 <div className="space-y-4">
                   <div className="p-4 rounded-lg bg-glass border border-primary/20">
