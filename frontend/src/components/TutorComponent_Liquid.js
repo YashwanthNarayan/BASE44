@@ -214,7 +214,7 @@ const TutorComponent = ({ student, onNavigate }) => {
               <div className="liquid-card-premium">
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-luxury-gold">Neural Sessions</h2>
+                    <h2 className="text-xl font-bold text-luxury-platinum">Neural Sessions</h2>
                     <div className="holographic-status">
                       <div className="status-indicator"></div>
                     </div>
