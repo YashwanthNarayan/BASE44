@@ -457,8 +457,8 @@ class TestTeacherAPIRoutes(unittest.TestCase):
                 self.assertEqual(response.status_code, 200, f"Failed to create class {i+1}")
                 
                 data = response.json()
-                class_code = data.get("class_code")
-                self.assertIsNotNone(class_code, "Class code should be generated")
+                class_code = data.get("join_code")
+                self.assertIsNotNone(class_code, "Join code should be generated")
                 self.assertTrue(len(class_code) >= 6, "Class code should be at least 6 characters")
                 
                 # Check uniqueness
