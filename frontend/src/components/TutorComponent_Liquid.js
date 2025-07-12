@@ -485,7 +485,7 @@ const TutorComponent = ({ student, onNavigate }) => {
                   </div>
                   <div className="holographic-status">
                     <span className="status-indicator"></span>
-                    <span className="text-sm text-neon-cyan font-semibold">Neural Link Active</span>
+                    <span className="text-sm text-success font-semibold">Neural Link Active</span>
                   </div>
                 </div>
               </div>
