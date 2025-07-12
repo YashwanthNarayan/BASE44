@@ -112,39 +112,39 @@
   100% { left: 100%; }
 }
 
-/* Holographic Chat Bubbles */
+/* Professional Chat Bubbles */
 .chatbot-container .chat-bubble-user {
-  background: linear-gradient(135deg, rgba(0, 255, 255, 0.2) 0%, rgba(191, 64, 191, 0.15) 100%);
-  border: 1px solid rgba(0, 255, 255, 0.4);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 102, 241, 0.1) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
   border-radius: 1rem;
   box-shadow: 
-    0 4px 20px rgba(0, 255, 255, 0.2),
+    0 4px 16px rgba(59, 130, 246, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(15px);
   position: relative;
-  animation: message-glow 0.5s ease-out;
+  animation: message-slide-in 0.4s ease-out;
 }
 
 .chatbot-container .chat-bubble-assistant {
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(229, 228, 226, 0.08) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(229, 228, 226, 0.06) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.25);
   border-radius: 1rem;
   box-shadow: 
-    0 4px 20px rgba(212, 175, 55, 0.15),
+    0 4px 16px rgba(212, 175, 55, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(15px);
   position: relative;
-  animation: message-appear 0.6s ease-out;
+  animation: message-fade-in 0.5s ease-out;
 }
 
-@keyframes message-glow {
-  0% { opacity: 0; transform: translateY(10px) scale(0.95); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes message-appear {
-  0% { opacity: 0; transform: translateX(-10px) scale(0.98); }
+@keyframes message-slide-in {
+  0% { opacity: 0; transform: translateX(20px) scale(0.95); }
   100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes message-fade-in {
+  0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* Premium Avatar Styling */
