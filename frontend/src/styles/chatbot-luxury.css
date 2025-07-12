@@ -1,0 +1,275 @@
+/* Chatbot Luxury Aesthetic - Futuristic Sci-Fi + Premium */
+.chatbot-container {
+  /* Luxury Color Palette */
+  --luxury-gold: #d4af37;
+  --luxury-platinum: #e5e4e2;
+  --luxury-bronze: #cd7f32;
+  --neon-cyan: #00ffff;
+  --neon-purple: #bf40bf;
+  --neon-blue: #4169e1;
+  
+  /* Luxury Gradients */
+  --gradient-holographic: linear-gradient(135deg, #00ffff 0%, #bf40bf 50%, #d4af37 100%);
+  --gradient-luxury: linear-gradient(135deg, #d4af37 0%, #e5e4e2 50%, #cd7f32 100%);
+  --gradient-premium: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(229, 228, 226, 0.1) 100%);
+  
+  /* Luxury Effects */
+  --shadow-holographic: 0 0 20px rgba(0, 255, 255, 0.3), 0 0 40px rgba(191, 64, 191, 0.2);
+  --shadow-luxury: 0 8px 32px rgba(212, 175, 55, 0.15), 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-premium: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Luxury Background */
+.chatbot-container .bg-dark-space {
+  background: radial-gradient(ellipse at center, #111111 0%, #0a0a0a 100%);
+  position: relative;
+}
+
+.chatbot-container .bg-dark-space::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(0, 255, 255, 0.05) 0%, transparent 50%);
+  opacity: 0.6;
+  z-index: 1;
+}
+
+/* Enhanced Quantum Grid */
+.chatbot-container .quantum-grid {
+  background-image: 
+    linear-gradient(rgba(212, 175, 55, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 175, 55, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  animation: quantum-shift 20s ease-in-out infinite;
+}
+
+@keyframes quantum-shift {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-2px, -2px); }
+  50% { transform: translate(2px, -1px); }
+  75% { transform: translate(-1px, 2px); }
+}
+
+/* Holographic Status Indicator */
+.chatbot-container .holographic-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--gradient-premium);
+  border: 1px solid var(--luxury-gold);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-holographic);
+}
+
+.chatbot-container .status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  animation: pulse-holographic 2s ease-in-out infinite;
+}
+
+@keyframes pulse-holographic {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+/* Premium Liquid Glass Cards */
+.chatbot-container .liquid-card-premium {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(212, 175, 55, 0.05) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-premium);
+  position: relative;
+  overflow: hidden;
+}
+
+.chatbot-container .liquid-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Holographic Chat Bubbles */
+.chatbot-container .chat-bubble-user {
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.2) 0%, rgba(191, 64, 191, 0.15) 100%);
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  border-radius: 1rem;
+  box-shadow: 
+    0 4px 20px rgba(0, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  position: relative;
+  animation: message-glow 0.5s ease-out;
+}
+
+.chatbot-container .chat-bubble-assistant {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(229, 228, 226, 0.08) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 1rem;
+  box-shadow: 
+    0 4px 20px rgba(212, 175, 55, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(15px);
+  position: relative;
+  animation: message-appear 0.6s ease-out;
+}
+
+@keyframes message-glow {
+  0% { opacity: 0; transform: translateY(10px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes message-appear {
+  0% { opacity: 0; transform: translateX(-10px) scale(0.98); }
+  100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* Premium Avatar Styling */
+.chatbot-container .avatar-premium {
+  background: var(--gradient-luxury);
+  border: 2px solid var(--luxury-gold);
+  box-shadow: 
+    0 0 15px rgba(212, 175, 55, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: avatar-glow 3s ease-in-out infinite;
+}
+
+@keyframes avatar-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+  50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
+}
+
+/* Luxury Input Styling */
+.chatbot-container .input-luxury {
+  background: linear-gradient(145deg, rgba(17, 17, 17, 0.9) 0%, rgba(30, 30, 30, 0.8) 100%);
+  border: 2px solid rgba(212, 175, 55, 0.2);
+  border-radius: 1rem;
+  color: #ffffff;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.chatbot-container .input-luxury:focus {
+  border-color: var(--luxury-gold);
+  box-shadow: 
+    0 0 0 3px rgba(212, 175, 55, 0.2),
+    0 0 20px rgba(212, 175, 55, 0.3),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  outline: none;
+}
+
+/* Holographic Button */
+.chatbot-container .btn-holographic {
+  background: var(--gradient-holographic);
+  border: none;
+  border-radius: 0.75rem;
+  color: #000;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+}
+
+.chatbot-container .btn-holographic::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.chatbot-container .btn-holographic:hover::before {
+  left: 100%;
+}
+
+.chatbot-container .btn-holographic:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 255, 255, 0.4);
+}
+
+/* Luxury Session Cards */
+.chatbot-container .session-card-luxury {
+  background: linear-gradient(145deg, rgba(212, 175, 55, 0.1) 0%, rgba(17, 17, 17, 0.8) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 0.75rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.chatbot-container .session-card-luxury:hover {
+  border-color: var(--luxury-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+}
+
+.chatbot-container .session-card-luxury.active {
+  border-color: var(--neon-cyan);
+  background: linear-gradient(145deg, rgba(0, 255, 255, 0.1) 0%, rgba(17, 17, 17, 0.8) 100%);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+/* Floating Particles Effect */
+.chatbot-container .floating-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.chatbot-container .particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: var(--luxury-gold);
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: float 6s ease-in-out infinite;
+}
+
+.chatbot-container .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+.chatbot-container .particle:nth-child(2) { left: 20%; animation-delay: 1s; }
+.chatbot-container .particle:nth-child(3) { left: 30%; animation-delay: 2s; }
+.chatbot-container .particle:nth-child(4) { left: 40%; animation-delay: 3s; }
+.chatbot-container .particle:nth-child(5) { left: 50%; animation-delay: 4s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10%, 90% { opacity: 0.7; }
+  50% { transform: translateY(-10px) rotate(180deg); opacity: 1; }
+}
+
+/* Luxury Text Colors */
+.chatbot-container .text-luxury-gold { color: var(--luxury-gold); }
+.chatbot-container .text-luxury-platinum { color: var(--luxury-platinum); }
+.chatbot-container .text-neon-cyan { color: var(--neon-cyan); }
