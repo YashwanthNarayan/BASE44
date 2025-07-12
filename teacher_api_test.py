@@ -485,10 +485,10 @@ class TestTeacherAPIRoutes(unittest.TestCase):
             self.assertEqual(response.status_code, 200, "Failed to create class with custom code")
             
             data = response.json()
-            returned_code = data.get("class_code")
-            self.assertEqual(returned_code, custom_code, "Custom class code should be preserved")
+            returned_code = data.get("join_code")
+            self.assertEqual(returned_code, custom_code, "Custom join code should be preserved")
             
-            print(f"✅ Successfully used custom class code: {returned_code}")
+            print(f"✅ Successfully used custom join code: {returned_code}")
             
         except Exception as e:
             print(f"❌ Error testing custom code: {str(e)}")
