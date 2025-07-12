@@ -38,13 +38,13 @@ async def join_class(
         # Find classroom by join code
         classroom = await db[Collections.CLASSROOMS].find_one({
             "join_code": join_request.join_code,
-            "is_active": True
+            "active": True  # Note: using 'active' to match teacher routes
         })
         
         if not classroom:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Invalid join code"
+                detail="Invalid join code or class not found"
             )
         
         # Check if student is already in the class
@@ -58,7 +58,7 @@ async def join_class(
                 detail="Student profile not found"
             )
         
-        class_id = classroom["id"]
+        class_id = classroom["class_id"]  # Using class_id to match teacher routes
         if class_id in student_profile.get("joined_classes", []):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -67,7 +67,7 @@ async def join_class(
         
         # Add student to classroom
         await db[Collections.CLASSROOMS].update_one(
-            {"id": class_id},
+            {"class_id": class_id},  # Using class_id to match teacher routes
             {"$addToSet": {"student_ids": current_user["sub"]}}
         )
         
@@ -87,7 +87,8 @@ async def join_class(
         return {
             "message": "Successfully joined class",
             "class_name": classroom["class_name"],
-            "subject": classroom["subject"]
+            "subject": classroom["subject"],
+            "class_id": class_id
         }
         
     except HTTPException:
