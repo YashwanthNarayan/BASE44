@@ -321,7 +321,8 @@
   50% { transform: translateY(-20px) rotate(90deg); opacity: 0.6; }
 }
 
-/* Luxury Text Colors */
+/* Professional Text Colors */
 .chatbot-container .text-luxury-gold { color: var(--luxury-gold); }
 .chatbot-container .text-luxury-platinum { color: var(--luxury-platinum); }
-.chatbot-container .text-neon-cyan { color: var(--neon-cyan); }
+.chatbot-container .text-professional-blue { color: #3b82f6; }
+.chatbot-container .text-success { color: #10b981; }
