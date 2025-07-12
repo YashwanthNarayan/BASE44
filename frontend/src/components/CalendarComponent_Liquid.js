@@ -213,15 +213,110 @@ const CalendarComponent = ({ student, onNavigate }) => {
             </LiquidCard>
           </div>
 
-          {/* Upcoming Events Neural Stream */}
-          <div>
+          {/* Upcoming Events & Quick Add */}
+          <div className="space-y-6">
+            {/* Quick Event Form */}
+            {showQuickForm && selectedDate && (
+              <LiquidCard>
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-primary">
+                      Add Event - {new Date(selectedDate).toLocaleDateString()}
+                    </h3>
+                    <button
+                      onClick={() => {
+                        setShowQuickForm(false);
+                        setSelectedDate(null);
+                      }}
+                      className="text-secondary hover:text-primary transition-colors"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-secondary mb-2">Event Title</label>
+                      <LiquidInput
+                        type="text"
+                        value={quickEvent.title}
+                        onChange={(e) => setQuickEvent({...quickEvent, title: e.target.value})}
+                        placeholder="What's happening?"
+                        className="w-full"
+                        onKeyPress={(e) => e.key === 'Enter' && createQuickEvent()}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-secondary mb-2">Event Type</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {eventTypes.map(type => (
+                          <button
+                            key={type.value}
+                            onClick={() => setQuickEvent({...quickEvent, event_type: type.value})}
+                            className={`
+                              p-3 rounded-lg border transition-all duration-200 text-sm font-medium
+                              ${quickEvent.event_type === type.value 
+                                ? type.color + ' border-opacity-100 scale-105' 
+                                : 'bg-glass border-primary/20 hover:border-primary/40'
+                              }
+                            `}
+                          >
+                            {type.icon} {type.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-secondary mb-2">Start Time</label>
+                        <LiquidInput
+                          type="time"
+                          value={quickEvent.start_time}
+                          onChange={(e) => setQuickEvent({...quickEvent, start_time: e.target.value})}
+                          className="w-full"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-secondary mb-2">End Time</label>
+                        <LiquidInput
+                          type="time"
+                          value={quickEvent.end_time}
+                          onChange={(e) => setQuickEvent({...quickEvent, end_time: e.target.value})}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex space-x-3">
+                      <LiquidButton
+                        variant="secondary"
+                        onClick={() => {
+                          setShowQuickForm(false);
+                          setSelectedDate(null);
+                        }}
+                        className="flex-1"
+                      >
+                        Cancel
+                      </LiquidButton>
+                      <LiquidButton onClick={createQuickEvent} className="flex-1">
+                        Add Event
+                      </LiquidButton>
+                    </div>
+                  </div>
+                </div>
+              </LiquidCard>
+            )}
+
+            {/* Upcoming Events */}
             <LiquidCard>
               <div className="p-6">
                 <div className="flex items-center space-x-3 mb-6">
                   <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center">
                     <span className="text-sm font-bold">⚡</span>
                   </div>
-                  <h2 className="text-xl font-bold text-primary">Neural Events Stream</h2>
+                  <h2 className="text-xl font-bold text-primary">Upcoming Events</h2>
                 </div>
                 
                 <div className="space-y-4">
@@ -234,7 +329,7 @@ const CalendarComponent = ({ student, onNavigate }) => {
                       return (
                         <div key={index} className="p-4 bg-glass border border-primary/20 rounded-lg hover:border-neon-cyan/50 transition-colors">
                           <div className="flex items-center mb-2">
-                            <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${eventType?.gradient} flex items-center justify-center mr-3`}>
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${eventType?.color || 'bg-gray-500/20'}`}>
                               <span className="text-lg">{eventType?.icon}</span>
                             </div>
                             <span className="font-medium text-primary">{event.title}</span>
@@ -252,7 +347,8 @@ const CalendarComponent = ({ student, onNavigate }) => {
                   {events.filter(event => new Date(event.start_time) >= new Date()).length === 0 && (
                     <div className="text-center py-8">
                       <div className="text-4xl mb-4">⏰</div>
-                      <p className="text-secondary">No upcoming neural events detected</p>
+                      <p className="text-secondary">No upcoming events</p>
+                      <p className="text-sm text-secondary mt-2">Click on a calendar day to add your first event!</p>
                     </div>
                   )}
                 </div>
