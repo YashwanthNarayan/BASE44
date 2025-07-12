@@ -334,117 +334,226 @@ const TutorComponent = ({ student, onNavigate }) => {
     <div className="min-h-screen bg-dark-space text-primary">
       <div className="quantum-grid fixed inset-0 opacity-30" />
       
-      <div className="relative z-10 p-6 max-w-5xl mx-auto">
-        <LiquidCard className="h-[700px] flex flex-col">
-          {/* Neural Header */}
-          <div className="p-6 border-b border-primary/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <LiquidButton
-                  variant="secondary"
-                  onClick={() => setSelectedSubject('')}
-                  className="mr-2"
-                >
-                  ← Select Domain
-                </LiquidButton>
-                <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${selectedSubjectData?.gradient} flex items-center justify-center`}>
-                  <span className="text-2xl">{selectedSubjectData?.icon}</span>
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-primary">{selectedSubjectData?.name} Neural Tutor</h1>
-                  <p className="text-sm text-secondary">Cognitive enhancement specialist online</p>
-                </div>
-              </div>
-              <div className="holographic-status">
-                <span className="status-indicator"></span>
-                <span className="text-sm text-neon-cyan">Neural Link Active</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Neural Messages Stream */}
-          <div className="flex-1 p-6 overflow-y-auto space-y-6">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
-                <div className="flex items-start space-x-3 max-w-[80%]">
-                  {message.role === 'assistant' && (
-                    <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center text-sm">
-                      🤖
-                    </div>
-                  )}
-                  <div
-                    className={`
-                      p-4 rounded-xl border backdrop-blur-sm
-                      ${message.role === 'user'
-                        ? 'bg-gradient-to-br from-neon-cyan/20 to-neon-magenta/20 border-neon-cyan/50 text-primary'
-                        : 'bg-glass border-primary/20 text-primary'
-                      }
-                    `}
+      <div className="relative z-10 p-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-3rem)]">
+          
+          {/* Chat History Sidebar */}
+          <div className={`lg:col-span-1 ${showSidebar ? 'block' : 'hidden lg:block'}`}>
+            <LiquidCard className="h-full flex flex-col">
+              <div className="p-4 border-b border-primary/20">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-primary">Neural Sessions</h2>
+                  <button
+                    onClick={() => setShowSidebar(!showSidebar)}
+                    className="lg:hidden text-secondary hover:text-primary"
                   >
-                    <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
-                    <div className={`text-xs mt-3 ${
-                      message.role === 'user' ? 'text-neon-cyan/70' : 'text-secondary'
-                    }`}>
-                      {message.timestamp.toLocaleTimeString()}
-                    </div>
-                  </div>
-                  {message.role === 'user' && (
-                    <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-sm">
-                      👤
-                    </div>
-                  )}
+                    ✕
+                  </button>
                 </div>
-              </div>
-            ))}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center text-sm">
-                    🤖
-                  </div>
-                  <div className="bg-glass border border-primary/20 p-4 rounded-xl">
-                    <div className="flex items-center space-x-2">
-                      <div className="quantum-loader w-4 h-4"></div>
-                      <span className="text-secondary">Processing neural pathways...</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Neural Input Interface */}
-          <div className="p-6 border-t border-primary/20">
-            <div className="flex space-x-4">
-              <div className="flex-1">
-                <textarea
-                  value={currentMessage}
-                  onChange={(e) => setCurrentMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder={`Input your ${selectedSubjectData?.name.toLowerCase()} query here...`}
-                  className="w-full p-4 bg-glass border border-primary/20 rounded-lg focus:ring-2 focus:ring-neon-cyan focus:border-transparent text-primary placeholder-secondary resize-none backdrop-blur-sm"
-                  rows="3"
-                  disabled={loading}
-                />
-              </div>
-              <div className="flex flex-col justify-end">
+                
                 <LiquidButton
-                  onClick={sendMessage}
-                  disabled={!currentMessage.trim() || loading}
-                  className="whitespace-nowrap"
+                  onClick={() => {
+                    setMessages([]);
+                    setSessionId('');
+                    setSelectedSessionId('');
+                    setSelectedSubject('');
+                  }}
+                  className="w-full"
+                  variant="primary"
                 >
-                  {loading ? '⚡ Processing...' : '⚡ Send Neural Query'}
+                  ⚡ New Neural Session
                 </LiquidButton>
               </div>
-            </div>
-            <div className="mt-3 text-xs text-secondary">
-              Press Enter to transmit • Shift+Enter for new line • Neural protocols active
-            </div>
+              
+              <div className="flex-1 p-4 overflow-y-auto">
+                {loadingHistory ? (
+                  <div className="space-y-3">
+                    {[...Array(4)].map((_, i) => (
+                      <div key={i} className="bg-glass rounded-lg p-3 animate-pulse">
+                        <div className="h-4 bg-primary/20 rounded mb-2"></div>
+                        <div className="h-3 bg-secondary/20 rounded w-2/3"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : chatSessions.length > 0 ? (
+                  <div className="space-y-2">
+                    {chatSessions.map(session => (
+                      <div
+                        key={session.session_id}
+                        onClick={() => {
+                          setSelectedSubject(session.subject);
+                          loadSessionMessages(session.session_id);
+                        }}
+                        className={`
+                          bg-glass hover:bg-glass-hover border rounded-lg p-3 cursor-pointer transition-all duration-200 group
+                          ${selectedSessionId === session.session_id ? 'border-neon-cyan/50 bg-neon-cyan/10' : 'border-primary/20'}
+                        `}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center space-x-2 mb-1">
+                              <span className="text-lg">
+                                {subjects.find(s => s.value === session.subject)?.icon || '🤖'}
+                              </span>
+                              <h3 className="text-sm font-medium text-primary truncate">
+                                {session.subject.charAt(0).toUpperCase() + session.subject.slice(1)}
+                              </h3>
+                            </div>
+                            <p className="text-xs text-secondary">
+                              {getSessionPreview(session)}
+                            </p>
+                            <p className="text-xs text-secondary/70 mt-1">
+                              {new Date(session.last_activity).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <button
+                            onClick={(e) => deleteSession(session.session_id, e)}
+                            className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all duration-200 p-1"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <div className="text-4xl mb-4">💭</div>
+                    <p className="text-secondary">No previous neural sessions</p>
+                    <p className="text-xs text-secondary/70 mt-1">Create your first cognitive enhancement session</p>
+                  </div>
+                )}
+              </div>
+            </LiquidCard>
           </div>
-        </LiquidCard>
+
+          {/* Main Chat Interface */}
+          <div className="lg:col-span-3">
+            <LiquidCard className="h-full flex flex-col">
+              {/* Neural Header */}
+              <div className="p-6 border-b border-primary/20">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={() => setShowSidebar(!showSidebar)}
+                      className="lg:hidden text-secondary hover:text-primary mr-2"
+                    >
+                      ☰
+                    </button>
+                    <LiquidButton
+                      variant="secondary"
+                      onClick={() => {
+                        setSelectedSubject('');
+                        setMessages([]);
+                        setSessionId('');
+                        setSelectedSessionId('');
+                      }}
+                      className="mr-2"
+                    >
+                      ← Select Domain
+                    </LiquidButton>
+                    <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${selectedSubjectData?.gradient} flex items-center justify-center`}>
+                      <span className="text-2xl">{selectedSubjectData?.icon}</span>
+                    </div>
+                    <div>
+                      <h1 className="text-xl font-bold text-primary">{selectedSubjectData?.name} Neural Tutor</h1>
+                      <p className="text-sm text-secondary">
+                        {sessionId ? 'Active neural session' : 'Establishing neural link...'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="holographic-status">
+                    <span className="status-indicator"></span>
+                    <span className="text-sm text-neon-cyan">Neural Link Active</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Neural Messages Stream */}
+              <div className="flex-1 p-6 overflow-y-auto space-y-6">
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div className="flex items-start space-x-3 max-w-[80%]">
+                      {message.role === 'assistant' && (
+                        <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center text-sm">
+                          🤖
+                        </div>
+                      )}
+                      <div
+                        className={`
+                          p-4 rounded-xl border backdrop-blur-sm
+                          ${message.role === 'user'
+                            ? 'bg-gradient-to-br from-neon-cyan/20 to-neon-magenta/20 border-neon-cyan/50 text-primary'
+                            : 'bg-glass border-primary/20 text-primary'
+                          }
+                        `}
+                      >
+                        <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
+                        <div className={`text-xs mt-3 ${
+                          message.role === 'user' ? 'text-neon-cyan/70' : 'text-secondary'
+                        }`}>
+                          {message.timestamp.toLocaleTimeString()}
+                        </div>
+                      </div>
+                      {message.role === 'user' && (
+                        <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center text-sm">
+                          👤
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {loading && (
+                  <div className="flex justify-start">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center text-sm">
+                        🤖
+                      </div>
+                      <div className="bg-glass border border-primary/20 p-4 rounded-xl">
+                        <div className="flex items-center space-x-2">
+                          <div className="quantum-loader w-4 h-4"></div>
+                          <span className="text-secondary">Processing neural pathways...</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Neural Input Interface */}
+              <div className="p-6 border-t border-primary/20">
+                <div className="flex space-x-4">
+                  <div className="flex-1">
+                    <textarea
+                      value={currentMessage}
+                      onChange={(e) => setCurrentMessage(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder={`Input your ${selectedSubjectData?.name.toLowerCase()} query here...`}
+                      className="w-full p-4 bg-glass border border-primary/20 rounded-lg focus:ring-2 focus:ring-neon-cyan focus:border-transparent text-primary placeholder-secondary resize-none backdrop-blur-sm"
+                      rows="3"
+                      disabled={loading}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-end">
+                    <LiquidButton
+                      onClick={sendMessage}
+                      disabled={!currentMessage.trim() || loading || !sessionId}
+                      className="whitespace-nowrap"
+                    >
+                      {loading ? '⚡ Processing...' : '⚡ Send Neural Query'}
+                    </LiquidButton>
+                  </div>
+                </div>
+                <div className="mt-3 text-xs text-secondary">
+                  Press Enter to transmit • Shift+Enter for new line • Neural protocols active
+                </div>
+              </div>
+            </LiquidCard>
+          </div>
+        </div>
       </div>
     </div>
   );
