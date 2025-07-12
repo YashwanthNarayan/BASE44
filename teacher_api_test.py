@@ -449,7 +449,7 @@ class TestTeacherAPIRoutes(unittest.TestCase):
                 "class_name": f"Auto Code Class {i+1}",
                 "subject": Subject.MATH.value,
                 "description": f"Test class {i+1} with auto-generated code",
-                "class_code": None
+                "join_code": None
             }
             
             try:
