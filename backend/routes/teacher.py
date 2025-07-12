@@ -20,7 +20,7 @@ class ClassResponse(BaseModel):
     class_name: str
     subject: str
     description: str
-    class_code: str
+    join_code: str
     teacher_id: str
     created_at: datetime
     student_count: int = 0
