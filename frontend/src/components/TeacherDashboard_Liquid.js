@@ -216,38 +216,81 @@ const TeacherDashboard = ({ teacher, onNavigate, onLogout }) => {
           </div>
         </LiquidCard>
 
-        {/* Class Analytics Overview */}
-        {dashboardData?.class_summary && dashboardData.class_summary.length > 0 && (
+        {/* Active Classes with Join Codes */}
+        {classes && classes.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Active Classes */}
             <LiquidCard>
               <div className="p-6">
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center">
-                    <span className="text-sm font-bold">🏫</span>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center">
+                      <span className="text-sm font-bold">🏫</span>
+                    </div>
+                    <h2 className="text-xl font-bold text-primary">My Classes</h2>
                   </div>
-                  <h2 className="text-xl font-bold text-primary">Neural Class Matrix</h2>
+                  <LiquidButton 
+                    variant="secondary" 
+                    onClick={() => onNavigate('manage-classes')}
+                    className="text-sm"
+                  >
+                    View All
+                  </LiquidButton>
                 </div>
                 
                 <div className="space-y-4">
-                  {dashboardData.class_summary.slice(0, 3).map((classData, index) => (
+                  {classes.slice(0, 3).map((classItem, index) => (
                     <div
-                      key={index}
+                      key={classItem.class_id || index}
                       className="p-4 rounded-lg bg-glass border border-primary/20 hover:border-neon-cyan/50 transition-colors cursor-pointer"
-                      onClick={() => onNavigate('teacher-analytics')}
+                      onClick={() => onNavigate('manage-classes')}
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-3">
                         <div>
                           <h3 className="font-medium text-primary">
-                            {classData.class_info?.class_name || 'Neural Class'}
+                            {classItem.class_name}
                           </h3>
-                          <p className="text-sm text-secondary">
-                            {classData.student_count} students • {classData.total_tests} tests
+                          <p className="text-sm text-secondary capitalize">
+                            {classItem.subject} • {classItem.student_count || 0} students
                           </p>
                         </div>
                         <div className="text-right">
                           <div className="text-lg font-bold text-neon-cyan">
-                            {(classData.average_score || 0).toFixed(1)}%
+                            {classItem.average_score ? `${classItem.average_score.toFixed(1)}%` : 'N/A'}
+                          </div>
+                          <p className="text-xs text-secondary">Avg Score</p>
+                        </div>
+                      </div>
+                      
+                      {/* Join Code Display */}
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-secondary">
+                          Class Code:
+                        </div>
+                        <div className="px-3 py-1 bg-gradient-to-r from-neon-cyan/20 to-neon-magenta/20 border border-neon-cyan/30 rounded-lg">
+                          <span className="font-mono text-sm text-neon-cyan font-bold">
+                            {classItem.join_code || 'N/A'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {classes.length === 0 && (
+                    <div className="text-center py-8">
+                      <div className="text-4xl mb-4">🏫</div>
+                      <p className="text-secondary">No classes created yet</p>
+                      <LiquidButton 
+                        onClick={() => onNavigate('create-class')}
+                        className="mt-4"
+                      >
+                        Create Your First Class
+                      </LiquidButton>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </LiquidCard>
                           </div>
                           <div className="text-xs text-secondary">avg score</div>
                         </div>
