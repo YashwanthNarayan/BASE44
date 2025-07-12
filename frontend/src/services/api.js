@@ -22,6 +22,13 @@ const getApiBaseUrl = () => {
 
 const API_BASE = getApiBaseUrl();
 
+// Log the configuration for debugging
+console.log('🔍 API Configuration:', {
+  frontend_url: window.location.origin,
+  backend_url: API_BASE,
+  hostname: window.location.hostname
+});
+
 // Setup axios authentication
 export const setupAxiosAuth = (token) => {
   if (token) {
