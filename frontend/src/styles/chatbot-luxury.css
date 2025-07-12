@@ -57,31 +57,32 @@
   75% { transform: translate(-1px, 2px); }
 }
 
-/* Holographic Status Indicator */
+/* Professional Status Indicator */
 .chatbot-container .holographic-status {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: var(--gradient-premium);
-  border: 1px solid var(--luxury-gold);
+  background: linear-gradient(145deg, rgba(212, 175, 55, 0.15) 0%, rgba(229, 228, 226, 0.1) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.3);
   border-radius: 1rem;
   backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-holographic);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.1);
 }
 
 .chatbot-container .status-indicator {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--neon-cyan);
-  box-shadow: 0 0 10px var(--neon-cyan);
-  animation: pulse-holographic 2s ease-in-out infinite;
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+  animation: pulse-professional 3s ease-in-out infinite;
 }
 
-@keyframes pulse-holographic {
+@keyframes pulse-professional {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.2); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
 }
 
 /* Premium Liquid Glass Cards */
