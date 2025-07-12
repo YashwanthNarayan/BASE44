@@ -216,6 +216,33 @@ const AuthPortal = ({ onAuthSuccess }) => {
               </LiquidButton>
             </form>
 
+            {/* Debug Login Button */}
+            <div className="mt-4">
+              <LiquidButton
+                onClick={async () => {
+                  setIsLoading(true);
+                  try {
+                    const payload = { email: "testlogin@test.com", password: "TestPassword123!" };
+                    const response = await authAPI.login(payload);
+                    storage.set('access_token', response.access_token);
+                    storage.set('user_type', response.user_type);
+                    storage.set('user', response.user);
+                    setupAxiosAuth(response.access_token);
+                    onAuthSuccess(response.user_type, response.user);
+                  } catch (error) {
+                    setError('Debug login failed: ' + (error.response?.data?.detail || error.message));
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
+                variant="secondary"
+                className="w-full"
+                disabled={isLoading}
+              >
+                🔧 Debug Login (Test User)
+              </LiquidButton>
+            </div>
+
             {/* Footer */}
             <div className="mt-8 text-center">
               <p className="text-white/60 text-sm">
