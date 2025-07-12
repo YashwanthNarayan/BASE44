@@ -9,12 +9,22 @@ import '../styles/liquid-glass.css';
 const getApiBaseUrl = () => {
   const currentHost = window.location.hostname;
   const currentProtocol = window.location.protocol;
+  const currentOrigin = window.location.origin;
   
   if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
     return 'http://localhost:8001';
   }
   
-  return `${currentProtocol}//${currentHost}:8001`;
+  // For Emergent platform, try the same origin
+  if (currentHost.includes('emergentagent.com') || currentHost.includes('preview')) {
+    return currentOrigin;
+  }
+  
+  if (currentProtocol === 'https:') {
+    return `https://${currentHost}:8001`;
+  }
+  
+  return `http://${currentHost}:8001`;
 };
 
 const AuthPortal = ({ onAuthSuccess }) => {
