@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// API Base URL from environment - temporarily hardcoded for debugging
-const API_BASE = 'http://localhost:8001';
+// API Base URL from environment
+const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
 // Setup axios authentication
 export const setupAxiosAuth = (token) => {
