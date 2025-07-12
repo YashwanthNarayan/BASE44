@@ -71,8 +71,8 @@
 }
 
 .chatbot-container .chat-bubble-assistant {
-  background: rgba(212, 175, 55, 0.05);
-  border: 1px solid rgba(212, 175, 55, 0.15);
+  background: rgba(229, 229, 229, 0.05);
+  border: 1px solid rgba(229, 229, 229, 0.15);
   border-radius: 1rem;
   box-shadow: var(--shadow-subtle);
   backdrop-filter: blur(10px);
