@@ -222,7 +222,7 @@
 
 
 
-user_problem_statement: "Enhance the chatbot to be top quality with chat flow, previous chats (chat history), new chat functionality, and delete chat functionality."
+user_problem_statement: "First lets try to change to font to something more professional and then in the chat bot the select domain and the new nueral session are kinda blended in change that"
 
 backend:
   - task: "Tutor API Routes Implementation"
