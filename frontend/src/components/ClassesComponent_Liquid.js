@@ -27,19 +27,20 @@ const ClassesComponent = ({ student, onNavigate }) => {
 
   const joinClass = async () => {
     if (!joinCode.trim()) {
-      alert('Please input neural access code.');
+      alert('Please input class code.');
       return;
     }
 
     setJoining(true);
     try {
       await studentAPI.joinClass({ join_code: joinCode });
-      alert('Neural class connection established successfully!');
+      alert('Successfully joined class!');
       setJoinCode('');
       loadJoinedClasses();
     } catch (error) {
       console.error('Error joining class:', error);
-      alert(error.response?.data?.detail || 'Failed to establish neural class connection. Verify access code and retry.');
+      const errorMessage = error.response?.data?.detail || 'Failed to join class. Please verify the class code and try again.';
+      alert(errorMessage);
     } finally {
       setJoining(false);
     }
