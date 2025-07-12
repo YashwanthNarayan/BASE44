@@ -25,15 +25,67 @@ const TutorComponent = ({ student, onNavigate }) => {
   ];
 
   useEffect(() => {
+    loadChatSessions();
+  }, []);
+
+  useEffect(() => {
     if (selectedSubject) {
       startNewSession();
     }
   }, [selectedSubject]);
 
+  const loadChatSessions = async () => {
+    try {
+      setLoadingHistory(true);
+      const sessions = await tutorAPI.getSessions();
+      setChatSessions(sessions);
+    } catch (error) {
+      console.error('Error loading chat sessions:', error);
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
+
+  const loadSessionMessages = async (sessionId) => {
+    try {
+      setLoading(true);
+      const messages = await tutorAPI.getSessionMessages(sessionId);
+      
+      // Convert backend messages to frontend format
+      const formattedMessages = [];
+      messages.forEach(msg => {
+        // Add user message
+        formattedMessages.push({
+          role: 'user',
+          content: msg.message,
+          timestamp: new Date(msg.timestamp)
+        });
+        
+        // Add assistant response
+        if (msg.response) {
+          formattedMessages.push({
+            role: 'assistant',
+            content: msg.response,
+            timestamp: new Date(msg.timestamp)
+          });
+        }
+      });
+      
+      setMessages(formattedMessages);
+      setSelectedSessionId(sessionId);
+      setSessionId(sessionId);
+    } catch (error) {
+      console.error('Error loading session messages:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const startNewSession = async () => {
     try {
       const response = await tutorAPI.createSession({ subject: selectedSubject });
       setSessionId(response.session_id);
+      setSelectedSessionId(response.session_id);
       setMessages([
         {
           role: 'assistant',
@@ -41,9 +93,46 @@ const TutorComponent = ({ student, onNavigate }) => {
           timestamp: new Date()
         }
       ]);
+      
+      // Reload sessions to include the new one
+      loadChatSessions();
     } catch (error) {
       console.error('Error starting tutor session:', error);
     }
+  };
+
+  const deleteSession = async (sessionId, event) => {
+    event.stopPropagation();
+    
+    if (window.confirm('Are you sure you want to delete this chat session? This action cannot be undone.')) {
+      try {
+        await tutorAPI.deleteSession(sessionId);
+        
+        // If deleted session was currently selected, clear it
+        if (selectedSessionId === sessionId) {
+          setMessages([]);
+          setSelectedSessionId('');
+          setSessionId('');
+        }
+        
+        // Reload sessions
+        loadChatSessions();
+      } catch (error) {
+        console.error('Error deleting session:', error);
+        alert('Failed to delete session. Please try again.');
+      }
+    }
+  };
+
+  const getSessionTitle = (session) => {
+    return session.session_title || `${session.subject} Chat - ${new Date(session.started_at).toLocaleDateString()}`;
+  };
+
+  const getSessionPreview = (session) => {
+    if (session.message_count === 0) {
+      return 'New conversation';
+    }
+    return `${session.message_count} messages`;
   };
 
   const sendMessage = async () => {
