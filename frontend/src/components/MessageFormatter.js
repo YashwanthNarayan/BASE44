@@ -171,6 +171,8 @@ const MessageFormatter = ({ content, className = "" }) => {
     <div className={`message-content prose prose-invert max-w-none text-gray-100 ${className}`}>
       <ReactMarkdown 
         components={components}
+        remarkPlugins={[remarkMath]}
+        rehypePlugins={[rehypeKatex]}
       >
         {preprocessContent(content)}
       </ReactMarkdown>
