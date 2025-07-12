@@ -51,9 +51,7 @@ const AuthPortal = ({ onAuthSuccess }) => {
         })
       };
 
-      console.log('Login attempt:', { payload, isLogin });
       const response = isLogin ? await authAPI.login(payload) : await authAPI.register(payload);
-      console.log('Auth response:', response);
       
       // Store authentication data using storage utility
       storage.set('access_token', response.access_token);
@@ -63,10 +61,8 @@ const AuthPortal = ({ onAuthSuccess }) => {
       // Setup axios auth
       setupAxiosAuth(response.access_token);
       
-      console.log('Calling onAuthSuccess with:', response.user_type, response.user);
       onAuthSuccess(response.user_type, response.user);
     } catch (error) {
-      console.error('Auth error:', error);
       setError(error.response?.data?.detail || 'Authentication failed');
     } finally {
       setIsLoading(false);
