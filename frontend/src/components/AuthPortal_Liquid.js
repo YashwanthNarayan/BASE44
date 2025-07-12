@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { authAPI, setupAxiosAuth } from '../services/api';
 import { userTypes, gradeLevels } from '../utils/constants';
-import { isValidEmail, validatePassword } from '../utils/helpers';
+import { isValidEmail, validatePassword, storage } from '../utils/helpers';
 import { LiquidCard, LiquidButton, LiquidInput, LiquidSelect, LiquidToast } from './ui/LiquidComponents';
 import '../styles/liquid-glass.css';
 
