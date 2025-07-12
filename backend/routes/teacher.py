@@ -136,7 +136,7 @@ async def get_teacher_classes(
                 "class_name": classroom["class_name"],
                 "subject": classroom["subject"],
                 "description": classroom.get("description", ""),
-                "class_code": classroom["class_code"],
+                "join_code": classroom["join_code"],
                 "teacher_id": classroom["teacher_id"],
                 "created_at": classroom["created_at"],
                 "student_count": student_count,
