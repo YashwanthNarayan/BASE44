@@ -34,6 +34,20 @@ const ProgressComponent = ({ student, onNavigate }) => {
     }
   };
 
+  const loadDetailedResults = async (attemptId) => {
+    setLoadingDetails(true);
+    try {
+      const response = await practiceAPI.getDetailedResults(attemptId);
+      setDetailedResults(response);
+      setViewingDetails(attemptId);
+    } catch (error) {
+      console.error('Error loading detailed results:', error);
+      alert('Failed to load detailed results');
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
+
   const getPerformanceColor = (score) => {
     if (score >= 80) return 'text-neon-green bg-gradient-to-r from-green-500/20 to-emerald-500/20';
     if (score >= 60) return 'text-neon-yellow bg-gradient-to-r from-yellow-500/20 to-orange-500/20';
