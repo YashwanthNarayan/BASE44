@@ -148,7 +148,7 @@ const ManageClassesComponent = ({ teacher, onNavigate }) => {
                 <div className="mb-4 p-3 bg-glass/50 rounded-lg">
                   <div className="text-xs text-secondary mb-1">Class Code</div>
                   <div className="text-lg font-mono font-bold text-primary tracking-wider">
-                    {classItem.class_code}
+                    {classItem.join_code || 'N/A'}
                   </div>
                 </div>
 
