@@ -162,6 +162,12 @@ const MessageFormatter = ({ content, className = "" }) => {
     processedText = processedText.replace(/^\*\s+/gm, '* ');
     processedText = processedText.replace(/^\-\s+/gm, '- ');
     
+    // Handle LaTeX math expressions - ensure proper spacing around $ signs
+    processedText = processedText.replace(/\$([^$]+)\$/g, ' $$$1$$ ');
+    
+    // Handle display math (double dollar signs)
+    processedText = processedText.replace(/\$\$([^$]+)\$\$/g, '\n$$$$1$$\n');
+    
     console.log('After preprocessing:', processedText);
     
     return processedText;
