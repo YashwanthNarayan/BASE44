@@ -496,7 +496,7 @@ const TutorComponent = ({ student, onNavigate }) => {
                         </div>
                       </div>
                       {message.role === 'user' && (
-                        <div className="avatar-premium w-10 h-10 rounded-lg bg-premium-gold flex items-center justify-center text-lg">
+                        <div className="avatar-premium w-10 h-10 rounded-lg bg-premium-platinum flex items-center justify-center text-lg">
                           👤
                         </div>
                       )}
