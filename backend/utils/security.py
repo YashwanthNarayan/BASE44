@@ -64,18 +64,33 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         if payload is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not validate credentials"
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"}
             )
         
         return payload
     except HTTPException:
         # Re-raise HTTP exceptions (like 401) as-is
         raise
-    except Exception as e:
-        # Convert any other exception to 401
+    except jwt.ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials"
+            detail="Token has expired",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    except jwt.JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    except Exception as e:
+        # Convert any other exception to 401 (not 500)
+        print(f"Authentication error: {e}")  # Log for debugging
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"}
         )
 
 # Role-based access dependencies
