@@ -103,24 +103,28 @@ async def send_message(
         if not session:
             raise HTTPException(status_code=404, detail="Chat session not found")
         
-        # Get previous messages for context
+        # Get previous messages for context (more recent messages for better context)
         previous_messages = await db[Collections.CHAT_MESSAGES].find({
             "session_id": request.session_id
-        }).sort("timestamp", -1).limit(5).to_list(length=5)
+        }).sort("timestamp", -1).limit(10).to_list(length=10)
         
-        # Build context from previous messages
+        # Build context from previous messages (reverse to get chronological order)
         context = {
             "learning_insights": [],
             "conversation_history": []
         }
         
+        # Process messages in chronological order (oldest first)
         for msg in reversed(previous_messages):
-            context["conversation_history"].append({
-                "user": msg.get("message", ""),
-                "assistant": msg.get("response", "")
-            })
+            if msg.get("message") and msg.get("response"):
+                context["conversation_history"].append({
+                    "user": msg.get("message", ""),
+                    "assistant": msg.get("response", "")
+                })
         
-        # Generate AI response
+        print(f"Context for AI: {len(context['conversation_history'])} previous exchanges")
+        
+        # Generate AI response with context
         ai_response = await ai_service.generate_tutor_response(
             message=request.message,
             subject=request.subject,
