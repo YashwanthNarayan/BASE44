@@ -149,19 +149,19 @@ class TestTeacherAPIRoutes(unittest.TestCase):
                 "class_name": "Advanced Mathematics",
                 "subject": Subject.MATH.value,
                 "description": "Advanced mathematics for grade 11 students covering calculus and algebra",
-                "class_code": None  # Let system generate
+                "join_code": None  # Let system generate
             },
             {
                 "class_name": "Physics Fundamentals",
                 "subject": Subject.PHYSICS.value,
                 "description": "Basic physics concepts including mechanics and thermodynamics",
-                "class_code": "PHYS101"  # Custom code
+                "join_code": "PHYS101"  # Custom code
             },
             {
                 "class_name": "Chemistry Lab",
                 "subject": Subject.CHEMISTRY.value,
                 "description": "Hands-on chemistry experiments and theory",
-                "class_code": None  # Let system generate
+                "join_code": None  # Let system generate
             }
         ]
         
