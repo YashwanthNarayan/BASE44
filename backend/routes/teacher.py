@@ -219,7 +219,7 @@ async def get_teacher_analytics_overview(
 ):
     """Get teacher's overall analytics across all classes"""
     try:
-        db = await get_database()
+        db = get_database()
         teacher_id = current_user['sub']
         
         # Check if user is a teacher
