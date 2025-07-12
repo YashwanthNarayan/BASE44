@@ -183,8 +183,12 @@ const ProgressComponent = ({ student, onNavigate }) => {
                       .map((test, index) => (
                       <div 
                         key={test.id || index} 
-                        className="p-4 bg-glass border border-primary/20 rounded-lg hover:border-neon-cyan/50 transition-all duration-300 cursor-pointer hover:scale-102 hover:bg-glass/70"
-                        onClick={() => test.id && loadDetailedResults(test.id)}
+                        className={`p-4 bg-glass border border-primary/20 rounded-lg transition-all duration-300 cursor-pointer hover:scale-102 hover:bg-glass/70 ${
+                          loadingDetails && viewingDetails === test.id 
+                            ? 'border-blue-400/50 bg-blue-500/10 cursor-wait' 
+                            : 'hover:border-neon-cyan/50'
+                        }`}
+                        onClick={() => test.id && !loadingDetails && loadDetailedResults(test.id)}
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
