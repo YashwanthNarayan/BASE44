@@ -283,6 +283,96 @@ const ProgressComponent = ({ student, onNavigate }) => {
             </LiquidButton>
           </LiquidCard>
         )}
+
+        {/* Detailed Results Modal */}
+        {viewingDetails && detailedResults && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-dark-space border border-primary/20 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+              <div className="p-6 border-b border-primary/20">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-primary">Detailed Test Results</h2>
+                  <button
+                    onClick={() => {
+                      setViewingDetails(null);
+                      setDetailedResults(null);
+                    }}
+                    className="text-secondary hover:text-primary transition-colors"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="flex items-center gap-4 mt-2 text-sm text-secondary">
+                  <span>{detailedResults.subject?.charAt(0).toUpperCase() + detailedResults.subject?.slice(1)} Test</span>
+                  <span>•</span>
+                  <span>{detailedResults.score}% Score</span>
+                  <span>•</span>
+                  <span>{detailedResults.correct_count}/{detailedResults.total_questions} Correct</span>
+                  <span>•</span>
+                  <span>{new Date(detailedResults.completed_at).toLocaleDateString()}</span>
+                </div>
+              </div>
+              
+              <div className="overflow-y-auto max-h-[calc(90vh-140px)] p-6">
+                <div className="space-y-4">
+                  {detailedResults.detailed_results?.map((result, index) => (
+                    <div 
+                      key={result.question_id} 
+                      className={`p-4 rounded-lg border ${
+                        result.is_correct 
+                          ? 'border-green-400/30 bg-green-500/5' 
+                          : 'border-red-400/30 bg-red-500/5'
+                      }`}
+                    >
+                      {/* Question Header */}
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                          result.is_correct 
+                            ? 'bg-green-400 text-green-900' 
+                            : 'bg-red-400 text-red-900'
+                        }`}>
+                          {result.is_correct ? '✓' : '✗'}
+                        </div>
+                        <span className="font-semibold text-primary">Question {index + 1}</span>
+                        <span className="text-xs text-secondary bg-white/10 px-2 py-1 rounded capitalize">
+                          {result.topic}
+                        </span>
+                      </div>
+
+                      {/* Question Text */}
+                      <div className="mb-3">
+                        <p className="text-primary text-sm">{result.question_text}</p>
+                      </div>
+
+                      {/* Answers */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3 text-sm">
+                        <div>
+                          <span className="text-secondary">Your Answer: </span>
+                          <span className={result.is_correct ? 'text-green-400' : 'text-red-400'}>
+                            {result.student_answer || 'No answer'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-secondary">Correct Answer: </span>
+                          <span className="text-green-400">{result.correct_answer}</span>
+                        </div>
+                      </div>
+
+                      {/* Explanation */}
+                      <div className="bg-white/5 rounded p-3">
+                        <div className="text-xs text-secondary mb-1">💡 Explanation:</div>
+                        <p className="text-primary/90 text-xs">{result.explanation}</p>
+                      </div>
+                    </div>
+                  )) || (
+                    <div className="text-center py-8">
+                      <p className="text-secondary">No detailed results available for this test.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
