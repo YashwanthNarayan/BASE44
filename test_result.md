@@ -471,6 +471,7 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Enhanced Calendar Component with Click-to-Add Events"
     - "Enhanced Tutor Component with Chat History"
   stuck_tasks: []
   test_all: false
