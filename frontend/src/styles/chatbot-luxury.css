@@ -1,10 +1,12 @@
 /* Simple Premium Chatbot Design */
 .chatbot-container {
-  /* Premium Color Palette - Simplified */
-  --premium-gold: #d4af37;
+  /* Premium Platinum Color Palette */
+  --premium-platinum: #e5e5e5;
+  --premium-silver: #c0c0c0;
+  --premium-graphite: #a8a8a8;
   --premium-dark: #1a1a1a;
   --premium-surface: #2a2a2a;
-  --premium-border: rgba(212, 175, 55, 0.2);
+  --premium-border: rgba(229, 229, 229, 0.2);
   --premium-text: #ffffff;
   --premium-text-secondary: #b0b0b0;
   
