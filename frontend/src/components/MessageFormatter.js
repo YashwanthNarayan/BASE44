@@ -165,10 +165,9 @@ const MessageFormatter = ({ content, className = "" }) => {
   };
 
   return (
-    <div className={`message-content prose prose-invert max-w-none ${className}`}>
+    <div className={`message-content prose prose-invert max-w-none text-gray-100 ${className}`}>
       <ReactMarkdown 
         components={components}
-        className="text-gray-100"
       >
         {preprocessContent(content)}
       </ReactMarkdown>
