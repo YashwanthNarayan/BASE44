@@ -202,7 +202,20 @@
 
 
 
-user_problem_statement: "Test the newly implemented futuristic cyberpunk UI design in the AIR-PROJECT-K platform. Focus on the visual aesthetics and functionality of the liquid glass components."
+user_problem_statement: "Enhance the chatbot to be top quality with chat flow, previous chats (chat history), new chat functionality, and delete chat functionality."
+
+backend:
+  - task: "Tutor API Routes Implementation"
+    implemented: true
+    working: false
+    file: "backend/routes/tutor.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Implemented comprehensive tutor API routes including: POST /api/tutor/session (create chat session), POST /api/tutor/chat (send message and get AI response), GET /api/tutor/sessions (get chat history), GET /api/tutor/session/{session_id}/messages (get messages for session), DELETE /api/tutor/session/{session_id} (delete chat), and PATCH /api/tutor/session/{session_id}/title (update session title). Integrated with existing AI service and database collections."
 
 backend:
   - task: "Health Check & API Structure"
