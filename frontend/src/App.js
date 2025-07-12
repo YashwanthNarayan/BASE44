@@ -36,24 +36,6 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for test parameter in URL
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('test') === 'progress') {
-      // Set up test authentication
-      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhOWQ4YzJmNC04ODYzLTRmMGUtOWMyZS1jODRlZmE4MzEyOGUiLCJlbWFpbCI6ImRlYnVndXNlckB0ZXN0LmNvbSIsInVzZXJfdHlwZSI6InN0dWRlbnQiLCJleHAiOjE3NTI0MzE4MTl9.EaL4VL7l7VZehpzT0VbudbbLFhuRQFS0e_0aZWr8vhI";
-      setupAxiosAuth(token);
-      setIsAuthenticated(true);
-      setUserType('student');
-      setUser({
-        id: "a9d8c2f4-8863-4f0e-9c2e-c84efa83128e",
-        name: "Debug User",
-        email: "debuguser@test.com"
-      });
-      setCurrentView('progress');
-      setLoading(false);
-      return;
-    }
-    
     checkAuthStatus();
   }, []);
 
