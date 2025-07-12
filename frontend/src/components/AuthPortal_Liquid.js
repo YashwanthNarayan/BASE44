@@ -238,28 +238,6 @@ const AuthPortal = ({ onAuthSuccess }) => {
               </LiquidButton>
             </form>
 
-            {/* Connection Test */}
-            <div className="mt-4 p-3 bg-yellow-500/20 rounded-lg border border-yellow-400/30">
-              <p className="text-white/80 text-sm mb-2">Connection Test:</p>
-              <button
-                onClick={async () => {
-                  try {
-                    const testUrl = `${getApiBaseUrl()}/health`;
-                    console.log('Testing connection to:', testUrl);
-                    const response = await fetch(testUrl);
-                    const data = await response.json();
-                    alert(`✅ Backend Connected!\nURL: ${testUrl}\nStatus: ${data.status}`);
-                  } catch (error) {
-                    console.error('Connection test failed:', error);
-                    alert(`❌ Backend Connection Failed!\nURL: ${getApiBaseUrl()}/health\nError: ${error.message}`);
-                  }
-                }}
-                className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-4 rounded-lg transition-colors text-sm"
-              >
-                🔍 Test Backend Connection
-              </button>
-            </div>
-
             {/* Footer */}
             <div className="mt-8 text-center">
               <p className="text-white/60 text-sm">
