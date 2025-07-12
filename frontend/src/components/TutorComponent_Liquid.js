@@ -3,6 +3,7 @@ import { tutorAPI } from '../services/api';
 import { LiquidCard, LiquidButton, LiquidInput } from './ui/LiquidComponents';
 import MessageFormatter from './MessageFormatter';
 import '../styles/liquid-glass.css';
+import '../styles/chatbot-luxury.css';
 
 const TutorComponent = ({ student, onNavigate }) => {
   const [selectedSubject, setSelectedSubject] = useState('');
