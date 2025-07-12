@@ -130,7 +130,7 @@ async def send_message(
         # Create chat message
         chat_message = ChatMessage(
             session_id=request.session_id,
-            user_id=current_user["user_id"],
+            user_id=current_user["sub"],
             message=request.message,
             response=ai_response,
             subject=request.subject,
