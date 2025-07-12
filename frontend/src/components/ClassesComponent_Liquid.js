@@ -27,13 +27,16 @@ const ClassesComponent = ({ student, onNavigate }) => {
 
   const joinClass = async () => {
     if (!joinCode.trim()) {
-      alert('Please input class code.');
+      alert('Please enter a class code.');
       return;
     }
 
     setJoining(true);
     try {
-      await studentAPI.joinClass({ join_code: joinCode });
+      // Normalize the join code (trim whitespace and convert to uppercase)
+      const normalizedCode = joinCode.trim().toUpperCase();
+      
+      await studentAPI.joinClass({ join_code: normalizedCode });
       alert('Successfully joined class!');
       setJoinCode('');
       loadJoinedClasses();
