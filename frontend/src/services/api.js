@@ -144,25 +144,8 @@ export const practiceAPI = {
   },
   
   getDetailedResults: async (attemptId) => {
-    const primaryUrl = `${API_BASE}/api/practice/results/${attemptId}`;
-    const fallbackUrl = `https://${window.location.hostname}:8001/api/practice/results/${attemptId}`;
-    
-    console.log('🔍 Calling detailed results API:', primaryUrl);
-    try {
-      const response = await axios.get(primaryUrl);
-      console.log('✅ Detailed results API success');
-      return response.data;
-    } catch (error) {
-      console.log('⚠️ Primary URL failed, trying fallback:', fallbackUrl);
-      try {
-        const response = await axios.get(fallbackUrl);
-        console.log('✅ Detailed results API success (fallback)');
-        return response.data;
-      } catch (fallbackError) {
-        console.error('❌ Both URLs failed for detailed results');
-        throw error; // Throw original error
-      }
-    }
+    const response = await axios.get(`${API_BASE}/api/practice/results/${attemptId}`);
+    return response.data;
   },
   
   getStats: async (subject) => {
