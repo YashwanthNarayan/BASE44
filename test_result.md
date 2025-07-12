@@ -345,6 +345,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "JWT validation has issues - invalid tokens are returning 500 Internal Server Error instead of the expected 401 Unauthorized. This suggests there's an issue with error handling in the security middleware or HTTPBearer dependency when processing malformed tokens."
+        - working: false
+          agent: "testing"
+          comment: "JWT validation issue confirmed still present: Missing tokens return 403 Forbidden (acceptable), but invalid/malformed tokens return 500 Internal Server Error instead of 401 Unauthorized. The security.py error handling needs improvement to catch JWT decode errors and return proper 401 responses instead of allowing exceptions to bubble up as 500 errors. This is a minor issue that doesn't affect core functionality but should be addressed for proper API behavior."
 
   - task: "Detailed Test Results API"
     implemented: true
