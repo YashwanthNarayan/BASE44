@@ -1,7 +1,26 @@
 import axios from 'axios';
 
-// API Base URL from environment
-const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
+// Dynamic API Base URL - automatically determines backend URL based on frontend URL
+const getApiBaseUrl = () => {
+  // If we're in development and have an env var, use it
+  if (process.env.REACT_APP_BACKEND_URL) {
+    return process.env.REACT_APP_BACKEND_URL;
+  }
+  
+  // Otherwise, determine dynamically based on current URL
+  const currentHost = window.location.hostname;
+  const currentProtocol = window.location.protocol;
+  
+  // For localhost development
+  if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+    return 'http://localhost:8001';
+  }
+  
+  // For any other host, use the same host with port 8001
+  return `${currentProtocol}//${currentHost}:8001`;
+};
+
+const API_BASE = getApiBaseUrl();
 
 // Setup axios authentication
 export const setupAxiosAuth = (token) => {
