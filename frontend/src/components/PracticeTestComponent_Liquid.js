@@ -331,13 +331,18 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
                     key={key}
                     onClick={() => setSelectedSubject(key)}
                     className={`
-                      p-6 rounded-2xl transition-all duration-300 text-center
+                      p-6 rounded-2xl transition-all duration-300 text-center relative
                       ${selectedSubject === key
-                        ? 'glass-strong border-white/40 text-white scale-105'
-                        : 'glass border-white/20 text-white/80 hover:glass-strong hover:scale-102'
+                        ? 'glass-strong border-2 border-green-400 text-white scale-105 ring-2 ring-green-400/50'
+                        : 'glass border-white/20 text-white/80 hover:glass-strong hover:scale-102 hover:border-white/40'
                       }
                     `}
                   >
+                    {selectedSubject === key && (
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center">
+                        <span className="text-black text-sm font-bold">✓</span>
+                      </div>
+                    )}
                     <div className="text-3xl mb-2">{subject.icon}</div>
                     <div className="font-medium">{subject.name}</div>
                   </button>
