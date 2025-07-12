@@ -10,6 +10,7 @@ from backend.utils.database import connect_to_database, close_database_connectio
 
 # Import route modules
 from backend.routes import auth, student, practice
+from backend.routes.student import dashboard_router
 
 # Load environment variables
 load_dotenv()
