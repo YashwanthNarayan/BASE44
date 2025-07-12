@@ -404,15 +404,37 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
                     key={type.value}
                     onClick={() => handleQuestionTypeToggle(type.value)}
                     className={`
-                      p-6 text-left rounded-2xl transition-all duration-300
+                      p-6 text-left rounded-2xl transition-all duration-300 relative
                       ${selectedQuestionTypes.includes(type.value)
-                        ? 'glass-strong border-white/40'
-                        : 'glass border-white/20 hover:glass-strong'
+                        ? 'glass-strong border-2 border-purple-400 bg-purple-400/10'
+                        : 'glass border-white/20 hover:glass-strong hover:border-white/40'
                       }
                     `}
                   >
-                    <div className="font-semibold text-white text-lg mb-2">{type.label}</div>
-                    <div className="text-white/60 text-sm">{type.description}</div>
+                    {selectedQuestionTypes.includes(type.value) && (
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-purple-400 rounded-full flex items-center justify-center">
+                        <span className="text-black text-sm font-bold">✓</span>
+                      </div>
+                    )}
+                    <div className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 ${
+                        selectedQuestionTypes.includes(type.value) 
+                          ? 'border-purple-400 bg-purple-400' 
+                          : 'border-white/40'
+                      }`}>
+                        {selectedQuestionTypes.includes(type.value) && (
+                          <span className="text-black text-xs font-bold">✓</span>
+                        )}
+                      </div>
+                      <div>
+                        <div className={`font-semibold text-white text-lg mb-2 ${
+                          selectedQuestionTypes.includes(type.value) ? 'text-purple-200' : ''
+                        }`}>
+                          {type.label}
+                        </div>
+                        <div className="text-white/60 text-sm">{type.description}</div>
+                      </div>
+                    </div>
                   </button>
                 ))}
               </div>
