@@ -104,7 +104,7 @@ async def get_teacher_classes(
 ):
     """Get all classes for the current teacher"""
     try:
-        db = await get_database()
+        db = get_database()
         teacher_id = current_user['sub']
         
         # Check if user is a teacher
