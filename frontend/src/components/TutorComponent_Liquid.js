@@ -344,7 +344,7 @@ const TutorComponent = ({ student, onNavigate }) => {
   const selectedSubjectData = subjects.find(s => s.value === selectedSubject);
 
   return (
-    <div className="min-h-screen bg-dark-space text-primary relative">
+    <div className="chatbot-container min-h-screen bg-dark-space text-primary relative">
       <div className="quantum-grid fixed inset-0 opacity-40" />
       
       {/* Floating Particles */}
