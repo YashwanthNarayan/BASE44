@@ -232,11 +232,16 @@ const ProgressComponent = ({ student, onNavigate }) => {
                   </div>
                 ) : (
                   <div className="text-center py-12">
-                    <div className="text-6xl mb-4">🧠</div>
-                    <h3 className="text-2xl font-bold text-primary mb-4">No Neural Data Detected</h3>
-                    <p className="text-secondary mb-6">Initialize your neural assessment protocols to begin tracking cognitive evolution.</p>
+                    <div className="text-6xl mb-4">📚</div>
+                    <h3 className="text-2xl font-bold text-primary mb-4">No Test History Yet</h3>
+                    <p className="text-secondary mb-6">
+                      Take your first practice test to see detailed results and track your progress.
+                    </p>
+                    <p className="text-xs text-secondary/70 mb-6">
+                      💡 After taking tests, you can click on any test result to view question-by-question analysis with explanations
+                    </p>
                     <LiquidButton onClick={() => onNavigate('practice')}>
-                      ⚡ Initialize Neural Assessment
+                      📝 Take Your First Test
                     </LiquidButton>
                   </div>
                 )}
