@@ -45,20 +45,20 @@ async def create_class(
                 detail="Only teachers can create classes"
             )
         
-        # Generate class code if not provided
-        if not class_data.class_code:
+        # Generate join code if not provided
+        if not class_data.join_code:
             import random
             import string
-            class_data.class_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            class_data.join_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
         
-        # Check if class code already exists
+        # Check if join code already exists
         existing_class = await db[Collections.CLASSROOMS].find_one({
-            "class_code": class_data.class_code
+            "join_code": class_data.join_code
         })
         if existing_class:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Class code already exists. Please choose a different one."
+                detail="Join code already exists. Please choose a different one."
             )
         
         # Create class
