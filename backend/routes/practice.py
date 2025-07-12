@@ -52,7 +52,7 @@ async def submit_practice_test(
     test_data: dict,
     current_user: dict = Depends(get_current_student)
 ):
-    """Submit practice test answers"""
+    """Submit practice test answers with detailed results"""
     db = get_database()
     
     try:
@@ -68,27 +68,53 @@ async def submit_practice_test(
                 detail="Questions not found"
             )
         
-        # Calculate score
+        # Calculate detailed results
         student_answers = test_data.get("student_answers", {})
         correct_count = 0
         total_questions = len(questions)
+        detailed_results = []
         
         for question in questions:
-            student_answer = student_answers.get(question["id"], "").strip().lower()
-            correct_answer = question["correct_answer"].strip().lower()
+            question_id = question["id"]
+            student_answer = student_answers.get(question_id, "").strip()
+            correct_answer = question["correct_answer"].strip()
             
-            if student_answer == correct_answer:
+            # Determine if answer is correct (case-insensitive for text answers)
+            is_correct = False
+            if question.get("question_type") == "mcq":
+                is_correct = student_answer.lower() == correct_answer.lower()
+            else:
+                # For numerical and short answers, allow for slight variations
+                is_correct = student_answer.lower() == correct_answer.lower()
+            
+            if is_correct:
                 correct_count += 1
+            
+            # Store detailed result for this question
+            detailed_result = {
+                "question_id": question_id,
+                "question_text": question["question_text"],
+                "question_type": question["question_type"],
+                "options": question.get("options"),
+                "student_answer": student_answer,
+                "correct_answer": correct_answer,
+                "is_correct": is_correct,
+                "explanation": question.get("explanation", "No explanation available"),
+                "topic": question.get("topic", "General")
+            }
+            detailed_results.append(detailed_result)
         
         score_percentage = ScoreUtils.calculate_percentage(correct_count, total_questions)
         
-        # Create practice attempt record
+        # Create detailed practice attempt record
         attempt_doc = {
             "id": str(uuid.uuid4()),
             "student_id": current_user["sub"],
             "questions": question_ids,
             "student_answers": student_answers,
+            "detailed_results": detailed_results,  # Store question-by-question results
             "score": score_percentage,
+            "correct_count": correct_count,
             "total_questions": total_questions,
             "subject": questions[0]["subject"] if questions else "general",
             "difficulty": questions[0]["difficulty"] if questions else "medium",
@@ -102,11 +128,13 @@ async def submit_practice_test(
         await update_student_stats(current_user["sub"], score_percentage, questions[0]["subject"])
         
         return {
+            "attempt_id": attempt_doc["id"],
             "score": score_percentage,
             "correct_answers": correct_count,
             "total_questions": total_questions,
             "grade": ScoreUtils.get_grade_from_percentage(score_percentage),
-            "xp_gained": ScoreUtils.calculate_xp_gain(score_percentage, questions[0]["difficulty"])
+            "xp_gained": ScoreUtils.calculate_xp_gain(score_percentage, questions[0]["difficulty"]),
+            "detailed_results": detailed_results  # Return detailed results immediately
         }
     
     except HTTPException:
