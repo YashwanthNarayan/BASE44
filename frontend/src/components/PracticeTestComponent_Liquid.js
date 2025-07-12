@@ -450,14 +450,26 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
                       key={num}
                       onClick={() => setNumQuestions(num)}
                       className={`
-                        p-4 rounded-xl transition-all duration-300
+                        p-4 rounded-xl transition-all duration-300 relative
                         ${numQuestions === num
-                          ? 'glass-strong border-white/40 text-white'
-                          : 'glass border-white/20 text-white/70 hover:text-white hover:glass-strong'
+                          ? 'glass-strong border-2 border-yellow-400 text-white bg-yellow-400/10'
+                          : 'glass border-white/20 text-white/70 hover:text-white hover:glass-strong hover:border-white/40'
                         }
                       `}
                     >
-                      {num} Questions
+                      {numQuestions === num && (
+                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center">
+                          <span className="text-black text-xs font-bold">✓</span>
+                        </div>
+                      )}
+                      <div className={`flex items-center gap-2 justify-center ${
+                        numQuestions === num ? 'font-semibold' : ''
+                      }`}>
+                        <div className={`w-3 h-3 rounded-full ${
+                          numQuestions === num ? 'bg-yellow-400' : 'border-2 border-white/40'
+                        }`}></div>
+                        {num} Questions
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -471,14 +483,26 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
                       key={level.value}
                       onClick={() => setDifficulty(level.value)}
                       className={`
-                        p-4 rounded-xl transition-all duration-300
+                        p-4 rounded-xl transition-all duration-300 relative
                         ${difficulty === level.value
-                          ? 'glass-strong border-white/40 text-white'
-                          : 'glass border-white/20 text-white/70 hover:text-white hover:glass-strong'
+                          ? 'glass-strong border-2 border-red-400 text-white bg-red-400/10'
+                          : 'glass border-white/20 text-white/70 hover:text-white hover:glass-strong hover:border-white/40'
                         }
                       `}
                     >
-                      {level.label}
+                      {difficulty === level.value && (
+                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-400 rounded-full flex items-center justify-center">
+                          <span className="text-black text-xs font-bold">✓</span>
+                        </div>
+                      )}
+                      <div className={`flex items-center gap-2 justify-center ${
+                        difficulty === level.value ? 'font-semibold' : ''
+                      }`}>
+                        <div className={`w-3 h-3 rounded-full ${
+                          difficulty === level.value ? 'bg-red-400' : 'border-2 border-white/40'
+                        }`}></div>
+                        {level.label}
+                      </div>
                     </button>
                   ))}
                 </div>
