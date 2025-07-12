@@ -300,7 +300,7 @@ const TutorComponent = ({ student, onNavigate }) => {
                           <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">
                             {subject.icon}
                           </div>
-                          <h3 className="font-bold text-xl text-luxury-gold mb-3 group-hover:text-white transition-colors duration-300">
+                          <h3 className="font-bold text-xl text-luxury-platinum mb-3 group-hover:text-white transition-colors duration-300">
                             {subject.name}
                           </h3>
                           <p className="text-sm text-luxury-platinum group-hover:text-white transition-colors duration-300">
