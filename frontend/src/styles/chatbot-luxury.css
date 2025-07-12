@@ -266,9 +266,9 @@
   color: white;
 }
 
-/* Luxury Session Cards */
+/* Professional Session Cards */
 .chatbot-container .session-card-luxury {
-  background: linear-gradient(145deg, rgba(212, 175, 55, 0.1) 0%, rgba(17, 17, 17, 0.8) 100%);
+  background: linear-gradient(145deg, rgba(212, 175, 55, 0.08) 0%, rgba(17, 17, 17, 0.9) 100%);
   border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 0.75rem;
   backdrop-filter: blur(10px);
@@ -278,15 +278,16 @@
 }
 
 .chatbot-container .session-card-luxury:hover {
-  border-color: var(--luxury-gold);
+  border-color: rgba(212, 175, 55, 0.4);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
+  background: linear-gradient(145deg, rgba(212, 175, 55, 0.12) 0%, rgba(17, 17, 17, 0.9) 100%);
 }
 
 .chatbot-container .session-card-luxury.active {
-  border-color: var(--neon-cyan);
-  background: linear-gradient(145deg, rgba(0, 255, 255, 0.1) 0%, rgba(17, 17, 17, 0.8) 100%);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  border-color: rgba(59, 130, 246, 0.5);
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.1) 0%, rgba(17, 17, 17, 0.9) 100%);
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.2);
 }
 
 /* Professional Floating Particles Effect */
