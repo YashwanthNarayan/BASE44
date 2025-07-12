@@ -521,7 +521,7 @@ const TutorComponent = ({ student, onNavigate }) => {
                           />
                         )}
                         <div className={`text-xs mt-4 ${
-                          message.role === 'user' ? 'text-neon-cyan/80' : 'text-luxury-gold/80'
+                          message.role === 'user' ? 'text-blue-300' : 'text-luxury-gold/80'
                         }`}>
                           {message.timestamp.toLocaleTimeString()}
                         </div>
