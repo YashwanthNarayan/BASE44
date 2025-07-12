@@ -68,7 +68,7 @@ async def create_class(
             "class_name": class_data.class_name,
             "subject": class_data.subject,
             "description": class_data.description,
-            "class_code": class_data.class_code,
+            "join_code": class_data.join_code,
             "teacher_id": teacher_id,
             "created_at": datetime.utcnow(),
             "student_ids": [],
