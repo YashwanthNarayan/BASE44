@@ -39,8 +39,20 @@ export const authAPI = {
   },
   
   register: async (formData) => {
-    const response = await axios.post(`${API_BASE}/api/auth/register`, formData);
-    return response.data;
+    console.log('🔍 Register attempt:', { email: formData.email, API_BASE });
+    try {
+      const response = await axios.post(`${API_BASE}/api/auth/register`, formData);
+      console.log('✅ Register successful:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Register failed:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        url: `${API_BASE}/api/auth/register`
+      });
+      throw error;
+    }
   }
 };
 
