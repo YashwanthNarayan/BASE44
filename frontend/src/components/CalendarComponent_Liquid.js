@@ -49,6 +49,10 @@ const CalendarComponent = ({ student, onNavigate }) => {
     const day = String(date.getDate()).padStart(2, '0');
     const dateStr = `${year}-${month}-${day}`;
     
+    console.log('Clicked date object:', date);
+    console.log('Clicked date string:', dateStr);
+    console.log('Formatted for display:', formatSelectedDate(dateStr));
+    
     setSelectedDate(dateStr);
     setQuickEvent({
       title: '',
