@@ -477,7 +477,7 @@ class TestTeacherAPIRoutes(unittest.TestCase):
             "class_name": "Custom Code Class",
             "subject": Subject.PHYSICS.value,
             "description": "Test class with custom code",
-            "class_code": custom_code
+            "join_code": custom_code
         }
         
         try:
