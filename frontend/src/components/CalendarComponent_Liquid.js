@@ -25,6 +25,14 @@ const CalendarComponent = ({ student, onNavigate }) => {
     loadEvents();
   }, []);
 
+  const formatSelectedDate = (dateStr) => {
+    if (!dateStr) return '';
+    // Parse the YYYY-MM-DD string manually to avoid timezone issues
+    const [year, month, day] = dateStr.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    return date.toLocaleDateString();
+  };
+
   const loadEvents = async () => {
     try {
       const response = await calendarAPI.getEvents();
