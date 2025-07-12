@@ -206,51 +206,123 @@ const TutorComponent = ({ student, onNavigate }) => {
             <p className="text-secondary">Connect with specialized AI tutors for personalized learning protocols</p>
           </div>
 
-          <LiquidCard holographic>
-            <div className="p-8">
-              <div className="flex items-center space-x-3 mb-8">
-                <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
-                  <span className="text-sm font-bold">🧠</span>
-                </div>
-                <h2 className="text-xl font-semibold text-primary">Select Neural Domain for Cognitive Enhancement</h2>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {subjects.map(subject => (
-                  <div
-                    key={subject.value}
-                    onClick={() => setSelectedSubject(subject.value)}
-                    className={`
-                      p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer
-                      bg-gradient-to-br ${subject.gradient}
-                      border-primary/20 hover:border-neon-cyan/50 hover:scale-105
-                      transform group
-                    `}
-                  >
-                    {/* Neural Glow Effect */}
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-neon-cyan/10 to-neon-magenta/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    <div className="relative z-10 text-center">
-                      <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                        {subject.icon}
-                      </div>
-                      <h3 className="font-semibold text-primary mb-2 group-hover:text-neon-cyan transition-colors">
-                        {subject.name}
-                      </h3>
-                      <p className="text-xs text-secondary group-hover:text-primary transition-colors">
-                        Neural Enhancement Protocol
-                      </p>
-                    </div>
-                    
-                    {/* Data Stream Animation */}
-                    <div className="absolute bottom-0 left-0 right-0 h-px">
-                      <div className="h-full bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Chat History Sidebar */}
+            <div className="lg:col-span-1">
+              <LiquidCard>
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-lg font-semibold text-primary">Chat History</h2>
+                    <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse"></div>
                   </div>
-                ))}
-              </div>
+                  
+                  {loadingHistory ? (
+                    <div className="space-y-3">
+                      {[...Array(3)].map((_, i) => (
+                        <div key={i} className="bg-glass rounded-lg p-3 animate-pulse">
+                          <div className="h-4 bg-primary/20 rounded mb-2"></div>
+                          <div className="h-3 bg-secondary/20 rounded w-2/3"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : chatSessions.length > 0 ? (
+                    <div className="space-y-2 max-h-96 overflow-y-auto">
+                      {chatSessions.map(session => (
+                        <div
+                          key={session.session_id}
+                          onClick={() => {
+                            setSelectedSubject(session.subject);
+                            loadSessionMessages(session.session_id);
+                          }}
+                          className="bg-glass hover:bg-glass-hover border border-primary/20 rounded-lg p-3 cursor-pointer transition-all duration-200 group"
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center space-x-2 mb-1">
+                                <span className="text-lg">
+                                  {subjects.find(s => s.value === session.subject)?.icon || '🤖'}
+                                </span>
+                                <h3 className="text-sm font-medium text-primary truncate">
+                                  {getSessionTitle(session)}
+                                </h3>
+                              </div>
+                              <p className="text-xs text-secondary">
+                                {getSessionPreview(session)}
+                              </p>
+                              <p className="text-xs text-secondary/70 mt-1">
+                                {new Date(session.last_activity).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <button
+                              onClick={(e) => deleteSession(session.session_id, e)}
+                              className="opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-300 transition-all duration-200 p-1"
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div className="text-4xl mb-4">💭</div>
+                      <p className="text-secondary">No previous chats</p>
+                      <p className="text-xs text-secondary/70 mt-1">Start a new conversation below</p>
+                    </div>
+                  )}
+                </div>
+              </LiquidCard>
             </div>
-          </LiquidCard>
+
+            {/* Subject Selection */}
+            <div className="lg:col-span-3">
+              <LiquidCard holographic>
+                <div className="p-8">
+                  <div className="flex items-center space-x-3 mb-8">
+                    <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
+                      <span className="text-sm font-bold">🧠</span>
+                    </div>
+                    <h2 className="text-xl font-semibold text-primary">Select Neural Domain for Cognitive Enhancement</h2>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {subjects.map(subject => (
+                      <div
+                        key={subject.value}
+                        onClick={() => setSelectedSubject(subject.value)}
+                        className={`
+                          p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer
+                          bg-gradient-to-br ${subject.gradient}
+                          border-primary/20 hover:border-neon-cyan/50 hover:scale-105
+                          transform group
+                        `}
+                      >
+                        {/* Neural Glow Effect */}
+                        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-neon-cyan/10 to-neon-magenta/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        
+                        <div className="relative z-10 text-center">
+                          <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                            {subject.icon}
+                          </div>
+                          <h3 className="font-semibold text-primary mb-2 group-hover:text-neon-cyan transition-colors">
+                            {subject.name}
+                          </h3>
+                          <p className="text-xs text-secondary group-hover:text-primary transition-colors">
+                            Neural Enhancement Protocol
+                          </p>
+                        </div>
+                        
+                        {/* Data Stream Animation */}
+                        <div className="absolute bottom-0 left-0 right-0 h-px">
+                          <div className="h-full bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </LiquidCard>
+            </div>
+          </div>
         </div>
       </div>
     );
