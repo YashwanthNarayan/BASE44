@@ -192,15 +192,6 @@ const TutorComponent = ({ student, onNavigate }) => {
       <div className="chatbot-container min-h-screen bg-dark-space text-primary relative">
         <div className="quantum-grid fixed inset-0 opacity-40" />
         
-        {/* Floating Particles */}
-        <div className="floating-particles">
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-          <div className="particle"></div>
-        </div>
-        
         <div className="relative z-10 p-6 max-w-5xl mx-auto">
           {/* Enhanced Neural Header */}
           <div className="text-center mb-8">
