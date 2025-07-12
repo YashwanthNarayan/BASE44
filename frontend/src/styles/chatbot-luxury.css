@@ -130,7 +130,7 @@
 
 /* Simple Premium Button */
 .chatbot-container .btn-holographic {
-  background: var(--premium-gold);
+  background: var(--premium-platinum);
   border: none;
   border-radius: 0.5rem;
   color: var(--premium-dark);
