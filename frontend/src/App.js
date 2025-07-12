@@ -18,6 +18,11 @@ const NotificationsComponent = React.lazy(() => import('./components/Notificatio
 const ClassesComponent = React.lazy(() => import('./components/ClassesComponent_Liquid'));
 const TeacherAnalyticsDashboard = React.lazy(() => import('./components/TeacherAnalyticsDashboard_Liquid'));
 
+// Teacher-specific components
+const CreateClassComponent = React.lazy(() => import('./components/CreateClassComponent_Liquid'));
+const ManageClassesComponent = React.lazy(() => import('./components/ManageClassesComponent_Liquid'));
+const AssignmentsComponent = React.lazy(() => import('./components/AssignmentsComponent_Liquid'));
+
 // Import services and utilities
 import { setupAxiosAuth, studentAPI } from './services/api';
 import { storage } from './utils/helpers';
