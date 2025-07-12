@@ -48,6 +48,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(student.router)
 app.include_router(practice.router)
+app.include_router(dashboard_router)
 
 # Health check endpoint
 @app.get("/health")
