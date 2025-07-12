@@ -145,17 +145,7 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
   };
 
   // Results View
-  if (showResults) {
-    const score = Object.keys(userAnswers).reduce((acc, qId) => {
-      const question = currentQuestions.find(q => q.id === qId);
-      if (question && question.correct_answer.toLowerCase() === userAnswers[qId].toLowerCase()) {
-        return acc + 1;
-      }
-      return acc;
-    }, 0);
-
-    const percentage = ((score / currentQuestions.length) * 100).toFixed(1);
-
+  if (showResults && testResults) {
     return (
       <div className="min-h-screen relative overflow-hidden">
         <div className="animated-bg" />
@@ -168,32 +158,190 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
         </nav>
 
         <div className="relative z-10 pt-24 pb-12 px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <LiquidCard className="p-12 bg-gradient-to-br from-white/10 to-white/5">
-              <div className="text-8xl mb-8 animate-bounce">🎉</div>
-              <h1 className="text-4xl font-bold text-gradient mb-4">Test Complete!</h1>
-              <div className="text-6xl font-bold text-white mb-2">{percentage}%</div>
-              <p className="text-xl text-white/70 mb-8">
-                You scored {score} out of {currentQuestions.length} questions correctly
-              </p>
-              
-              <LiquidProgress 
-                value={score} 
-                max={currentQuestions.length} 
-                className="mb-8"
-                showLabel={true}
-                label="Your Performance"
-              />
-              
-              <div className="flex justify-center gap-4">
-                <LiquidButton onClick={resetTest} variant="secondary">
-                  Take Another Test
-                </LiquidButton>
-                <LiquidButton onClick={() => onNavigate('student-dashboard')} variant="primary">
-                  Back to Dashboard
-                </LiquidButton>
+          <div className="max-w-6xl mx-auto">
+            
+            {!showDetailedResults ? (
+              // Summary Results View
+              <div className="text-center mb-8">
+                <LiquidCard className="p-12 bg-gradient-to-br from-white/10 to-white/5">
+                  <div className="text-8xl mb-8 animate-bounce">🎉</div>
+                  <h1 className="text-4xl font-bold text-gradient mb-4">Test Complete!</h1>
+                  <div className="text-6xl font-bold text-white mb-2">{testResults.score}%</div>
+                  <p className="text-xl text-white/70 mb-4">
+                    You scored {testResults.correct_answers} out of {testResults.total_questions} questions correctly
+                  </p>
+                  <div className="text-lg text-white/60 mb-8">
+                    Grade: <span className="font-bold text-white">{testResults.grade}</span> • 
+                    XP Gained: <span className="font-bold text-green-400">+{testResults.xp_gained}</span>
+                  </div>
+                  
+                  <LiquidProgress 
+                    value={testResults.correct_answers} 
+                    max={testResults.total_questions} 
+                    className="mb-8"
+                    showLabel={true}
+                    label="Your Performance"
+                  />
+                  
+                  <div className="flex justify-center gap-4 mb-6">
+                    <LiquidButton 
+                      onClick={() => setShowDetailedResults(true)} 
+                      variant="primary"
+                      className="px-8"
+                    >
+                      📊 View Detailed Results
+                    </LiquidButton>
+                  </div>
+                  
+                  <div className="flex justify-center gap-4">
+                    <LiquidButton onClick={resetTest} variant="secondary">
+                      Take Another Test
+                    </LiquidButton>
+                    <LiquidButton onClick={() => onNavigate('progress')} variant="primary">
+                      View Progress
+                    </LiquidButton>
+                  </div>
+                </LiquidCard>
               </div>
-            </LiquidCard>
+            ) : (
+              // Detailed Results View
+              <div>
+                <div className="flex items-center justify-between mb-8">
+                  <h1 className="text-3xl font-bold text-gradient">Detailed Results</h1>
+                  <LiquidButton 
+                    onClick={() => setShowDetailedResults(false)} 
+                    variant="secondary"
+                  >
+                    ← Back to Summary
+                  </LiquidButton>
+                </div>
+
+                {/* Summary Card */}
+                <LiquidCard className="p-6 mb-8 bg-gradient-to-r from-white/10 to-white/5">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+                    <div>
+                      <div className="text-3xl font-bold text-white">{testResults.score}%</div>
+                      <div className="text-sm text-white/60">Overall Score</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-green-400">{testResults.correct_answers}</div>
+                      <div className="text-sm text-white/60">Correct</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-red-400">{testResults.total_questions - testResults.correct_answers}</div>
+                      <div className="text-sm text-white/60">Incorrect</div>
+                    </div>
+                    <div>
+                      <div className="text-3xl font-bold text-blue-400">{testResults.grade}</div>
+                      <div className="text-sm text-white/60">Grade</div>
+                    </div>
+                  </div>
+                </LiquidCard>
+
+                {/* Question by Question Results */}
+                <div className="space-y-6">
+                  {detailedResults.map((result, index) => (
+                    <LiquidCard 
+                      key={result.question_id} 
+                      className={`p-6 border-l-4 ${
+                        result.is_correct 
+                          ? 'border-green-400 bg-green-500/5' 
+                          : 'border-red-400 bg-red-500/5'
+                      }`}
+                    >
+                      {/* Question Header */}
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                            result.is_correct 
+                              ? 'bg-green-400 text-green-900' 
+                              : 'bg-red-400 text-red-900'
+                          }`}>
+                            {result.is_correct ? '✓' : '✗'}
+                          </div>
+                          <span className="text-lg font-semibold text-white">Question {index + 1}</span>
+                          <span className="text-sm text-white/60 bg-white/10 px-2 py-1 rounded capitalize">
+                            {result.topic}
+                          </span>
+                        </div>
+                        <div className={`text-sm font-medium ${
+                          result.is_correct ? 'text-green-400' : 'text-red-400'
+                        }`}>
+                          {result.is_correct ? 'Correct' : 'Incorrect'}
+                        </div>
+                      </div>
+
+                      {/* Question Text */}
+                      <div className="mb-4">
+                        <h3 className="text-lg text-white mb-3">{result.question_text}</h3>
+                        
+                        {/* MCQ Options */}
+                        {result.question_type === 'mcq' && result.options && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
+                            {result.options.map((option, optIndex) => (
+                              <div 
+                                key={optIndex}
+                                className={`p-3 rounded-lg border text-sm ${
+                                  option === result.correct_answer
+                                    ? 'border-green-400 bg-green-500/10 text-green-300'
+                                    : option === result.student_answer && !result.is_correct
+                                    ? 'border-red-400 bg-red-500/10 text-red-300'
+                                    : 'border-white/20 text-white/70'
+                                }`}
+                              >
+                                <span className="font-medium">{String.fromCharCode(65 + optIndex)}.</span> {option}
+                                {option === result.correct_answer && (
+                                  <span className="ml-2 text-green-400">✓ Correct</span>
+                                )}
+                                {option === result.student_answer && !result.is_correct && (
+                                  <span className="ml-2 text-red-400">Your Answer</span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Answers */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <div className="text-sm text-white/60 mb-1">Your Answer:</div>
+                          <div className={`font-medium ${
+                            result.is_correct ? 'text-green-400' : 'text-red-400'
+                          }`}>
+                            {result.student_answer || 'No answer provided'}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-white/60 mb-1">Correct Answer:</div>
+                          <div className="font-medium text-green-400">
+                            {result.correct_answer}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Explanation */}
+                      <div className="bg-white/5 rounded-lg p-4">
+                        <div className="text-sm text-white/60 mb-2">💡 Explanation:</div>
+                        <div className="text-white/90 text-sm leading-relaxed">
+                          {result.explanation}
+                        </div>
+                      </div>
+                    </LiquidCard>
+                  ))}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-center gap-4 mt-8">
+                  <LiquidButton onClick={resetTest} variant="secondary">
+                    Take Another Test
+                  </LiquidButton>
+                  <LiquidButton onClick={() => onNavigate('progress')} variant="primary">
+                    View Progress Tracker
+                  </LiquidButton>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
