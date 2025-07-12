@@ -465,7 +465,7 @@ class TestTeacherAPIRoutes(unittest.TestCase):
                 self.assertNotIn(class_code, generated_codes, "Join codes should be unique")
                 generated_codes.append(class_code)
                 
-                print(f"✅ Generated unique class code: {class_code}")
+                print(f"✅ Generated unique join code: {class_code}")
                 
             except Exception as e:
                 print(f"❌ Error testing auto-generated codes: {str(e)}")
