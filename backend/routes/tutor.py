@@ -59,7 +59,7 @@ async def create_chat_session(
         
         # Create new session
         session = ChatSession(
-            user_id=current_user["user_id"],
+            user_id=current_user["sub"],
             subject=request.subject,
             session_type=request.session_type
         )
