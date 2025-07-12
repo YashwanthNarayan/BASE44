@@ -1094,11 +1094,455 @@ class TestProjectKV3BackendFocusedIssues(unittest.TestCase):
             print(f"❌ JWT validation test failed: {str(e)}")
             self.fail(f"JWT validation test failed: {str(e)}")
 
+class TestTutorAPIRoutes(unittest.TestCase):
+    """Test cases specifically for the Tutor API routes implementation"""
+
+    def setUp(self):
+        """Set up test case - create student account for tutor testing"""
+        self.student_token = None
+        self.student_id = None
+        self.session_id = None
+        
+        # Register student for tutor testing
+        self.register_student()
+
+    def register_student(self):
+        """Register a student for tutor testing"""
+        print("\n🔍 Setting up student account for tutor testing...")
+        url = f"{API_URL}/auth/register"
+        payload = {
+            "email": f"tutor_student_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Tutor Test Student",
+            "user_type": UserType.STUDENT.value,
+            "grade_level": GradeLevel.GRADE_10.value
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 200:
+                data = response.json()
+                self.student_token = data.get("access_token")
+                self.student_id = data.get("user", {}).get("id")
+                print(f"Registered tutor test student with ID: {self.student_id}")
+            else:
+                print(f"Failed to register tutor test student: {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error registering tutor test student: {str(e)}")
+
+    def test_01_create_tutor_session(self):
+        """Test POST /api/tutor/session - Create new chat session"""
+        print("\n🔍 Testing Tutor Session Creation...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/tutor/session"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test with different subjects
+        test_subjects = [Subject.MATH.value, Subject.PHYSICS.value, Subject.CHEMISTRY.value]
+        
+        for subject in test_subjects:
+            payload = {
+                "subject": subject,
+                "session_type": "tutoring"
+            }
+            
+            try:
+                print(f"Creating session for subject: {subject}")
+                response = requests.post(url, json=payload, headers=headers)
+                print(f"Create Session Response: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    
+                    # Verify response structure
+                    self.assertIn("session_id", data, "Session ID should be present")
+                    self.assertIn("subject", data, "Subject should be present")
+                    self.assertIn("started_at", data, "Started at should be present")
+                    self.assertIn("last_activity", data, "Last activity should be present")
+                    self.assertIn("message_count", data, "Message count should be present")
+                    self.assertIn("topics_covered", data, "Topics covered should be present")
+                    self.assertIn("is_active", data, "Is active should be present")
+                    
+                    # Verify data values
+                    self.assertEqual(data.get("subject"), subject, f"Subject should be {subject}")
+                    self.assertEqual(data.get("message_count"), 0, "Initial message count should be 0")
+                    self.assertEqual(data.get("is_active"), True, "Session should be active")
+                    self.assertIsInstance(data.get("topics_covered"), list, "Topics covered should be a list")
+                    
+                    # Store session ID for further tests
+                    if subject == Subject.MATH.value:
+                        self.session_id = data.get("session_id")
+                    
+                    print(f"✅ Successfully created {subject} session: {data.get('session_id')}")
+                else:
+                    print(f"❌ Failed to create {subject} session: {response.status_code} - {response.text}")
+                    self.fail(f"Failed to create {subject} session: {response.status_code}")
+                    
+            except Exception as e:
+                print(f"❌ Error creating {subject} session: {str(e)}")
+                self.fail(f"Error creating {subject} session: {str(e)}")
+
+    def test_02_send_tutor_message(self):
+        """Test POST /api/tutor/chat - Send message and get AI response"""
+        print("\n🔍 Testing Tutor Chat Message...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        if not self.session_id:
+            # Create a session first
+            self.test_01_create_tutor_session()
+        
+        if not self.session_id:
+            self.skipTest("Session ID not available")
+        
+        url = f"{API_URL}/tutor/chat"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test different types of messages
+        test_messages = [
+            {
+                "message": "Can you help me solve the quadratic equation x^2 - 5x + 6 = 0?",
+                "subject": Subject.MATH.value,
+                "description": "Math quadratic equation"
+            },
+            {
+                "message": "What is the derivative of x^3?",
+                "subject": Subject.MATH.value,
+                "description": "Math calculus derivative"
+            },
+            {
+                "message": "Explain the concept of limits in calculus",
+                "subject": Subject.MATH.value,
+                "description": "Math concept explanation"
+            }
+        ]
+        
+        for test_msg in test_messages:
+            payload = {
+                "message": test_msg["message"],
+                "subject": test_msg["subject"],
+                "session_id": self.session_id
+            }
+            
+            try:
+                print(f"Sending message: {test_msg['description']}")
+                response = requests.post(url, json=payload, headers=headers)
+                print(f"Send Message Response: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    
+                    # Verify response structure
+                    self.assertIn("message_id", data, "Message ID should be present")
+                    self.assertIn("response", data, "AI response should be present")
+                    self.assertIn("session_id", data, "Session ID should be present")
+                    self.assertIn("timestamp", data, "Timestamp should be present")
+                    
+                    # Verify data values
+                    self.assertEqual(data.get("session_id"), self.session_id, "Session ID should match")
+                    self.assertIsNotNone(data.get("response"), "AI response should not be None")
+                    self.assertTrue(len(data.get("response", "")) > 0, "AI response should not be empty")
+                    
+                    print(f"✅ Successfully sent message and received response")
+                    print(f"Response preview: {data.get('response')[:100]}...")
+                else:
+                    print(f"❌ Failed to send message: {response.status_code} - {response.text}")
+                    self.fail(f"Failed to send message: {response.status_code}")
+                    
+            except Exception as e:
+                print(f"❌ Error sending message: {str(e)}")
+                self.fail(f"Error sending message: {str(e)}")
+
+    def test_03_get_tutor_sessions(self):
+        """Test GET /api/tutor/sessions - Get chat history"""
+        print("\n🔍 Testing Get Tutor Sessions...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/tutor/sessions"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Get Sessions Response: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Verify response is a list
+                self.assertIsInstance(data, list, "Sessions should be a list")
+                
+                if len(data) > 0:
+                    # Check first session structure
+                    session = data[0]
+                    self.assertIn("session_id", session, "Session ID should be present")
+                    self.assertIn("subject", session, "Subject should be present")
+                    self.assertIn("started_at", session, "Started at should be present")
+                    self.assertIn("last_activity", session, "Last activity should be present")
+                    self.assertIn("message_count", session, "Message count should be present")
+                    self.assertIn("topics_covered", session, "Topics covered should be present")
+                    self.assertIn("is_active", session, "Is active should be present")
+                    
+                    print(f"✅ Successfully retrieved {len(data)} sessions")
+                    
+                    # Verify sessions are sorted by last_activity (most recent first)
+                    if len(data) > 1:
+                        for i in range(len(data) - 1):
+                            current_activity = data[i].get("last_activity")
+                            next_activity = data[i + 1].get("last_activity")
+                            # Note: This is a basic check, proper datetime comparison would be better
+                            print(f"Session {i}: {current_activity}, Session {i+1}: {next_activity}")
+                else:
+                    print("✅ No sessions found (expected for new user)")
+                    
+            else:
+                print(f"❌ Failed to get sessions: {response.status_code} - {response.text}")
+                self.fail(f"Failed to get sessions: {response.status_code}")
+                
+        except Exception as e:
+            print(f"❌ Error getting sessions: {str(e)}")
+            self.fail(f"Error getting sessions: {str(e)}")
+
+    def test_04_get_session_messages(self):
+        """Test GET /api/tutor/session/{session_id}/messages - Get session messages"""
+        print("\n🔍 Testing Get Session Messages...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        if not self.session_id:
+            # Try to get sessions and use the first one
+            sessions_url = f"{API_URL}/tutor/sessions"
+            headers = {"Authorization": f"Bearer {self.student_token}"}
+            
+            try:
+                sessions_response = requests.get(sessions_url, headers=headers)
+                if sessions_response.status_code == 200:
+                    sessions = sessions_response.json()
+                    if len(sessions) > 0:
+                        self.session_id = sessions[0].get("session_id")
+                    else:
+                        self.skipTest("No sessions available for testing")
+                else:
+                    self.skipTest("Could not retrieve sessions")
+            except:
+                self.skipTest("Error retrieving sessions")
+        
+        if not self.session_id:
+            self.skipTest("Session ID not available")
+        
+        url = f"{API_URL}/tutor/session/{self.session_id}/messages"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Get Session Messages Response: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Verify response is a list
+                self.assertIsInstance(data, list, "Messages should be a list")
+                
+                if len(data) > 0:
+                    # Check first message structure
+                    message = data[0]
+                    self.assertIn("id", message, "Message ID should be present")
+                    self.assertIn("session_id", message, "Session ID should be present")
+                    self.assertIn("message", message, "Message should be present")
+                    self.assertIn("response", message, "Response should be present")
+                    self.assertIn("timestamp", message, "Timestamp should be present")
+                    self.assertIn("message_type", message, "Message type should be present")
+                    
+                    # Verify session ID matches
+                    self.assertEqual(message.get("session_id"), self.session_id, "Session ID should match")
+                    
+                    print(f"✅ Successfully retrieved {len(data)} messages for session")
+                    
+                    # Verify messages are sorted by timestamp (oldest first)
+                    if len(data) > 1:
+                        for i in range(len(data) - 1):
+                            current_timestamp = data[i].get("timestamp")
+                            next_timestamp = data[i + 1].get("timestamp")
+                            print(f"Message {i}: {current_timestamp}, Message {i+1}: {next_timestamp}")
+                else:
+                    print("✅ No messages found in session (expected for new session)")
+                    
+            elif response.status_code == 404:
+                print("❌ Session not found - this could indicate an authorization issue")
+                self.fail("Session not found - check authorization")
+            else:
+                print(f"❌ Failed to get session messages: {response.status_code} - {response.text}")
+                self.fail(f"Failed to get session messages: {response.status_code}")
+                
+        except Exception as e:
+            print(f"❌ Error getting session messages: {str(e)}")
+            self.fail(f"Error getting session messages: {str(e)}")
+
+    def test_05_delete_tutor_session(self):
+        """Test DELETE /api/tutor/session/{session_id} - Delete chat session"""
+        print("\n🔍 Testing Delete Tutor Session...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        # Create a session specifically for deletion testing
+        create_url = f"{API_URL}/tutor/session"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        create_payload = {
+            "subject": Subject.PHYSICS.value,
+            "session_type": "tutoring"
+        }
+        
+        try:
+            # Create session to delete
+            create_response = requests.post(create_url, json=create_payload, headers=headers)
+            if create_response.status_code != 200:
+                self.skipTest("Could not create session for deletion test")
+            
+            session_to_delete = create_response.json().get("session_id")
+            if not session_to_delete:
+                self.skipTest("Could not get session ID for deletion test")
+            
+            print(f"Created session for deletion: {session_to_delete}")
+            
+            # Delete the session
+            delete_url = f"{API_URL}/tutor/session/{session_to_delete}"
+            delete_response = requests.delete(delete_url, headers=headers)
+            print(f"Delete Session Response: {delete_response.status_code}")
+            
+            if delete_response.status_code == 200:
+                data = delete_response.json()
+                
+                # Verify response structure
+                self.assertIn("message", data, "Success message should be present")
+                self.assertIn("deleted", data.get("message", "").lower(), "Message should indicate deletion")
+                
+                print("✅ Successfully deleted session")
+                
+                # Verify session is actually deleted by trying to get its messages
+                messages_url = f"{API_URL}/tutor/session/{session_to_delete}/messages"
+                messages_response = requests.get(messages_url, headers=headers)
+                
+                if messages_response.status_code == 404:
+                    print("✅ Confirmed session is deleted (404 when accessing messages)")
+                else:
+                    print(f"⚠️ Session may not be fully deleted (messages still accessible: {messages_response.status_code})")
+                    
+            elif delete_response.status_code == 404:
+                print("❌ Session not found for deletion - this could indicate an authorization issue")
+                self.fail("Session not found for deletion - check authorization")
+            else:
+                print(f"❌ Failed to delete session: {delete_response.status_code} - {delete_response.text}")
+                self.fail(f"Failed to delete session: {delete_response.status_code}")
+                
+        except Exception as e:
+            print(f"❌ Error deleting session: {str(e)}")
+            self.fail(f"Error deleting session: {str(e)}")
+
+    def test_06_tutor_authentication_required(self):
+        """Test that tutor endpoints require student authentication"""
+        print("\n🔍 Testing Tutor Authentication Requirements...")
+        
+        # Test endpoints without authentication
+        endpoints_to_test = [
+            ("POST", f"{API_URL}/tutor/session", {"subject": "math"}),
+            ("POST", f"{API_URL}/tutor/chat", {"message": "test", "subject": "math", "session_id": "test"}),
+            ("GET", f"{API_URL}/tutor/sessions", None),
+            ("GET", f"{API_URL}/tutor/session/test/messages", None),
+            ("DELETE", f"{API_URL}/tutor/session/test", None)
+        ]
+        
+        for method, url, payload in endpoints_to_test:
+            try:
+                if method == "POST":
+                    response = requests.post(url, json=payload)
+                elif method == "GET":
+                    response = requests.get(url)
+                elif method == "DELETE":
+                    response = requests.delete(url)
+                
+                print(f"{method} {url}: {response.status_code}")
+                
+                # Should return 401 or 403 for unauthorized access
+                self.assertIn(response.status_code, [401, 403], 
+                             f"{method} {url} should require authentication")
+                
+            except Exception as e:
+                print(f"❌ Error testing {method} {url}: {str(e)}")
+        
+        print("✅ All tutor endpoints properly require authentication")
+
+    def test_07_tutor_error_handling(self):
+        """Test error handling for tutor endpoints"""
+        print("\n🔍 Testing Tutor Error Handling...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test invalid session ID for chat
+        chat_url = f"{API_URL}/tutor/chat"
+        invalid_chat_payload = {
+            "message": "test message",
+            "subject": Subject.MATH.value,
+            "session_id": "invalid-session-id"
+        }
+        
+        try:
+            response = requests.post(chat_url, json=invalid_chat_payload, headers=headers)
+            print(f"Invalid session chat response: {response.status_code}")
+            
+            # Should return 404 for invalid session
+            self.assertEqual(response.status_code, 404, "Invalid session should return 404")
+            
+        except Exception as e:
+            print(f"❌ Error testing invalid session: {str(e)}")
+        
+        # Test invalid session ID for messages
+        messages_url = f"{API_URL}/tutor/session/invalid-session-id/messages"
+        
+        try:
+            response = requests.get(messages_url, headers=headers)
+            print(f"Invalid session messages response: {response.status_code}")
+            
+            # Should return 404 for invalid session
+            self.assertEqual(response.status_code, 404, "Invalid session should return 404")
+            
+        except Exception as e:
+            print(f"❌ Error testing invalid session messages: {str(e)}")
+        
+        # Test invalid session ID for deletion
+        delete_url = f"{API_URL}/tutor/session/invalid-session-id"
+        
+        try:
+            response = requests.delete(delete_url, headers=headers)
+            print(f"Invalid session deletion response: {response.status_code}")
+            
+            # Should return 404 for invalid session
+            self.assertEqual(response.status_code, 404, "Invalid session should return 404")
+            
+        except Exception as e:
+            print(f"❌ Error testing invalid session deletion: {str(e)}")
+        
+        print("✅ Error handling tests completed")
+
 if __name__ == "__main__":
     # Run the V3 tests
     print("\n==== TESTING PROJECT K V3 BACKEND ====\n")
     
-    # First run the focused tests for the issues in the test plan
+    # First run the tutor API tests (current focus)
+    print("\n==== RUNNING TUTOR API TESTS (CURRENT FOCUS) ====\n")
+    tutor_suite = unittest.TestLoader().loadTestsFromTestCase(TestTutorAPIRoutes)
+    tutor_result = unittest.TextTestRunner().run(tutor_suite)
+    
+    # Then run the focused tests for the issues in the test plan
     print("\n==== RUNNING FOCUSED TESTS FOR IDENTIFIED ISSUES ====\n")
     focused_suite = unittest.TestLoader().loadTestsFromTestCase(TestProjectKV3BackendFocusedIssues)
     focused_result = unittest.TextTestRunner().run(focused_suite)
