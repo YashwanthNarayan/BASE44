@@ -15,37 +15,13 @@ export const setupAxiosAuth = (token) => {
 // Auth API
 export const authAPI = {
   login: async (credentials) => {
-    console.log('🔍 Login attempt:', { credentials: { email: credentials.email }, API_BASE });
-    try {
-      const response = await axios.post(`${API_BASE}/api/auth/login`, credentials);
-      console.log('✅ Login successful:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('❌ Login failed:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-        url: `${API_BASE}/api/auth/login`
-      });
-      throw error;
-    }
+    const response = await axios.post(`${API_BASE}/api/auth/login`, credentials);
+    return response.data;
   },
   
   register: async (formData) => {
-    console.log('🔍 Register attempt:', { email: formData.email, API_BASE });
-    try {
-      const response = await axios.post(`${API_BASE}/api/auth/register`, formData);
-      console.log('✅ Register successful:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error('❌ Register failed:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-        url: `${API_BASE}/api/auth/register`
-      });
-      throw error;
-    }
+    const response = await axios.post(`${API_BASE}/api/auth/register`, formData);
+    return response.data;
   }
 };
 
