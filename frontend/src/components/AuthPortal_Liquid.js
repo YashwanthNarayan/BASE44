@@ -5,6 +5,18 @@ import { isValidEmail, validatePassword, storage } from '../utils/helpers';
 import { LiquidCard, LiquidButton, LiquidInput, LiquidSelect, LiquidToast } from './ui/LiquidComponents';
 import '../styles/liquid-glass.css';
 
+// Helper function to get API base URL (same logic as in api.js)
+const getApiBaseUrl = () => {
+  const currentHost = window.location.hostname;
+  const currentProtocol = window.location.protocol;
+  
+  if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+    return 'http://localhost:8001';
+  }
+  
+  return `${currentProtocol}//${currentHost}:8001`;
+};
+
 const AuthPortal = ({ onAuthSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [userType, setUserType] = useState('student');
