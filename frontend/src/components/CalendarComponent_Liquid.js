@@ -140,11 +140,11 @@ const CalendarComponent = ({ student, onNavigate }) => {
               <div className="p-6">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-semibold text-primary">
-                    {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Matrix
+                    {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} Calendar
                   </h2>
-                  <LiquidButton onClick={() => setShowCreateForm(true)}>
-                    ⚡ Sync New Event
-                  </LiquidButton>
+                  <div className="text-sm text-secondary">
+                    Click on any day to add an event
+                  </div>
                 </div>
 
                 {/* Calendar Grid */}
@@ -161,14 +161,17 @@ const CalendarComponent = ({ student, onNavigate }) => {
                     const dateStr = date ? date.toISOString().split('T')[0] : '';
                     const dayEvents = date ? getEventsForDate(dateStr) : [];
                     const isToday = date && date.toDateString() === new Date().toDateString();
+                    const isSelected = selectedDate === dateStr;
                     
                     return (
                       <div
                         key={index}
+                        onClick={() => date && handleDayClick(date)}
                         className={`
-                          min-h-[100px] p-2 border rounded-lg transition-all duration-300
-                          ${date ? 'bg-glass border-primary/20 hover:border-neon-cyan/50 cursor-pointer' : 'bg-transparent border-transparent'}
+                          min-h-[100px] p-2 border rounded-lg transition-all duration-300 relative
+                          ${date ? 'bg-glass border-primary/20 hover:border-neon-cyan/50 cursor-pointer hover:bg-glass/50' : 'bg-transparent border-transparent'}
                           ${isToday ? 'ring-2 ring-neon-cyan border-neon-cyan' : ''}
+                          ${isSelected ? 'ring-2 ring-yellow-400 border-yellow-400 bg-yellow-500/10' : ''}
                         `}
                       >
                         {date && (
@@ -182,7 +185,7 @@ const CalendarComponent = ({ student, onNavigate }) => {
                                 return (
                                   <div
                                     key={idx}
-                                    className="text-xs p-1 bg-gradient-to-r from-neon-cyan/20 to-neon-magenta/20 text-primary rounded border border-neon-cyan/30 truncate"
+                                    className={`text-xs p-1 rounded border truncate ${eventType?.color || 'bg-gray-500/20 border-gray-500/40'}`}
                                     title={event.title}
                                   >
                                     {eventType?.icon} {event.title}
@@ -195,6 +198,11 @@ const CalendarComponent = ({ student, onNavigate }) => {
                                 </div>
                               )}
                             </div>
+                            {date && (
+                              <div className="absolute bottom-1 right-1 text-xs text-secondary opacity-50">
+                                +
+                              </div>
+                            )}
                           </>
                         )}
                       </div>
