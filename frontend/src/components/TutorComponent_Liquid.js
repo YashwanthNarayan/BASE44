@@ -9,6 +9,10 @@ const TutorComponent = ({ student, onNavigate }) => {
   const [currentMessage, setCurrentMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState('');
+  const [chatSessions, setChatSessions] = useState([]);
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [selectedSessionId, setSelectedSessionId] = useState('');
+  const [loadingHistory, setLoadingHistory] = useState(false);
 
   const subjects = [
     { value: 'math', name: 'Quantum Mathematics', icon: '🔢', gradient: 'from-blue-500/20 to-cyan-500/20' },
