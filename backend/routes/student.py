@@ -97,3 +97,39 @@ async def join_class(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to join class: {str(e)}"
         )
+
+@dashboard_router.get("/dashboard")
+async def get_student_dashboard(current_user: dict = Depends(get_current_student)):
+    """Get comprehensive dashboard data for a student"""
+    try:
+        # Get student profile
+        profile = await auth_service.get_user_profile(
+            current_user["sub"], 
+            current_user["user_type"]
+        )
+        
+        # Return basic dashboard data
+        return {
+            "profile": profile,
+            "total_messages": 0,
+            "total_tests": 0,
+            "average_score": 0,
+            "recent_scores": [],
+            "study_streak": 0,
+            "total_study_time": 0,
+            "achievements": [],
+            "upcoming_events": [],
+            "notifications": [],
+            "xp_points": profile.get("total_xp", 0),
+            "level": profile.get("level", 1),
+            "subjects_studied": [],
+            "joined_classes": profile.get("joined_classes", [])
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get dashboard data: {str(e)}"
+        )
