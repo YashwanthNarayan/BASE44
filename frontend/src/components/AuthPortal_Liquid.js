@@ -53,7 +53,7 @@ const AuthPortal = ({ onAuthSuccess }) => {
 
       const response = isLogin ? await authAPI.login(payload) : await authAPI.register(payload);
       
-      // Store authentication data
+      // Store authentication data using storage utility
       localStorage.setItem('access_token', response.access_token);
       localStorage.setItem('user_type', response.user_type);
       localStorage.setItem('user', JSON.stringify(response.user));
