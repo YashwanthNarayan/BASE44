@@ -532,7 +532,12 @@ const TutorComponent = ({ student, onNavigate }) => {
                       onChange={(e) => setCurrentMessage(e.target.value)}
                       onKeyPress={handleKeyPress}
                       placeholder={`Input your ${selectedSubjectData?.name.toLowerCase()} query here...`}
-                      className="w-full p-4 bg-glass border border-primary/20 rounded-lg focus:ring-2 focus:ring-neon-cyan focus:border-transparent text-primary placeholder-secondary resize-none backdrop-blur-sm"
+                      className="w-full p-4 bg-slate-800/50 border border-primary/20 rounded-lg focus:ring-2 focus:ring-neon-cyan focus:border-transparent text-white placeholder-slate-400 resize-none backdrop-blur-sm"
+                      style={{
+                        backgroundColor: 'rgba(30, 41, 59, 0.8)',
+                        color: '#ffffff',
+                        borderColor: 'rgba(248, 250, 252, 0.2)'
+                      }}
                       rows="3"
                       disabled={loading}
                     />
