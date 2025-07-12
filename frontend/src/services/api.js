@@ -1,5 +1,12 @@
 import axios from 'axios';
 
+// Debug logging for authentication
+console.log('🔍 API Configuration Debug:', {
+  API_BASE,
+  env_var: process.env.REACT_APP_BACKEND_URL,
+  current_url: window.location.origin
+});
+
 // API Base URL from environment
 const API_BASE = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
