@@ -245,7 +245,7 @@ const CalendarComponent = ({ student, onNavigate }) => {
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-primary">
-                      Add Event - {new Date(selectedDate).toLocaleDateString()}
+                      Add Event - {formatSelectedDate(selectedDate)}
                     </h3>
                     <button
                       onClick={() => {
