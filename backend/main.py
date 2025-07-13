@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
@@ -34,6 +34,21 @@ app = FastAPI(
     version="2.0.0",
     lifespan=lifespan
 )
+
+# Add request logging middleware
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    print(f"🔍 REQUEST DEBUG: {request.method} {request.url}")
+    print(f"🔍 REQUEST HEADERS: {dict(request.headers)}")
+    if "authorization" in request.headers:
+        auth_header = request.headers.get("authorization")
+        print(f"🔍 AUTH HEADER: {auth_header[:50]}...")
+    else:
+        print("❌ NO AUTHORIZATION HEADER FOUND")
+    
+    response = await call_next(request)
+    print(f"🔍 RESPONSE: {response.status_code}")
+    return response
 
 # Configure CORS
 app.add_middleware(
