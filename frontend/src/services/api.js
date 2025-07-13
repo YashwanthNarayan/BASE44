@@ -2,33 +2,8 @@ import axios from 'axios';
 
 // Dynamic API Base URL - automatically determines backend URL based on frontend URL
 const getApiBaseUrl = () => {
-  // If we're in development and have an env var, use it
-  if (process.env.REACT_APP_BACKEND_URL) {
-    return process.env.REACT_APP_BACKEND_URL;
-  }
-  
-  // Otherwise, determine dynamically based on current URL
-  const currentHost = window.location.hostname;
-  const currentProtocol = window.location.protocol;
-  const currentOrigin = window.location.origin;
-  
-  // For localhost development
-  if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
-    return 'http://localhost:8001';
-  }
-  
-  // For Emergent platform, use same origin (Kubernetes ingress routes /api to backend)
-  if (currentHost.includes('emergentagent.com') || currentHost.includes('preview')) {
-    return currentOrigin; // Same domain, backend is routed via /api prefix by Kubernetes
-  }
-  
-  // For HTTPS sites, use HTTPS backend
-  if (currentProtocol === 'https:') {
-    return `https://${currentHost}:8001`;
-  }
-  
-  // Fallback to HTTP for other cases
-  return `http://${currentHost}:8001`;
+  // Always use current origin for Emergent platform to avoid cross-origin issues
+  return window.location.origin;
 };
 
 const API_BASE = getApiBaseUrl();
