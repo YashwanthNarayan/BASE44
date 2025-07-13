@@ -43,7 +43,7 @@ function App() {
 
   const checkAuthStatus = async () => {
     try {
-      const token = storage.get('access_token');
+      const token = localStorage.getItem('access_token'); // Direct access to avoid quotes
       const userType = storage.get('user_type');
       const user = storage.get('user');
 
