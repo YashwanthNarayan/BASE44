@@ -68,27 +68,36 @@ class SecurityUtils:
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Extract current user from JWT token"""
     try:
+        print(f"🔍 AUTH DEBUG: Received credentials: {credentials}")
         token = credentials.credentials
+        print(f"🔍 AUTH DEBUG: Token: {token[:50]}...")  # Only show first 50 chars for security
+        
         payload = SecurityUtils.verify_token(token)
+        print(f"🔍 AUTH DEBUG: Token payload: {payload}")
         
         if payload is None:
+            print("❌ AUTH DEBUG: Payload is None")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Could not validate credentials",
                 headers={"WWW-Authenticate": "Bearer"}
             )
         
+        print(f"✅ AUTH DEBUG: Authentication successful for user: {payload.get('sub', 'unknown')}")
         return payload
     except HTTPException:
         # Re-raise HTTP exceptions (like 401) as-is
+        print("❌ AUTH DEBUG: HTTPException raised")
         raise
     except jwt.ExpiredSignatureError:
+        print("❌ AUTH DEBUG: Token has expired")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token has expired",
             headers={"WWW-Authenticate": "Bearer"}
         )
-    except jwt.PyJWTError:
+    except jwt.PyJWTError as e:
+        print(f"❌ AUTH DEBUG: JWT Error: {e}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
@@ -96,7 +105,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         )
     except Exception as e:
         # Convert any other exception to 401 (not 500)
-        print(f"Authentication error: {e}")  # Log for debugging
+        print(f"❌ AUTH DEBUG: Unexpected error: {e}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
