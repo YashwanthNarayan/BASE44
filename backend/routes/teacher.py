@@ -243,8 +243,8 @@ async def get_teacher_analytics_overview(
         total_students = len(students)
         
         # Get all practice test results for these students
-        practice_results_cursor = db[Collections.PRACTICE_RESULTS].find({
-            "user_id": {"$in": [student['user_id'] for student in students]}
+        practice_results_cursor = db[Collections.PRACTICE_ATTEMPTS].find({
+            "student_id": {"$in": [student['user_id'] for student in students]}
         })
         practice_results = await practice_results_cursor.to_list(1000)
         
