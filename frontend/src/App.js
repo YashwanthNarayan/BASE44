@@ -9,6 +9,7 @@ import StudentDashboard from './components/StudentDashboard_Liquid';
 import TeacherDashboard from './components/TeacherDashboard_Liquid';
 import NotesComponent from './components/NotesComponent_Liquid';
 import PracticeTestComponent from './components/PracticeTestComponent_Liquid';
+import AuthDebugComponent from './components/AuthDebugComponent';
 
 // Import lazy-loaded components (now with liquid versions)
 const MindfulnessComponent = React.lazy(() => import('./components/MindfulnessComponent_Liquid'));
@@ -31,53 +32,16 @@ import API_BASE from './services/api';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentView, setCurrentView] = useState('student-dashboard');
+  const [currentView, setCurrentView] = useState('debug'); // Change to debug
   const [userType, setUserType] = useState('student');
   const [user, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Disable loading for debug
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
-  const checkAuthStatus = async () => {
-    try {
-      const token = storage.get('access_token');
-      const userType = storage.get('user_type');
-      const user = storage.get('user');
-
-      if (token && userType && user) {
-        setupAxiosAuth(token);
-        
-        // Validate token with backend by making a test API call
-        try {
-          await axios.get(`${API_BASE}/api/dashboard`);
-          
-          // Token is valid, set auth state
-          setIsAuthenticated(true);
-          setUserType(userType);
-          setUser(user);
-          
-          if (userType === 'student') {
-            await loadDashboardData();
-            setCurrentView('student-dashboard');
-          } else {
-            setCurrentView('teacher-dashboard');
-          }
-        } catch (apiError) {
-          // Token is invalid, clear auth
-          console.warn('Token validation failed, clearing auth');
-          handleLogout();
-        }
-      }
-    } catch (error) {
-      console.error('Error checking auth status:', error);
-      handleLogout();
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Show debug component directly
+  if (currentView === 'debug') {
+    return <AuthDebugComponent />;
+  }
 
   const loadDashboardData = async () => {
     try {
