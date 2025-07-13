@@ -25,6 +25,15 @@ const ProgressComponent = ({ student, onNavigate }) => {
         : practiceAPI.getStats(selectedSubject);
         
       const response = await endpoint;
+      console.log('🔍 Progress data received:', response);
+      console.log('🔍 Data type:', Array.isArray(response) ? 'Array' : 'Object');
+      
+      if (Array.isArray(response)) {
+        console.log('🔍 First item in array:', response[0]);
+      } else if (response.recent_tests) {
+        console.log('🔍 Recent tests:', response.recent_tests);
+      }
+      
       setProgressData(response);
     } catch (error) {
       console.error('Error loading progress data:', error);
