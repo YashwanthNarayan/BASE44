@@ -571,8 +571,8 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     <div className="min-h-screen bg-dark-space text-primary">
       <div className="quantum-grid fixed inset-0 opacity-30" />
       
-      <div className="relative z-10 p-6 max-w-6xl mx-auto">
-        {/* Neural Header */}
+      <div className="relative z-10 p-6 max-w-7xl mx-auto">
+        {/* Enhanced Header */}
         <div className="text-center mb-8">
           <LiquidButton
             variant="secondary"
@@ -582,12 +582,75 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
             ← Neural Dashboard
           </LiquidButton>
           <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-            🧘‍♀️ Neural Wellness Center
+            🧘‍♀️ Advanced Neural Wellness Center
           </h1>
-          <p className="text-secondary">Quantum consciousness optimization protocols</p>
+          <p className="text-secondary">Quantum consciousness optimization & stress management protocols</p>
         </div>
 
-        {/* Neural State Selection */}
+        {/* Daily Progress & Stats Dashboard */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <LiquidCard className="text-center">
+            <div className="p-4">
+              <div className="text-3xl mb-2">🎯</div>
+              <div className="text-2xl font-bold text-neon-cyan">{todayProgress}/{dailyGoal}</div>
+              <div className="text-sm text-secondary">Today's Minutes</div>
+              <LiquidProgress value={todayProgress} max={dailyGoal} className="mt-2" />
+            </div>
+          </LiquidCard>
+          
+          <LiquidCard className="text-center">
+            <div className="p-4">
+              <div className="text-3xl mb-2">🔥</div>
+              <div className="text-2xl font-bold text-neon-orange">{personalStats?.streakDays || 0}</div>
+              <div className="text-sm text-secondary">Day Streak</div>
+            </div>
+          </LiquidCard>
+          
+          <LiquidCard className="text-center">
+            <div className="p-4">
+              <div className="text-3xl mb-2">⏱️</div>
+              <div className="text-2xl font-bold text-neon-green">{personalStats?.totalMinutes || 0}</div>
+              <div className="text-sm text-secondary">Total Minutes</div>
+            </div>
+          </LiquidCard>
+          
+          <LiquidCard className="text-center">
+            <div className="p-4">
+              <div className="text-3xl mb-2">📈</div>
+              <div className="text-2xl font-bold text-neon-purple">+{(personalStats?.moodImprovement || 0).toFixed(1)}</div>
+              <div className="text-sm text-secondary">Mood Boost</div>
+            </div>
+          </LiquidCard>
+        </div>
+
+        {/* Background Sound Selection */}
+        <LiquidCard className="mb-8">
+          <div className="p-6">
+            <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+              <span>🎵</span> Neural Background Environment
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {backgroundSounds.map((sound) => (
+                <button
+                  key={sound.id}
+                  onClick={() => setSelectedBackgroundSound(sound.id)}
+                  className={`
+                    p-3 rounded-lg border-2 transition-all duration-300 text-center
+                    ${selectedBackgroundSound === sound.id
+                      ? 'border-neon-cyan bg-glass-strong text-neon-cyan'
+                      : 'border-primary/20 bg-glass hover:border-neon-cyan/50'
+                    }
+                  `}
+                >
+                  <div className="text-xl mb-1">{sound.icon}</div>
+                  <div className="text-xs">{sound.name}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </LiquidCard>
+
+        {/* Current Neural State Assessment */}
         <LiquidCard className="mb-8" holographic>
           <div className="p-6">
             <div className="flex items-center space-x-3 mb-6">
@@ -597,7 +660,7 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
               <h2 className="text-xl font-bold text-primary">Current Neural State Assessment</h2>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
               {moods.map((mood) => (
                 <button
                   key={mood.value}
@@ -615,22 +678,66 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
                 </button>
               ))}
             </div>
+            
+            {/* Personalized Recommendations */}
+            {moodBefore && (
+              <div className="mt-6 p-4 bg-glass rounded-lg border border-primary/20">
+                <h3 className="text-lg font-semibold text-primary mb-3">🎯 Recommended Protocols</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {getRecommendedActivities().map((activity) => (
+                    <div key={activity.id} className="p-3 bg-glass-strong rounded-lg border border-primary/10 text-center">
+                      <div className="text-2xl mb-1">{activity.icon}</div>
+                      <div className="text-sm font-medium text-primary">{activity.name}</div>
+                      <div className="text-xs text-secondary">{activity.duration}m</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </LiquidCard>
 
-        {/* Mindfulness Protocols */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {mindfulnessActivities.map((activity) => (
+        {/* Category Filters */}
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-primary mb-4">Protocol Categories</h2>
+          <div className="flex flex-wrap gap-3">
+            {mindfulnessCategories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`
+                  px-4 py-2 rounded-lg border-2 transition-all duration-300 flex items-center gap-2
+                  ${selectedCategory === category.id
+                    ? 'border-neon-cyan bg-glass-strong text-neon-cyan'
+                    : 'border-primary/20 bg-glass hover:border-neon-cyan/50'
+                  }
+                `}
+              >
+                <span>{category.icon}</span>
+                <span className="text-sm font-medium">{category.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Enhanced Mindfulness Protocols Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {getFilteredActivities().map((activity) => (
             <LiquidCard
               key={activity.id}
-              className="hover:scale-105 transform transition-all duration-300 cursor-pointer"
+              className="hover:scale-105 transform transition-all duration-300 cursor-pointer group"
               onClick={() => startSession(activity)}
             >
-              <div className={`p-6 bg-gradient-to-br ${activity.gradient} rounded-xl`}>
+              <div className={`p-6 bg-gradient-to-br ${activity.gradient} rounded-xl relative overflow-hidden`}>
                 {/* Activity Header */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className="text-4xl">{activity.icon}</div>
+                  <div className="text-4xl group-hover:scale-110 transition-transform duration-300">
+                    {activity.icon}
+                  </div>
                   <div className="text-right">
+                    <div className={`text-xs px-2 py-1 rounded mb-1 ${getDifficultyColor(activity.difficulty)}`}>
+                      {activity.difficulty}
+                    </div>
                     <div className="text-sm text-secondary">Duration</div>
                     <div className="text-lg font-bold text-neon-cyan">{activity.duration}m</div>
                   </div>
@@ -638,7 +745,21 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
 
                 {/* Activity Content */}
                 <h3 className="text-xl font-bold text-primary mb-2">{activity.name}</h3>
-                <p className="text-secondary mb-4">{activity.description}</p>
+                <p className="text-secondary mb-4 text-sm">{activity.description}</p>
+
+                {/* Benefits Preview */}
+                {activity.benefits && (
+                  <div className="mb-4">
+                    <div className="text-xs text-secondary mb-2">Key Benefits:</div>
+                    <div className="flex flex-wrap gap-1">
+                      {activity.benefits.slice(0, 2).map((benefit, index) => (
+                        <span key={index} className="text-xs bg-white/10 px-2 py-1 rounded">
+                          {benefit}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Neural Start Button */}
                 <LiquidButton
@@ -652,14 +773,48 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
                   {!moodBefore ? 'Select Neural State First' : `⚡ Initialize ${activity.name}`}
                 </LiquidButton>
 
-                {/* Data Stream */}
+                {/* Quantum Data Stream */}
                 <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-50" />
               </div>
             </LiquidCard>
           ))}
         </div>
 
-        {/* Neural Session History */}
+        {/* Achievements Section */}
+        <LiquidCard className="mb-8">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-primary flex items-center gap-2">
+                <span>🏆</span> Neural Achievements
+              </h2>
+              <LiquidButton
+                variant="secondary"
+                onClick={() => setShowAchievements(!showAchievements)}
+              >
+                {showAchievements ? 'Hide' : 'Show All'}
+              </LiquidButton>
+            </div>
+            
+            <div className={`grid grid-cols-2 md:grid-cols-5 gap-4 ${showAchievements ? '' : 'max-h-20 overflow-hidden'}`}>
+              {achievements.map((achievement) => (
+                <div
+                  key={achievement.id}
+                  className={`p-4 rounded-lg border-2 text-center transition-all duration-300 ${
+                    achievement.unlocked
+                      ? 'border-yellow-400 bg-yellow-500/10 text-yellow-400'
+                      : 'border-gray-500 bg-gray-500/10 text-gray-500'
+                  }`}
+                >
+                  <div className="text-2xl mb-2">{achievement.icon}</div>
+                  <div className="text-sm font-medium">{achievement.name}</div>
+                  <div className="text-xs text-secondary">{achievement.description}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </LiquidCard>
+
+        {/* Enhanced Session History */}
         {sessionHistory.length > 0 && (
           <LiquidCard>
             <div className="p-6">
@@ -671,26 +826,41 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
               </div>
               
               <div className="space-y-3">
-                {sessionHistory.slice(0, 5).map((session, index) => (
-                  <div key={index} className="flex justify-between items-center p-4 bg-glass rounded-lg border border-primary/20">
-                    <div className="flex items-center space-x-4">
-                      <div className="text-2xl">
-                        {mindfulnessActivities.find(a => a.id === session.activity_type)?.icon || '🧘‍♀️'}
+                {sessionHistory.slice(0, 5).map((session, index) => {
+                  const activity = enhancedMindfulnessActivities.find(a => a.id === session.activity_type);
+                  return (
+                    <div key={index} className="flex justify-between items-center p-4 bg-glass rounded-lg border border-primary/20">
+                      <div className="flex items-center space-x-4">
+                        <div className="text-2xl">
+                          {activity?.icon || '🧘‍♀️'}
+                        </div>
+                        <div>
+                          <div className="font-medium text-primary">
+                            {activity?.name || session.activity_type.replace('_', ' ')}
+                          </div>
+                          <div className="text-sm text-secondary">
+                            {new Date(session.completed_at).toLocaleDateString()} • {session.duration} minutes
+                          </div>
+                          {activity?.category && (
+                            <div className="text-xs text-secondary capitalize">
+                              {activity.category} • {activity.difficulty}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-medium text-primary capitalize">
-                          {session.activity_type.replace('_', ' ')}
+                      <div className="text-right">
+                        <div className="text-sm font-medium text-primary">
+                          {session.mood_before} → {session.mood_after}
                         </div>
-                        <div className="text-sm text-secondary">
-                          {new Date(session.completed_at).toLocaleDateString()} • {session.duration} minutes
-                        </div>
+                        {session.background_sound && (
+                          <div className="text-xs text-secondary">
+                            🎵 {backgroundSounds.find(s => s.id === session.background_sound)?.name}
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <div className="text-sm text-secondary">
-                      {session.mood_before} → {session.mood_after}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </LiquidCard>
