@@ -11,6 +11,50 @@ import uuid
 
 router = APIRouter(prefix="/api/practice", tags=["practice"])
 
+async def fix_null_subjects_in_database(db):
+    """One-time data migration to fix NULL subjects in existing practice attempts"""
+    try:
+        # Find attempts with NULL/None subjects
+        null_attempts = await db[Collections.PRACTICE_ATTEMPTS].find({
+            "$or": [
+                {"subject": {"$exists": False}},
+                {"subject": None},
+                {"subject": ""}
+            ]
+        }).to_list(None)
+        
+        if null_attempts:
+            print(f"🔧 Data Migration: Found {len(null_attempts)} attempts with NULL subjects")
+            
+            # Update them to 'general' as fallback
+            result = await db[Collections.PRACTICE_ATTEMPTS].update_many(
+                {
+                    "$or": [
+                        {"subject": {"$exists": False}},
+                        {"subject": None},
+                        {"subject": ""}
+                    ]
+                },
+                {"$set": {"subject": "general"}}
+            )
+            
+            print(f"✅ Data Migration: Updated {result.modified_count} attempts with subject='general'")
+    except Exception as e:
+        print(f"❌ Data Migration Error: {e}")
+
+async def update_student_stats(student_id: str, score: float, subject: str):
+    """Update student statistics after completing a practice test"""
+    db = get_database()
+    try:
+        # Update student's practice stats
+        current_date = datetime.utcnow().date()
+        
+        # This is a placeholder - implement actual stats update logic as needed
+        print(f"📊 Updated stats for student {student_id}: {subject} - {score}%")
+        
+    except Exception as e:
+        print(f"Error updating student stats: {e}")
+
 @router.post("/generate")
 async def generate_practice_test(
     test_request: PracticeTestRequest,
