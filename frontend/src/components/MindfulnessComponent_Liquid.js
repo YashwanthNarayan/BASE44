@@ -785,7 +785,7 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
           <div className="p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-primary flex items-center gap-2">
-                <span>🏆</span> Neural Achievements
+                <span>🏆</span> Achievements
               </h2>
               <LiquidButton
                 variant="secondary"
