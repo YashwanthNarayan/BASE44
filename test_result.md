@@ -523,9 +523,11 @@ metadata:
 
 test_plan:
   current_focus:
+    - "Authentication Issue Fix - Practice Test Generation 401 Error"
     - "Enhanced Calendar Component with Click-to-Add Events"
     - "Enhanced Tutor Component with Chat History"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Authentication Issue Fix - Practice Test Generation 401 Error"
   test_all: false
   test_priority: "high_first"
 
