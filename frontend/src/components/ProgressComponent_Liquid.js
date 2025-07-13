@@ -133,7 +133,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
               />
               
               <LiquidStatsCard
-                title="Neural Score"
+                title="Average Score"
                 value={`${Array.isArray(progressData) 
                   ? (progressData.reduce((acc, test) => acc + test.score, 0) / progressData.length || 0).toFixed(1)
                   : (progressData.average_score || 0).toFixed(1)
