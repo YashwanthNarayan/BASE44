@@ -254,15 +254,18 @@ user_problem_statement: "when i try to generate a practice test i am getting thi
 backend:
   - task: "Authentication Issue Fix - Practice Test Generation 401 Error"
     implemented: true
-    working: true
+    working: false
     file: "backend/utils/security.py, frontend/src/services/api.js, frontend/src/App.js"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: true
           agent: "main"
           comment: "AUTHENTICATION FIX IMPLEMENTED: Successfully identified and fixed the root cause of the practice test generation 401 error. The issue was with the API configuration on the Emergent platform. Fixed issues: 1) Updated getApiBaseUrl() function to use currentOrigin for Emergent platform (Kubernetes ingress routes /api to backend), 2) Updated REACT_APP_BACKEND_URL to use the correct HTTPS URL without port, 3) Confirmed backend is accessible via HTTPS at same domain with /api prefix (curl test successful), 4) Added request interceptor to ensure all axios requests include current token from localStorage, 5) Fixed App.js to use consistent API_BASE from api.js. TESTING RESULTS: Backend accessible via https://eduleap-k.preview.emergentagent.com/api/health returns proper health check. Frontend compiles and loads correctly. Authentication fix should resolve the 401 Unauthorized errors during practice test generation."
+        - working: false
+          agent: "testing"
+          comment: "🚨 CRITICAL AUTHENTICATION ISSUE CONFIRMED: Comprehensive testing reveals the authentication flow is still broken despite previous fixes. ROOT CAUSE IDENTIFIED: The /api/dashboard endpoint rejects valid JWT tokens when called from frontend but accepts identical tokens via curl. DETAILED FINDINGS: ✅ Backend Working: All endpoints (login, dashboard, practice) work perfectly with curl using same tokens. ❌ Frontend Broken: 1) Login succeeds (200), tokens stored correctly, 2) Dashboard calls immediately return 401 despite valid Bearer tokens, 3) Axios response interceptor clears localStorage on 401, 4) User redirected back to login. EVIDENCE: Network logs show proper Bearer tokens sent from frontend, backend logs confirm 401 responses. Manual fetch from frontend fails with 'Failed to fetch'. ISSUE: Frontend requests differ from curl requests in a way that causes JWT validation to fail. This affects ALL authenticated endpoints including practice test generation. URGENT: Need to debug exact request differences between frontend and curl to fix authentication flow."
     implemented: true
     working: true
     file: "backend/routes/tutor.py"
