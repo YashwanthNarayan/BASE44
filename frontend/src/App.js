@@ -52,7 +52,7 @@ function App() {
         
         // Validate token with backend by making a test API call
         try {
-          await axios.get(`${import.meta.env.REACT_APP_BACKEND_URL || window.location.origin}/api/dashboard`);
+          await axios.get(`${API_BASE}/api/dashboard`);
           
           // Token is valid, set auth state
           setIsAuthenticated(true);
