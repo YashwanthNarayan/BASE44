@@ -146,7 +146,7 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     // Focus Training
     {
       id: 'single_point',
-      name: 'Laser Focus Protocol',
+      name: 'Single-Point Focus',
       category: 'focus',
       description: 'Concentration enhancement training',
       duration: 10,
@@ -158,9 +158,9 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     },
     {
       id: 'open_monitoring',
-      name: 'Panoramic Awareness',
+      name: 'Open Monitoring',
       category: 'focus',
-      description: 'Wide-spectrum consciousness training',
+      description: 'Wide-spectrum awareness training',
       duration: 15,
       icon: '👁️',
       gradient: 'from-indigo-500/20 to-blue-500/20',
@@ -172,25 +172,25 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     // Sleep Preparation
     {
       id: 'sleep_stories',
-      name: 'Neural Sleep Narrative',
+      name: 'Sleep Stories',
       category: 'sleep',
-      description: 'Consciousness transition protocol',
+      description: 'Guided sleep preparation',
       duration: 20,
       icon: '📖',
       gradient: 'from-slate-500/20 to-gray-500/20',
-      instructions: 'Listen to calming narrative while progressively relaxing. Let the story guide you into sleep state.',
+      instructions: 'Listen to calming narrative while progressively relaxing. Let the story guide you into a restful state.',
       benefits: ['Improves sleep onset', 'Reduces sleep anxiety', 'Enhances sleep quality'],
       difficulty: 'beginner'
     },
     {
       id: 'yoga_nidra',
-      name: 'Quantum Sleep Yoga',
+      name: 'Yoga Nidra',
       category: 'sleep',
-      description: 'Conscious sleep induction protocol',
+      description: 'Conscious relaxation practice',
       duration: 25,
       icon: '🕉️',
       gradient: 'from-purple-500/20 to-indigo-500/20',
-      instructions: 'Systematic relaxation through body awareness, breath, and intention. Remain conscious while body sleeps.',
+      instructions: 'Systematic relaxation through body awareness, breath, and intention. Remain aware while body rests.',
       benefits: ['Deep restoration', 'Reduces insomnia', 'Enhances recovery'],
       difficulty: 'intermediate'
     },
