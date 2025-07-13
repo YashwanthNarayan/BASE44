@@ -209,7 +209,8 @@ async def get_detailed_results(
             )
         
         return convert_objectid_to_str({
-            "attempt_id": attempt["id"],
+            "id": attempt["id"],  # Use 'id' for consistency with frontend
+            "attempt_id": attempt["id"],  # Keep attempt_id for backward compatibility
             "score": attempt["score"],
             "correct_count": attempt.get("correct_count", 0),
             "total_questions": attempt["total_questions"],
