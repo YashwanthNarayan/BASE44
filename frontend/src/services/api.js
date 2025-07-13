@@ -17,9 +17,14 @@ const getApiBaseUrl = () => {
     return 'http://localhost:8001';
   }
   
-  // For Emergent platform, use port 8001 for backend
+  // For Emergent platform, try different approaches based on protocol
   if (currentHost.includes('emergentagent.com') || currentHost.includes('preview')) {
-    return `${currentProtocol}//${currentHost}:8001`; // Backend is on port 8001
+    // If frontend is HTTPS, try HTTPS backend first, fall back to HTTP
+    if (currentProtocol === 'https:') {
+      return `https://${currentHost}:8001`;
+    } else {
+      return `http://${currentHost}:8001`;
+    }
   }
   
   // For HTTPS sites, use HTTPS backend
