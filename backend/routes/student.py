@@ -161,11 +161,16 @@ async def join_class(
 async def get_student_dashboard(current_user: dict = Depends(get_current_student)):
     """Get comprehensive dashboard data for a student"""
     try:
+        print(f"🔍 DASHBOARD DEBUG: Received request for user: {current_user}")
+        print(f"🔍 DASHBOARD DEBUG: User ID: {current_user.get('sub')}, Type: {current_user.get('user_type')}")
+        
         # Get student profile
         profile = await auth_service.get_user_profile(
             current_user["sub"], 
             current_user["user_type"]
         )
+        
+        print(f"✅ DASHBOARD DEBUG: Successfully retrieved profile for user {current_user.get('sub')}")
         
         # Return basic dashboard data
         return {
