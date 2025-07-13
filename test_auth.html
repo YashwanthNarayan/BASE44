@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Test</title>
+</head>
+<body>
+    <h1>Authentication Test</h1>
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="testDashboard()">Test Dashboard</button>
+    <div id="result"></div>
+
+    <script>
+        const API_BASE = 'https://eduleap-auth.preview.emergentagent.com';
+        let token = null;
+
+        async function testLogin() {
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'test@example.com',
+                        password: 'TestPassword123!'
+                    })
+                });
+                
+                const data = await response.json();
+                token = data.access_token;
+                document.getElementById('result').innerHTML = `Login successful! Token: ${token.substring(0, 50)}...`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Login failed: ${error.message}`;
+            }
+        }
+
+        async function testDashboard() {
+            if (!token) {
+                document.getElementById('result').innerHTML = 'Please login first';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/dashboard`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('result').innerHTML = `Dashboard success! User: ${data.profile.name}`;
+                } else {
+                    document.getElementById('result').innerHTML = `Dashboard failed: ${response.status} ${response.statusText}`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Dashboard failed: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
