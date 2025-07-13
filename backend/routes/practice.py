@@ -107,6 +107,14 @@ async def submit_practice_test(
         score_percentage = ScoreUtils.calculate_percentage(correct_count, total_questions)
         
         # Create detailed practice attempt record
+        # Ensure we have a valid subject - get from request data if questions don't have it
+        subject = None
+        if questions and questions[0].get("subject"):
+            subject = questions[0]["subject"]
+        else:
+            # Fallback to getting subject from the original test request data
+            subject = test_data.get("subject", "general")
+        
         attempt_doc = {
             "id": str(uuid.uuid4()),
             "student_id": current_user["sub"],
@@ -116,8 +124,8 @@ async def submit_practice_test(
             "score": score_percentage,
             "correct_count": correct_count,
             "total_questions": total_questions,
-            "subject": questions[0]["subject"] if questions else "general",
-            "difficulty": questions[0]["difficulty"] if questions else "medium",
+            "subject": subject,  # Use validated subject
+            "difficulty": questions[0]["difficulty"] if questions and questions[0].get("difficulty") else "medium",
             "time_taken": test_data.get("time_taken", 0),
             "completed_at": datetime.utcnow()
         }
