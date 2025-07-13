@@ -518,7 +518,7 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
               {/* Post-Session Mood Selection */}
               {timeRemaining === 0 && (
                 <div className="mb-6 p-6 bg-glass rounded-lg border border-primary/20">
-                  <h3 className="text-lg font-semibold text-primary mb-4">Post-Session Neural State</h3>
+                  <h3 className="text-lg font-semibold text-primary mb-4">Post-Session Mood</h3>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
                     {moods.map((mood) => (
                       <button
