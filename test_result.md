@@ -59,7 +59,7 @@
     file: "frontend/src/components/TutorComponent_Liquid.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
