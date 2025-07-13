@@ -75,8 +75,8 @@ const AuthPortal = ({ onAuthSuccess }) => {
 
       const response = isLogin ? await authAPI.login(payload) : await authAPI.register(payload);
       
-      // Store authentication data using storage utility
-      storage.set('access_token', response.access_token);
+      // Store authentication data - store token directly to avoid JSON.stringify quotes
+      localStorage.setItem('access_token', response.access_token);
       storage.set('user_type', response.user_type);
       storage.set('user', response.user);
       
