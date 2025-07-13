@@ -120,9 +120,9 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     // Relaxation
     {
       id: 'progressive_muscle',
-      name: 'Systematic Muscle Release',
+      name: 'Progressive Muscle Relaxation',
       category: 'relaxation',
-      description: 'Targeted tension elimination protocol',
+      description: 'Systematic muscle tension release',
       duration: 15,
       icon: '💪',
       gradient: 'from-violet-500/20 to-purple-500/20',
@@ -132,13 +132,13 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     },
     {
       id: 'visualization',
-      name: 'Quantum Sanctuary Visualization',
+      name: 'Guided Visualization',
       category: 'relaxation',
-      description: 'Neural-space construction protocol',
+      description: 'Peaceful scene visualization',
       duration: 12,
       icon: '🏞️',
       gradient: 'from-teal-500/20 to-cyan-500/20',
-      instructions: 'Construct a perfect digital sanctuary. Engage all senses: visual, auditory, tactile, olfactory details.',
+      instructions: 'Create a perfect peaceful sanctuary. Engage all senses: visual, auditory, tactile, olfactory details.',
       benefits: ['Reduces stress hormones', 'Enhances creativity', 'Improves mood'],
       difficulty: 'intermediate'
     },
