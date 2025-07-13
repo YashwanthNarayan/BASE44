@@ -94,7 +94,7 @@ function App() {
   };
 
   const handleLogout = () => {
-    storage.remove('access_token');
+    localStorage.removeItem('access_token'); // Direct removal
     storage.remove('user_type');
     storage.remove('user');
     setupAxiosAuth(null);
