@@ -42,19 +42,6 @@ async def fix_null_subjects_in_database(db):
     except Exception as e:
         print(f"❌ Data Migration Error: {e}")
 
-async def update_student_stats(student_id: str, score: float, subject: str):
-    """Update student statistics after completing a practice test"""
-    db = get_database()
-    try:
-        # Update student's practice stats
-        current_date = datetime.utcnow().date()
-        
-        # This is a placeholder - implement actual stats update logic as needed
-        print(f"📊 Updated stats for student {student_id}: {subject} - {score}%")
-        
-    except Exception as e:
-        print(f"Error updating student stats: {e}")
-
 @router.post("/generate")
 async def generate_practice_test(
     test_request: PracticeTestRequest,
