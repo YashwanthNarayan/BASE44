@@ -17,14 +17,9 @@ const getApiBaseUrl = () => {
     return 'http://localhost:8001';
   }
   
-  // For Emergent platform, try different approaches based on protocol
+  // For Emergent platform, use same origin (Kubernetes ingress routes /api to backend)
   if (currentHost.includes('emergentagent.com') || currentHost.includes('preview')) {
-    // If frontend is HTTPS, try HTTPS backend first, fall back to HTTP
-    if (currentProtocol === 'https:') {
-      return `https://${currentHost}:8001`;
-    } else {
-      return `http://${currentHost}:8001`;
-    }
+    return currentOrigin; // Same domain, backend is routed via /api prefix by Kubernetes
   }
   
   // For HTTPS sites, use HTTPS backend
