@@ -35,14 +35,19 @@ const ProgressComponent = ({ student, onNavigate }) => {
   };
 
   const loadDetailedResults = async (attemptId) => {
+    console.log('🔍 loadDetailedResults called with ID:', attemptId);
     setLoadingDetails(true);
     try {
+      console.log('📡 Making API call to get detailed results...');
       const response = await practiceAPI.getDetailedResults(attemptId);
+      console.log('✅ Detailed results response:', response);
       setDetailedResults(response);
       setViewingDetails(attemptId);
     } catch (error) {
-      console.error('Error loading detailed results:', error);
-      alert('Failed to load detailed results: ' + error.message);
+      console.error('❌ Error loading detailed results:', error);
+      console.error('❌ Error response:', error.response?.data);
+      console.error('❌ Error status:', error.response?.status);
+      alert('Failed to load detailed results: ' + (error.response?.data?.detail || error.message));
     } finally {
       setLoadingDetails(false);
     }
