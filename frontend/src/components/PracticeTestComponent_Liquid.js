@@ -112,6 +112,7 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
       const results = await practiceAPI.submit({
         questions: currentQuestions.map(q => q.id),
         student_answers: userAnswers,
+        subject: selectedSubject, // Include subject for proper data storage
         time_taken: 300 // placeholder
       });
 
