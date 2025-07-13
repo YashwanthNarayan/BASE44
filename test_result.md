@@ -249,7 +249,7 @@
 
 
 
-user_problem_statement: "First lets try to change to font to something more professional and then in the chat bot the select domain and the new nueral session are kinda blended in change that"
+user_problem_statement: "when i try to generate a practice test i am getting this error" - User reports getting "Authentication expired. Please log in again." error specifically when trying to generate practice tests
 
 backend:
   - task: "Tutor API Routes Implementation"
