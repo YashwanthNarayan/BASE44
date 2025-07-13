@@ -151,7 +151,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
                 }%`}
                 icon="🏆"
                 gradient="from-yellow-500/20 to-orange-500/20"
-                trend="Maximum neural output"
+                trend="Best performance"
               />
               
               <LiquidStatsCard
