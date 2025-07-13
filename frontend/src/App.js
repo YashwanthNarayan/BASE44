@@ -27,6 +27,7 @@ const AssignmentsComponent = React.lazy(() => import('./components/AssignmentsCo
 // Import services and utilities
 import { setupAxiosAuth, studentAPI } from './services/api';
 import { storage } from './utils/helpers';
+import API_BASE from './services/api';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
