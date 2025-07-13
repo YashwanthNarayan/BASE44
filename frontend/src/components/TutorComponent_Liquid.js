@@ -171,7 +171,7 @@ const TutorComponent = ({ student, onNavigate }) => {
       console.error('Error sending message:', error);
       const errorMessage = {
         role: 'assistant',
-        content: 'Neural network connection interrupted. Please re-establish communication link.',
+        content: 'Connection interrupted. Let\'s reconnect and continue learning together!',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
