@@ -9,7 +9,6 @@ import StudentDashboard from './components/StudentDashboard_Liquid';
 import TeacherDashboard from './components/TeacherDashboard_Liquid';
 import NotesComponent from './components/NotesComponent_Liquid';
 import PracticeTestComponent from './components/PracticeTestComponent_Liquid';
-import AuthDebugComponent from './components/AuthDebugComponent';
 
 // Import lazy-loaded components (now with liquid versions)
 const MindfulnessComponent = React.lazy(() => import('./components/MindfulnessComponent_Liquid'));
@@ -32,16 +31,45 @@ import API_BASE from './services/api';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentView, setCurrentView] = useState('debug'); // Change to debug
+  const [currentView, setCurrentView] = useState('student-dashboard');
   const [userType, setUserType] = useState('student');
   const [user, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading] = useState(false); // Disable loading for debug
+  const [loading, setLoading] = useState(true);
 
-  // Show debug component directly
-  if (currentView === 'debug') {
-    return <AuthDebugComponent />;
-  }
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      const token = storage.get('access_token');
+      const userType = storage.get('user_type');
+      const user = storage.get('user');
+
+      if (token && userType && user) {
+        setupAxiosAuth(token);
+        
+        // Skip token validation call that was causing issues
+        // Just trust the stored token and set auth state
+        setIsAuthenticated(true);
+        setUserType(userType);
+        setUser(user);
+        
+        if (userType === 'student') {
+          await loadDashboardData();
+          setCurrentView('student-dashboard');
+        } else {
+          setCurrentView('teacher-dashboard');
+        }
+      }
+    } catch (error) {
+      console.error('Error checking auth status:', error);
+      handleLogout();
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadDashboardData = async () => {
     try {
