@@ -108,56 +108,201 @@ class AIService:
         self,
         message: str,
         subject: Subject,
-        context: Optional[Dict[str, Any]] = None
+        context: Optional[Dict] = None,
+        use_cache: bool = True
     ) -> str:
-        """Generate AI tutor response with conversation context"""
+        """Generate an educational tutor response with step-by-step guidance"""
         
-        # Don't cache responses when we have context - each response should be contextual
-        use_cache = context is None or not context.get('conversation_history')
-        
-        if use_cache:
-            cache_key = CacheUtils.get_cache_key(message, subject)
+        # Only cache non-contextual responses
+        if use_cache and not context:
+            cache_key = CacheUtils.get_cache_key(f"tutor_{message[:50]}", subject)
             cached_response = CacheUtils.get_cached_response(cache_key)
             if cached_response:
                 return cached_response
         
-        # Build conversation context
+        # Analyze student's learning pattern from conversation history
+        learning_analysis = self._analyze_learning_pattern(context)
+        
+        # Build conversation context with learning insights
         conversation_context = ""
         if context and context.get('conversation_history'):
-            conversation_context = "\n\nPrevious conversation in this session:\n"
-            for i, exchange in enumerate(context['conversation_history'][-3:]):  # Last 3 exchanges
+            conversation_context = "\n\nPrevious conversation context:\n"
+            for i, exchange in enumerate(context['conversation_history'][-3:]):
                 conversation_context += f"Student: {exchange.get('user', '')}\n"
-                conversation_context += f"Tutor: {exchange.get('assistant', '')}\n\n"
+                conversation_context += f"Teacher: {exchange.get('assistant', '')}\n\n"
         
-        prompt = f"""You are an expert {subject.value} tutor having a continuing conversation with a student.
+        # Determine if this is a direct question asking for an answer or if they need guidance
+        question_type = self._classify_question_type(message)
+        
+        prompt = f"""You are an experienced and patient {subject.value} teacher (not a chatbot) having a one-on-one tutoring session with a student. Your role is to GUIDE learning, not just provide answers.
 
-Current student question: "{message}"
+STUDENT'S QUESTION: "{message}"
+
+LEARNING PATTERN ANALYSIS: {learning_analysis}
+
 {conversation_context}
-Context: This is part of an ongoing tutoring session. Please refer to the previous conversation when relevant and build upon what has already been discussed. Maintain continuity in your explanations.
 
-Provide a helpful, educational response that:
-1. Takes into account the previous conversation context
-2. Directly answers their current question
-3. Explains concepts clearly with examples
-4. References previous topics discussed when relevant
-5. Encourages further learning and questions
-6. Maintains a conversational and engaging tone
+TEACHING APPROACH:
+{self._get_teaching_approach(question_type)}
 
-Remember: You are continuing an educational conversation, not starting fresh each time."""
+YOUR RESPONSE MUST:
+1. 🎯 **Understand First**: Ask clarifying questions if the problem/concept isn't clear
+2. 📚 **Assess Knowledge**: Check what the student already knows about this topic
+3. 🔍 **Guide Discovery**: Lead them to discover answers through questions and hints
+4. 📝 **Step-by-Step**: Break complex problems into smaller, manageable steps
+5. 💡 **Encourage Thinking**: Ask "What do you think happens next?" or "Why might that be?"
+6. ✅ **Check Understanding**: Ensure they understand each step before moving forward
+7. 🌟 **Build Confidence**: Praise their thinking process and effort
+8. 🔗 **Connect Concepts**: Relate to what they've learned before
+
+TEACHING STYLE:
+- Use Socratic method (guide through questions)
+- Give hints rather than direct answers
+- Encourage the student to explain their thinking
+- Adapt your language to their level of understanding
+- Be patient and supportive
+- Celebrate small wins and progress
+
+FORBIDDEN:
+- Don't just give the final answer
+- Don't solve the entire problem for them
+- Don't use overly technical language without explanation
+- Don't move too fast without checking understanding
+
+Remember: You're a teacher who wants students to LEARN and UNDERSTAND, not just get the right answer."""
         
         try:
             response = self.model.generate_content(prompt)
             content = response.text
             
             # Only cache responses without context
-            if use_cache:
+            if use_cache and not context:
                 CacheUtils.cache_response(cache_key, content)
             
             return content
         
         except Exception as e:
             print(f"Error generating tutor response: {e}")
-            return f"I apologize, but I'm having trouble generating a response right now. Could you please rephrase your question about {subject.value}?"
+            return f"I'm having a technical issue right now. Let's try again - what {subject.value} concept would you like to explore together?"
+
+    def _analyze_learning_pattern(self, context: Optional[Dict]) -> str:
+        """Analyze student's learning pattern from conversation history"""
+        if not context or not context.get('conversation_history'):
+            return "New student - no learning pattern data available yet."
+        
+        history = context['conversation_history']
+        if len(history) < 2:
+            return "Early in conversation - observing learning style."
+        
+        # Analyze patterns
+        patterns = []
+        
+        # Check if student asks for direct answers vs shows work
+        direct_answer_requests = sum(1 for exchange in history 
+                                   if any(phrase in exchange.get('user', '').lower() 
+                                         for phrase in ['what is', 'give me', 'tell me', 'answer is']))
+        
+        if direct_answer_requests > len(history) * 0.6:
+            patterns.append("tends to seek direct answers rather than understanding process")
+        else:
+            patterns.append("shows interest in understanding the process")
+        
+        # Check question complexity
+        question_lengths = [len(exchange.get('user', '')) for exchange in history]
+        avg_length = sum(question_lengths) / len(question_lengths)
+        
+        if avg_length > 100:
+            patterns.append("asks detailed, thoughtful questions")
+        elif avg_length < 30:
+            patterns.append("asks brief questions - may need encouragement to elaborate")
+        
+        # Check if they build on previous responses
+        if len(history) > 2:
+            last_exchanges = history[-2:]
+            if any(ref in last_exchanges[-1].get('user', '').lower() 
+                   for ref in ['but', 'however', 'also', 'what about', 'then']):
+                patterns.append("builds on previous discussions - good critical thinking")
+        
+        return f"Learning pattern observed: {', '.join(patterns) if patterns else 'Still observing learning style'}"
+
+    def _classify_question_type(self, message: str) -> str:
+        """Classify the type of question the student is asking"""
+        message_lower = message.lower()
+        
+        # Direct answer seeking
+        if any(phrase in message_lower for phrase in [
+            'what is', 'what are', 'give me', 'tell me', 'answer is', 
+            'solve this', 'find the', 'calculate'
+        ]):
+            return "direct_answer"
+        
+        # Conceptual understanding
+        elif any(phrase in message_lower for phrase in [
+            'why', 'how does', 'explain', 'understand', 'concept', 
+            'difference between', 'what happens when'
+        ]):
+            return "conceptual"
+        
+        # Problem-solving help
+        elif any(phrase in message_lower for phrase in [
+            'stuck on', 'help with', 'not sure how', 'confused about',
+            'having trouble', 'don\'t know'
+        ]):
+            return "problem_solving"
+        
+        # Process/method questions
+        elif any(phrase in message_lower for phrase in [
+            'how to', 'steps', 'method', 'approach', 'way to'
+        ]):
+            return "process"
+        
+        else:
+            return "general"
+
+    def _get_teaching_approach(self, question_type: str) -> str:
+        """Get specific teaching approach based on question type"""
+        approaches = {
+            "direct_answer": """
+            🚫 AVOID giving direct answers. Instead:
+            - Ask what they already know about this topic
+            - Guide them to think through the problem step by step
+            - Use hints and leading questions
+            - Example: Instead of "The answer is X", ask "What do you think the first step should be?"
+            """,
+            
+            "conceptual": """
+            💡 CONCEPTUAL TEACHING:
+            - Use analogies and real-world examples
+            - Build from what they already know
+            - Ask them to explain their current understanding first
+            - Guide them to discover the concept through questions
+            """,
+            
+            "problem_solving": """
+            🔧 PROBLEM-SOLVING GUIDANCE:
+            - First understand what exactly they're stuck on
+            - Break the problem into smaller parts
+            - Guide them through each step without solving it for them
+            - Ask "What would happen if...?" questions
+            """,
+            
+            "process": """
+            📋 PROCESS TEACHING:
+            - Break down the method into clear steps
+            - Have them explain each step back to you
+            - Use examples to illustrate each step
+            - Check understanding before moving to next step
+            """,
+            
+            "general": """
+            🎯 GENERAL TEACHING:
+            - Start by understanding what they need help with
+            - Assess their current knowledge level
+            - Adapt your approach based on their response
+            """
+        }
+        
+        return approaches.get(question_type, approaches["general"])
     
     async def generate_study_notes(
         self,
