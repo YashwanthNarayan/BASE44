@@ -657,7 +657,7 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
               <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center">
                 <span className="text-sm font-bold">🧠</span>
               </div>
-              <h2 className="text-xl font-bold text-primary">Current Neural State Assessment</h2>
+              <h2 className="text-xl font-bold text-primary">Current Mood Assessment</h2>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
