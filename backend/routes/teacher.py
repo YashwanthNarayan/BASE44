@@ -260,7 +260,7 @@ async def get_teacher_analytics_overview(
             class_students = [s for s in students if class_data['class_id'] in s.get('joined_classes', [])]
             class_student_ids = [s['user_id'] for s in class_students]
             
-            class_results = [r for r in practice_results if r['user_id'] in class_student_ids]
+            class_results = [r for r in practice_results if r['student_id'] in class_student_ids]
             class_avg = 0
             if class_results:
                 class_avg = sum(r.get('score', 0) for r in class_results) / len(class_results)
