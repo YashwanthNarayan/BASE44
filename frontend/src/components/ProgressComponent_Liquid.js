@@ -65,7 +65,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
       <div className="min-h-screen bg-dark-space flex items-center justify-center">
         <LiquidCard className="p-8 text-center">
           <div className="quantum-loader mx-auto mb-4"></div>
-          <p className="text-secondary">Analyzing neural progression patterns...</p>
+          <p className="text-secondary">Analyzing learning progress patterns...</p>
         </LiquidCard>
       </div>
     );
