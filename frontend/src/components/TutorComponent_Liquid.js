@@ -21,9 +21,9 @@ const TutorComponent = ({ student, onNavigate }) => {
     { value: 'physics', name: 'Physics', icon: '⚛️', gradient: 'from-purple-500/20 to-indigo-500/20' },
     { value: 'chemistry', name: 'Chemistry', icon: '🧪', gradient: 'from-green-500/20 to-lime-500/20' },
     { value: 'biology', name: 'Biology', icon: '🧬', gradient: 'from-emerald-500/20 to-teal-500/20' },
-    { value: 'english', name: 'Linguistic Protocols', icon: '📚', gradient: 'from-red-500/20 to-pink-500/20' },
-    { value: 'history', name: 'Temporal Archives', icon: '🏛️', gradient: 'from-yellow-500/20 to-orange-500/20' },
-    { value: 'geography', name: 'Planetary Systems', icon: '🌍', gradient: 'from-teal-500/20 to-cyan-500/20' }
+    { value: 'english', name: 'English', icon: '📚', gradient: 'from-red-500/20 to-pink-500/20' },
+    { value: 'history', name: 'History', icon: '🏛️', gradient: 'from-yellow-500/20 to-orange-500/20' },
+    { value: 'geography', name: 'Geography', icon: '🌍', gradient: 'from-teal-500/20 to-cyan-500/20' }
   ];
 
   useEffect(() => {
