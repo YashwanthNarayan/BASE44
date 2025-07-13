@@ -140,7 +140,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
                 }%`}
                 icon="📈"
                 gradient="from-green-500/20 to-emerald-500/20"
-                trend="Quantum average"
+                trend="Overall average"
               />
               
               <LiquidStatsCard
