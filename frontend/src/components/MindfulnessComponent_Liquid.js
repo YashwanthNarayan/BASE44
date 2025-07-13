@@ -627,7 +627,7 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
         <LiquidCard className="mb-8">
           <div className="p-6">
             <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
-              <span>🎵</span> Neural Background Environment
+              <span>🎵</span> Background Sound Environment
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {backgroundSounds.map((sound) => (
