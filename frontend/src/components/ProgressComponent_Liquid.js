@@ -173,7 +173,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
                   <div className="w-8 h-8 rounded-full bg-gradient-accent flex items-center justify-center">
                     <span className="text-sm font-bold">⚡</span>
                   </div>
-                  <h2 className="text-xl font-bold text-primary">Recent Neural Assessments</h2>
+                  <h2 className="text-xl font-bold text-primary">Recent Practice Tests</h2>
                 </div>
                 
                 {(Array.isArray(progressData) ? progressData : progressData.recent_tests || []).length > 0 ? (
