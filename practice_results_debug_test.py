@@ -9,8 +9,8 @@ import uuid
 import os
 from datetime import datetime
 
-# Get API URL from current origin (same as frontend)
-API_BASE = os.environ.get('REACT_APP_BACKEND_URL', 'https://eduleap-k.preview.emergentagent.com')
+# Get API URL - use localhost for testing
+API_BASE = 'http://localhost:8001'
 API_URL = f"{API_BASE}/api"
 
 print(f"🔍 Testing Practice Results API at: {API_URL}")
