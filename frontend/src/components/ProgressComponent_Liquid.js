@@ -76,7 +76,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
       <div className="quantum-grid fixed inset-0 opacity-30" />
       
       <div className="relative z-10 p-6 max-w-7xl mx-auto">
-        {/* Neural Header */}
+        {/* Progress Header */}
         <div className="text-center mb-8">
           <LiquidButton
             variant="secondary"
