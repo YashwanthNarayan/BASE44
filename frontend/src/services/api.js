@@ -51,9 +51,13 @@ axios.interceptors.response.use(
       // Remove authorization header
       delete axios.defaults.headers.common['Authorization'];
       
-      // Show alert and reload page
+      // Log the error for debugging instead of auto-reload
+      console.error('🚨 401 Unauthorized error:', error.config?.url, error.response?.data);
+      
+      // Show alert but don't reload automatically
       alert('Authentication expired. Please log in again.');
-      window.location.reload();
+      // Commented out auto-reload to prevent loops
+      // window.location.reload();
     }
     return Promise.reject(error);
   }
