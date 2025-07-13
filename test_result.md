@@ -526,8 +526,7 @@ test_plan:
     - "Authentication Issue Fix - Practice Test Generation 401 Error"
     - "Enhanced Calendar Component with Click-to-Add Events"
     - "Enhanced Tutor Component with Chat History"
-  stuck_tasks:
-    - "Authentication Issue Fix - Practice Test Generation 401 Error"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
