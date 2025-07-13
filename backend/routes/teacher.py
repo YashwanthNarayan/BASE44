@@ -321,3 +321,259 @@ async def get_teacher_analytics_overview(
             "class_summary": [],
             "subject_distribution": []
         }
+
+@router.get("/analytics/test-results")
+async def get_test_results(
+    class_id: Optional[str] = None,
+    subject: Optional[str] = None,
+    current_user: dict = Depends(get_current_teacher)
+):
+    """Get detailed test results with filtering options"""
+    try:
+        db = get_database()
+        teacher_id = current_user['sub']
+        
+        # Verify teacher profile
+        teacher_profile = await db[Collections.TEACHER_PROFILES].find_one({"user_id": teacher_id})
+        if not teacher_profile:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only teachers can access test results"
+            )
+        
+        # Build query for practice attempts
+        query = {}
+        
+        # If specific class is requested, get students from that class
+        if class_id:
+            classroom = await db[Collections.CLASSROOMS].find_one({
+                "class_id": class_id,
+                "teacher_id": teacher_id
+            })
+            if not classroom:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Class not found"
+                )
+            
+            # Get students in this class
+            students_cursor = db[Collections.STUDENT_PROFILES].find({
+                "joined_classes": {"$in": [class_id]}
+            })
+            students = await students_cursor.to_list(1000)
+            student_ids = [student['user_id'] for student in students]
+            
+            if student_ids:
+                query["student_id"] = {"$in": student_ids}
+            else:
+                # No students in class, return empty results
+                return []
+        else:
+            # Get all students from all teacher's classes
+            teacher_classes_cursor = db[Collections.CLASSROOMS].find({"teacher_id": teacher_id})
+            teacher_classes = await teacher_classes_cursor.to_list(100)
+            
+            all_class_ids = [cls['class_id'] for cls in teacher_classes]
+            
+            if all_class_ids:
+                students_cursor = db[Collections.STUDENT_PROFILES].find({
+                    "joined_classes": {"$elemMatch": {"$in": all_class_ids}}
+                })
+                students = await students_cursor.to_list(1000)
+                student_ids = [student['user_id'] for student in students]
+                
+                if student_ids:
+                    query["student_id"] = {"$in": student_ids}
+                else:
+                    return []
+            else:
+                return []
+        
+        # Add subject filter if provided
+        if subject and subject != 'all':
+            query["subject"] = subject
+        
+        # Get practice attempts
+        practice_attempts_cursor = db[Collections.PRACTICE_ATTEMPTS].find(query).sort("completed_at", -1)
+        practice_attempts = await practice_attempts_cursor.to_list(1000)
+        
+        # Enrich with student information
+        results = []
+        for attempt in practice_attempts:
+            # Get student info
+            student = await db[Collections.STUDENT_PROFILES].find_one({"user_id": attempt["student_id"]})
+            user = await db[Collections.USERS].find_one({"id": attempt["student_id"]})
+            
+            results.append({
+                "id": attempt["id"],
+                "student_id": attempt["student_id"],
+                "student_name": user.get("name", "Unknown") if user else "Unknown",
+                "student_email": user.get("email", "") if user else "",
+                "subject": attempt.get("subject", "Unknown"),
+                "score": attempt.get("score", 0),
+                "correct_count": attempt.get("correct_count", 0),
+                "total_questions": attempt.get("total_questions", 0),
+                "difficulty": attempt.get("difficulty", "medium"),
+                "time_taken": attempt.get("time_taken", 0),
+                "completed_at": attempt.get("completed_at"),
+                "grade": get_grade_from_score(attempt.get("score", 0))
+            })
+        
+        return results
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error getting test results: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get test results: {str(e)}"
+        )
+
+@router.get("/analytics/class-performance/{class_id}")
+async def get_class_performance(
+    class_id: str,
+    current_user: dict = Depends(get_current_teacher)
+):
+    """Get detailed performance analytics for a specific class"""
+    try:
+        db = get_database()
+        teacher_id = current_user['sub']
+        
+        # Verify teacher owns this class
+        classroom = await db[Collections.CLASSROOMS].find_one({
+            "class_id": class_id,
+            "teacher_id": teacher_id
+        })
+        if not classroom:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Class not found"
+            )
+        
+        # Get students in this class
+        students_cursor = db[Collections.STUDENT_PROFILES].find({
+            "joined_classes": {"$in": [class_id]}
+        })
+        students = await students_cursor.to_list(1000)
+        
+        if not students:
+            return {
+                "class_info": {
+                    "class_id": class_id,
+                    "class_name": classroom.get("class_name", ""),
+                    "subject": classroom.get("subject", ""),
+                    "student_count": 0
+                },
+                "performance_summary": {
+                    "total_tests": 0,
+                    "average_score": 0,
+                    "highest_score": 0,
+                    "lowest_score": 0,
+                    "completion_rate": 0
+                },
+                "student_performance": [],
+                "subject_breakdown": [],
+                "recent_activity": []
+            }
+        
+        student_ids = [student['user_id'] for student in students]
+        
+        # Get practice attempts for these students
+        practice_attempts_cursor = db[Collections.PRACTICE_ATTEMPTS].find({
+            "student_id": {"$in": student_ids}
+        }).sort("completed_at", -1)
+        practice_attempts = await practice_attempts_cursor.to_list(1000)
+        
+        # Calculate performance metrics
+        total_tests = len(practice_attempts)
+        scores = [attempt.get("score", 0) for attempt in practice_attempts]
+        
+        performance_summary = {
+            "total_tests": total_tests,
+            "average_score": sum(scores) / len(scores) if scores else 0,
+            "highest_score": max(scores) if scores else 0,
+            "lowest_score": min(scores) if scores else 0,
+            "completion_rate": 100 if total_tests > 0 else 0  # Simplified completion rate
+        }
+        
+        # Student performance breakdown
+        student_performance = []
+        for student in students:
+            user = await db[Collections.USERS].find_one({"id": student['user_id']})
+            student_attempts = [a for a in practice_attempts if a['student_id'] == student['user_id']]
+            student_scores = [a.get("score", 0) for a in student_attempts]
+            
+            student_performance.append({
+                "student_id": student['user_id'],
+                "student_name": user.get("name", "Unknown") if user else "Unknown",
+                "total_tests": len(student_attempts),
+                "average_score": sum(student_scores) / len(student_scores) if student_scores else 0,
+                "best_score": max(student_scores) if student_scores else 0,
+                "recent_tests": len([a for a in student_attempts if a.get("completed_at")])
+            })
+        
+        # Subject breakdown
+        subject_breakdown = {}
+        for attempt in practice_attempts:
+            subject = attempt.get("subject", "Unknown")
+            if subject not in subject_breakdown:
+                subject_breakdown[subject] = {"tests": 0, "total_score": 0}
+            subject_breakdown[subject]["tests"] += 1
+            subject_breakdown[subject]["total_score"] += attempt.get("score", 0)
+        
+        subject_list = []
+        for subject, data in subject_breakdown.items():
+            avg_score = data["total_score"] / data["tests"] if data["tests"] > 0 else 0
+            subject_list.append({
+                "subject": subject,
+                "test_count": data["tests"],
+                "average_score": avg_score
+            })
+        
+        # Recent activity (last 10 tests)
+        recent_activity = []
+        for attempt in practice_attempts[:10]:
+            user = await db[Collections.USERS].find_one({"id": attempt["student_id"]})
+            recent_activity.append({
+                "student_name": user.get("name", "Unknown") if user else "Unknown",
+                "subject": attempt.get("subject", "Unknown"),
+                "score": attempt.get("score", 0),
+                "completed_at": attempt.get("completed_at"),
+                "difficulty": attempt.get("difficulty", "medium")
+            })
+        
+        return {
+            "class_info": {
+                "class_id": class_id,
+                "class_name": classroom.get("class_name", ""),
+                "subject": classroom.get("subject", ""),
+                "student_count": len(students)
+            },
+            "performance_summary": performance_summary,
+            "student_performance": student_performance,
+            "subject_breakdown": subject_list,
+            "recent_activity": recent_activity
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error getting class performance: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get class performance: {str(e)}"
+        )
+
+def get_grade_from_score(score):
+    """Convert numerical score to letter grade"""
+    if score >= 90:
+        return "A"
+    elif score >= 80:
+        return "B"
+    elif score >= 70:
+        return "C"
+    elif score >= 60:
+        return "D"
+    else:
+        return "F"
