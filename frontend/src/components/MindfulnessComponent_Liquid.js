@@ -582,9 +582,9 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
             ← Neural Dashboard
           </LiquidButton>
           <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-            🧘‍♀️ Advanced Neural Wellness Center
+            🧘‍♀️ Wellness & Mindfulness Center
           </h1>
-          <p className="text-secondary">Quantum consciousness optimization & stress management protocols</p>
+          <p className="text-secondary">Stress management & mindfulness training programs</p>
         </div>
 
         {/* Daily Progress & Stats Dashboard */}
