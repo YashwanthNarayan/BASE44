@@ -10,52 +10,232 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [moodBefore, setMoodBefore] = useState('');
   const [moodAfter, setMoodAfter] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedBackgroundSound, setSelectedBackgroundSound] = useState('silence');
+  const [breathingPhase, setBreathingPhase] = useState('inhale');
+  const [breathingCycle, setBreathingCycle] = useState(0);
+  const [personalStats, setPersonalStats] = useState(null);
+  const [dailyGoal, setDailyGoal] = useState(10); // minutes
+  const [todayProgress, setTodayProgress] = useState(0);
+  const [showAchievements, setShowAchievements] = useState(false);
 
-  const mindfulnessActivities = [
+  const mindfulnessCategories = [
+    { id: 'all', name: 'All Protocols', icon: '🧘‍♀️' },
+    { id: 'breathing', name: 'Breathing', icon: '🫁' },
+    { id: 'meditation', name: 'Meditation', icon: '🧠' },
+    { id: 'relaxation', name: 'Relaxation', icon: '💆‍♀️' },
+    { id: 'focus', name: 'Focus', icon: '🎯' },
+    { id: 'sleep', name: 'Sleep', icon: '😴' },
+    { id: 'stress', name: 'Stress Relief', icon: '🌿' }
+  ];
+
+  const backgroundSounds = [
+    { id: 'silence', name: 'Quantum Silence', icon: '🔇' },
+    { id: 'rain', name: 'Digital Rain', icon: '🌧️' },
+    { id: 'forest', name: 'Bio-Forest', icon: '🌲' },
+    { id: 'ocean', name: 'Cyber Ocean', icon: '🌊' },
+    { id: 'wind', name: 'Neural Wind', icon: '💨' },
+    { id: 'bells', name: 'Quantum Bells', icon: '🔔' },
+    { id: 'white_noise', name: 'White Static', icon: '📡' },
+    { id: 'binaural', name: 'Binaural Beats', icon: '🎵' }
+  ];
+
+  const enhancedMindfulnessActivities = [
+    // Breathing Exercises
     {
-      id: 'breathing',
-      name: 'Quantum Breathing',
-      description: 'Synchronized neural respiration patterns',
+      id: 'box_breathing',
+      name: 'Quantum Box Breathing',
+      category: 'breathing',
+      description: 'Military-grade stress regulation protocol',
       duration: 5,
-      icon: '🫁',
+      icon: '📦',
       gradient: 'from-cyan-500/20 to-blue-500/20',
-      instructions: 'Inhale for 4 cycles, hold for 4, exhale for 6. Synchronize with the quantum field.'
+      instructions: 'Inhale 4 counts → Hold 4 counts → Exhale 4 counts → Hold 4 counts. Visualize quantum energy flowing through your neural pathways.',
+      benefits: ['Reduces cortisol', 'Improves focus', 'Regulates heart rate'],
+      difficulty: 'beginner'
     },
     {
-      id: 'meditation',
-      name: 'Neural Meditation',
-      description: 'Deep consciousness exploration protocol',
-      duration: 10,
-      icon: '🧘‍♀️',
-      gradient: 'from-purple-500/20 to-indigo-500/20',
-      instructions: 'Close optical sensors, establish neural comfort, focus on quantum present moment.'
+      id: 'triangle_breathing',
+      name: 'Neural Triangle Sync',
+      category: 'breathing',
+      description: 'Triangular respiratory optimization',
+      duration: 7,
+      icon: '🔺',
+      gradient: 'from-purple-500/20 to-pink-500/20',
+      instructions: 'Inhale 3 counts → Hold 3 counts → Exhale 3 counts. Focus on the triangular energy flow pattern.',
+      benefits: ['Calms nervous system', 'Improves concentration', 'Reduces anxiety'],
+      difficulty: 'beginner'
     },
     {
-      id: 'body_scan',
-      name: 'Bio-Scan Protocol',
-      description: 'Progressive cellular relaxation sequence',
-      duration: 8,
-      icon: '💆‍♀️',
+      id: 'wim_hof',
+      name: 'Cryo-Neural Breathing',
+      category: 'breathing',
+      description: 'Advanced thermal regulation protocol',
+      duration: 15,
+      icon: '❄️',
+      gradient: 'from-blue-500/20 to-indigo-500/20',
+      instructions: '30 rapid breaths → Hold after exhale → Repeat 3 cycles. Activates cold-shock proteins and neural resilience.',
+      benefits: ['Boosts immunity', 'Increases energy', 'Improves cold tolerance'],
+      difficulty: 'advanced'
+    },
+
+    // Meditation
+    {
+      id: 'mindfulness_scan',
+      name: 'Bio-Scan Meditation',
+      category: 'meditation',
+      description: 'Progressive consciousness mapping',
+      duration: 12,
+      icon: '🔍',
       gradient: 'from-green-500/20 to-emerald-500/20',
-      instructions: 'Initialize scan from neural center, progress through all biological systems.'
+      instructions: 'Systematically scan each body region. Identify tension, observe without judgment, release with quantum intention.',
+      benefits: ['Body awareness', 'Stress release', 'Improved sleep'],
+      difficulty: 'intermediate'
     },
     {
-      id: 'gratitude',
-      name: 'Gratitude Matrix',
-      description: 'Positive neural pattern enhancement',
-      duration: 3,
-      icon: '🙏',
+      id: 'loving_kindness',
+      name: 'Compassion Matrix',
+      category: 'meditation',
+      description: 'Neural empathy enhancement protocol',
+      duration: 10,
+      icon: '💝',
+      gradient: 'from-pink-500/20 to-rose-500/20',
+      instructions: 'Generate loving-kindness for self → loved ones → neutral people → difficult people → all beings.',
+      benefits: ['Increases empathy', 'Reduces negativity', 'Improves relationships'],
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'zen_counting',
+      name: 'Quantum Counting Zen',
+      category: 'meditation',
+      description: 'Numerical consciousness anchor',
+      duration: 8,
+      icon: '🔢',
       gradient: 'from-yellow-500/20 to-orange-500/20',
-      instructions: 'Identify 3 positive quantum states and analyze their neural significance.'
+      instructions: 'Count breaths from 1 to 10, restart when mind wanders. Each count strengthens neural focus pathways.',
+      benefits: ['Improves concentration', 'Reduces mind wandering', 'Builds patience'],
+      difficulty: 'beginner'
+    },
+
+    // Relaxation
+    {
+      id: 'progressive_muscle',
+      name: 'Systematic Muscle Release',
+      category: 'relaxation',
+      description: 'Targeted tension elimination protocol',
+      duration: 15,
+      icon: '💪',
+      gradient: 'from-violet-500/20 to-purple-500/20',
+      instructions: 'Tense each muscle group for 5 seconds, then release. Start with toes, progress to head.',
+      benefits: ['Releases physical tension', 'Improves sleep quality', 'Reduces chronic pain'],
+      difficulty: 'beginner'
+    },
+    {
+      id: 'visualization',
+      name: 'Quantum Sanctuary Visualization',
+      category: 'relaxation',
+      description: 'Neural-space construction protocol',
+      duration: 12,
+      icon: '🏞️',
+      gradient: 'from-teal-500/20 to-cyan-500/20',
+      instructions: 'Construct a perfect digital sanctuary. Engage all senses: visual, auditory, tactile, olfactory details.',
+      benefits: ['Reduces stress hormones', 'Enhances creativity', 'Improves mood'],
+      difficulty: 'intermediate'
+    },
+
+    // Focus Training
+    {
+      id: 'single_point',
+      name: 'Laser Focus Protocol',
+      category: 'focus',
+      description: 'Concentration enhancement training',
+      duration: 10,
+      icon: '🎯',
+      gradient: 'from-red-500/20 to-pink-500/20',
+      instructions: 'Focus on a single point (breath, mantra, or visual). When mind wanders, gently return focus.',
+      benefits: ['Improves attention span', 'Enhances cognitive control', 'Reduces distractibility'],
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'open_monitoring',
+      name: 'Panoramic Awareness',
+      category: 'focus',
+      description: 'Wide-spectrum consciousness training',
+      duration: 15,
+      icon: '👁️',
+      gradient: 'from-indigo-500/20 to-blue-500/20',
+      instructions: 'Observe all thoughts, feelings, sensations without attachment. Maintain panoramic awareness.',
+      benefits: ['Increases mindfulness', 'Improves emotional regulation', 'Enhances metacognition'],
+      difficulty: 'advanced'
+    },
+
+    // Sleep Preparation
+    {
+      id: 'sleep_stories',
+      name: 'Neural Sleep Narrative',
+      category: 'sleep',
+      description: 'Consciousness transition protocol',
+      duration: 20,
+      icon: '📖',
+      gradient: 'from-slate-500/20 to-gray-500/20',
+      instructions: 'Listen to calming narrative while progressively relaxing. Let the story guide you into sleep state.',
+      benefits: ['Improves sleep onset', 'Reduces sleep anxiety', 'Enhances sleep quality'],
+      difficulty: 'beginner'
+    },
+    {
+      id: 'yoga_nidra',
+      name: 'Quantum Sleep Yoga',
+      category: 'sleep',
+      description: 'Conscious sleep induction protocol',
+      duration: 25,
+      icon: '🕉️',
+      gradient: 'from-purple-500/20 to-indigo-500/20',
+      instructions: 'Systematic relaxation through body awareness, breath, and intention. Remain conscious while body sleeps.',
+      benefits: ['Deep restoration', 'Reduces insomnia', 'Enhances recovery'],
+      difficulty: 'intermediate'
+    },
+
+    // Stress Relief
+    {
+      id: 'quick_calm',
+      name: 'Emergency Calm Protocol',
+      category: 'stress',
+      description: 'Rapid stress deactivation sequence',
+      duration: 3,
+      icon: '🚨',
+      gradient: 'from-red-500/20 to-orange-500/20',
+      instructions: '4-7-8 breathing + grounding technique. Name 5 things you see, 4 you hear, 3 you feel, 2 you smell, 1 you taste.',
+      benefits: ['Rapid stress relief', 'Anxiety reduction', 'Emotional reset'],
+      difficulty: 'beginner'
+    },
+    {
+      id: 'stress_release',
+      name: 'Cortisol Neutralization',
+      category: 'stress',
+      description: 'Advanced stress hormone regulation',
+      duration: 18,
+      icon: '🌿',
+      gradient: 'from-green-500/20 to-teal-500/20',
+      instructions: 'Combine breathwork, body scanning, and positive visualization to systematically release stress accumulation.',
+      benefits: ['Lowers cortisol', 'Improves immunity', 'Enhances wellbeing'],
+      difficulty: 'intermediate'
     }
   ];
 
+  const achievements = [
+    { id: 'first_session', name: 'Neural Pioneer', description: 'Complete your first mindfulness session', icon: '🎖️', unlocked: false },
+    { id: 'week_streak', name: 'Consistency Matrix', description: 'Practice 7 days in a row', icon: '🔥', unlocked: false },
+    { id: 'total_hours', name: 'Zen Master', description: 'Complete 10 hours of practice', icon: '🧙‍♂️', unlocked: false },
+    { id: 'all_categories', name: 'Protocol Explorer', description: 'Try all activity categories', icon: '🗺️', unlocked: false },
+    { id: 'advanced_user', name: 'Neural Expert', description: 'Complete 5 advanced protocols', icon: '🚀', unlocked: false }
+  ];
+
   const moods = [
-    { value: '😊 Excellent', color: 'text-neon-green' },
-    { value: '🙂 Good', color: 'text-neon-cyan' },
-    { value: '😐 Neutral', color: 'text-neon-yellow' },
-    { value: '😔 Low', color: 'text-neon-magenta' },
-    { value: '😰 Stressed', color: 'text-neon-pink' }
+    { value: '😊 Excellent', color: 'text-neon-green', score: 5 },
+    { value: '🙂 Good', color: 'text-neon-cyan', score: 4 },
+    { value: '😐 Neutral', color: 'text-neon-yellow', score: 3 },
+    { value: '😔 Low', color: 'text-neon-magenta', score: 2 },
+    { value: '😰 Stressed', color: 'text-neon-pink', score: 1 }
   ];
 
   useEffect(() => {
