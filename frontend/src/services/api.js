@@ -31,7 +31,7 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Clear all authentication data
+      // Clear all authentication data - use direct localStorage for token
       localStorage.removeItem('access_token');
       localStorage.removeItem('user_type');
       localStorage.removeItem('user');
