@@ -86,7 +86,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
             ← Student Dashboard
           </LiquidButton>
           <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-            📊 Neural Progress Analytics
+            📊 Progress Analytics
           </h1>
           <p className="text-secondary">Monitor your quantum learning evolution and achievements</p>
         </div>
