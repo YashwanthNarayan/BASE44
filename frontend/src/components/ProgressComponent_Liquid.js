@@ -203,15 +203,8 @@ const ProgressComponent = ({ student, onNavigate }) => {
                             : 'hover:border-neon-cyan/50'
                         }`}
                         onClick={() => {
-                          console.log('🔍 Clicked test:', test);
-                          console.log('🔍 Test ID:', test.id);
-                          console.log('🔍 Loading details:', loadingDetails);
-                          
                           if (test.id && !loadingDetails) {
-                            console.log('✅ Calling loadDetailedResults with ID:', test.id);
                             loadDetailedResults(test.id);
-                          } else {
-                            console.warn('❌ Cannot load details - missing ID or already loading');
                           }
                         }}
                       >
