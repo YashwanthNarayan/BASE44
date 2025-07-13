@@ -125,7 +125,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
             {/* Neural Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <LiquidStatsCard
-                title="Neural Tests"
+                title="Practice Tests"
                 value={Array.isArray(progressData) ? progressData.length : progressData.total_tests || 0}
                 icon="📝"
                 gradient="from-blue-500/20 to-cyan-500/20"
