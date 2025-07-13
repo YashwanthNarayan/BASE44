@@ -470,7 +470,7 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
                 <LiquidCard className="text-left">
                   <div className="p-4">
                     <h3 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
-                      <span>🧠</span> Neural Protocol
+                      <span>🧠</span> Instructions
                     </h3>
                     <p className="text-secondary leading-relaxed text-sm">{activeSession.instructions}</p>
                   </div>
