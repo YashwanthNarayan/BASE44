@@ -240,6 +240,8 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
 
   useEffect(() => {
     loadSessionHistory();
+    loadPersonalStats();
+    loadTodayProgress();
   }, []);
 
   useEffect(() => {
@@ -247,6 +249,17 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     if (activeSession && timeRemaining > 0) {
       interval = setInterval(() => {
         setTimeRemaining(prev => prev - 1);
+        
+        // Update breathing animation phases
+        if (activeSession.category === 'breathing' && activeSession.id === 'box_breathing') {
+          const cycleDuration = 16; // 4+4+4+4 seconds
+          const currentPhaseTime = timeRemaining % cycleDuration;
+          
+          if (currentPhaseTime >= 12) setBreathingPhase('inhale');
+          else if (currentPhaseTime >= 8) setBreathingPhase('hold-in');
+          else if (currentPhaseTime >= 4) setBreathingPhase('exhale');
+          else setBreathingPhase('hold-out');
+        }
       }, 1000);
     } else if (timeRemaining === 0 && activeSession) {
       completeSession();
@@ -263,6 +276,42 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     }
   };
 
+  const loadPersonalStats = () => {
+    // Simulate loading personal stats - in real app this would come from API
+    setPersonalStats({
+      totalSessions: sessionHistory.length,
+      totalMinutes: sessionHistory.reduce((sum, session) => sum + session.duration, 0),
+      streakDays: 3,
+      favoriteCategory: 'breathing',
+      moodImprovement: 1.2 // average mood improvement per session
+    });
+  };
+
+  const loadTodayProgress = () => {
+    const today = new Date().toDateString();
+    const todaySessions = sessionHistory.filter(session => 
+      new Date(session.completed_at).toDateString() === today
+    );
+    const minutesToday = todaySessions.reduce((sum, session) => sum + session.duration, 0);
+    setTodayProgress(minutesToday);
+  };
+
+  const getFilteredActivities = () => {
+    if (selectedCategory === 'all') {
+      return enhancedMindfulnessActivities;
+    }
+    return enhancedMindfulnessActivities.filter(activity => activity.category === selectedCategory);
+  };
+
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case 'beginner': return 'text-green-400 bg-green-500/20';
+      case 'intermediate': return 'text-yellow-400 bg-yellow-500/20';
+      case 'advanced': return 'text-red-400 bg-red-500/20';
+      default: return 'text-gray-400 bg-gray-500/20';
+    }
+  };
+
   const startSession = (activity) => {
     if (!moodBefore) {
       alert('Please select your current neural state before initializing session.');
@@ -271,6 +320,7 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     
     setActiveSession(activity);
     setTimeRemaining(activity.duration * 60);
+    setBreathingCycle(0);
   };
 
   const completeSession = async () => {
@@ -282,14 +332,19 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
         activity_type: activeSession.id,
         duration: activeSession.duration,
         mood_before: moodBefore,
-        mood_after: moodAfter
+        mood_after: moodAfter,
+        background_sound: selectedBackgroundSound
       });
 
+      // Update progress
+      setTodayProgress(prev => prev + activeSession.duration);
+      
       alert('Neural session completed successfully! Quantum patterns optimized.');
       setActiveSession(null);
       setMoodBefore('');
       setMoodAfter('');
       loadSessionHistory();
+      loadPersonalStats();
     } catch (error) {
       console.error('Error saving mindfulness session:', error);
       alert('Session completed, but neural storage encountered an error.');
@@ -302,6 +357,29 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const getRecommendedActivities = () => {
+    if (!moodBefore) return [];
+    
+    const moodScore = moods.find(m => m.value === moodBefore)?.score || 3;
+    
+    if (moodScore <= 2) {
+      // Stressed/Low mood - recommend stress relief and relaxation
+      return enhancedMindfulnessActivities.filter(a => 
+        a.category === 'stress' || a.category === 'relaxation'
+      ).slice(0, 3);
+    } else if (moodScore === 3) {
+      // Neutral - recommend focus and breathing
+      return enhancedMindfulnessActivities.filter(a => 
+        a.category === 'focus' || a.category === 'breathing'
+      ).slice(0, 3);
+    } else {
+      // Good/Excellent - recommend meditation and advanced practices
+      return enhancedMindfulnessActivities.filter(a => 
+        a.category === 'meditation' || a.difficulty === 'advanced'
+      ).slice(0, 3);
+    }
   };
 
   if (activeSession) {
