@@ -83,7 +83,7 @@ const ProgressComponent = ({ student, onNavigate }) => {
             onClick={() => onNavigate('student-dashboard')}
             className="mb-4"
           >
-            ← Neural Dashboard
+            ← Student Dashboard
           </LiquidButton>
           <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
             📊 Neural Progress Analytics
