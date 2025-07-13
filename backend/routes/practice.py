@@ -177,7 +177,10 @@ async def submit_practice_test(
         await db[Collections.PRACTICE_ATTEMPTS].insert_one(attempt_doc)
         
         # Update student profile
-        await update_student_stats(current_user["sub"], score_percentage, questions[0]["subject"])
+        await update_student_stats(current_user["sub"], score_percentage, subject)
+        
+        # Data migration: Fix any NULL subjects in existing attempts (one-time fix)
+        await fix_null_subjects_in_database(db)
         
         return {
             "attempt_id": attempt_doc["id"],
