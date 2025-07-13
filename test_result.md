@@ -252,7 +252,17 @@
 user_problem_statement: "when i try to generate a practice test i am getting this error" - User reports getting "Authentication expired. Please log in again." error specifically when trying to generate practice tests
 
 backend:
-  - task: "Tutor API Routes Implementation"
+  - task: "Authentication Issue Fix - Practice Test Generation 401 Error"
+    implemented: true
+    working: false
+    file: "backend/utils/security.py, frontend/src/services/api.js, frontend/src/App.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: false
+          agent: "main"
+          comment: "INVESTIGATION FINDINGS: Backend authentication and practice test generation are working correctly (100% success rate in comprehensive testing). The issue is on the frontend side. Backend testing shows: ✅ Authentication Flow working correctly (registration → login → JWT token validation → practice test generation), ✅ JWT Token Validation working correctly (all invalid tokens return 401 Unauthorized), ✅ Practice Test Generation working correctly with proper authentication, ✅ Edge Cases handled properly (token expiration, concurrent requests, malformed tokens). ROOT CAUSE: Frontend authentication flow inconsistency. Fixed issues: 1) Updated App.js to use consistent API_BASE from api.js instead of hardcoded import.meta.env.REACT_APP_BACKEND_URL, 2) Added request interceptor to ensure all axios requests include current token from localStorage, 3) Added REACT_APP_BACKEND_URL to frontend/.env file for consistency. NEXT STEPS: Test complete frontend authentication flow to verify fixes work correctly."
     implemented: true
     working: true
     file: "backend/routes/tutor.py"
