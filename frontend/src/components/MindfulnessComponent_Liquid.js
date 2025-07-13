@@ -82,21 +82,21 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     // Meditation
     {
       id: 'mindfulness_scan',
-      name: 'Bio-Scan Meditation',
+      name: 'Body Scan Meditation',
       category: 'meditation',
-      description: 'Progressive consciousness mapping',
+      description: 'Progressive body awareness practice',
       duration: 12,
       icon: '🔍',
       gradient: 'from-green-500/20 to-emerald-500/20',
-      instructions: 'Systematically scan each body region. Identify tension, observe without judgment, release with quantum intention.',
+      instructions: 'Systematically scan each body region. Identify tension, observe without judgment, release with mindful intention.',
       benefits: ['Body awareness', 'Stress release', 'Improved sleep'],
       difficulty: 'intermediate'
     },
     {
       id: 'loving_kindness',
-      name: 'Compassion Matrix',
+      name: 'Loving Kindness Meditation',
       category: 'meditation',
-      description: 'Neural empathy enhancement protocol',
+      description: 'Compassion enhancement practice',
       duration: 10,
       icon: '💝',
       gradient: 'from-pink-500/20 to-rose-500/20',
@@ -106,13 +106,13 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
     },
     {
       id: 'zen_counting',
-      name: 'Quantum Counting Zen',
+      name: 'Counting Meditation',
       category: 'meditation',
-      description: 'Numerical consciousness anchor',
+      description: 'Focused attention training',
       duration: 8,
       icon: '🔢',
       gradient: 'from-yellow-500/20 to-orange-500/20',
-      instructions: 'Count breaths from 1 to 10, restart when mind wanders. Each count strengthens neural focus pathways.',
+      instructions: 'Count breaths from 1 to 10, restart when mind wanders. Each count strengthens focus and concentration.',
       benefits: ['Improves concentration', 'Reduces mind wandering', 'Builds patience'],
       difficulty: 'beginner'
     },
