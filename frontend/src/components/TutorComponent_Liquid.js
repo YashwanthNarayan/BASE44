@@ -205,7 +205,7 @@ const TutorComponent = ({ student, onNavigate }) => {
             <h1 className="text-4xl font-bold text-luxury-platinum mb-4">
               🎓 AI Teaching Assistant
             </h1>
-            <p className="text-luxury-silver text-lg">Premium educational experience powered by advanced AI</p>
+            <p className="text-luxury-silver text-lg">Get personalized step-by-step guidance from your AI teacher</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
