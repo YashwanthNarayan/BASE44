@@ -533,6 +533,8 @@ test_plan:
 
 agent_communication:
   - agent: "main"
+    message: "AUTHENTICATION ISSUE INVESTIGATION: User reports getting 'Authentication expired. Please log in again.' error when generating practice tests. Backend comprehensive testing shows authentication and practice test generation work correctly (100% success rate). Issue is on frontend side. Fixed: 1) App.js authentication flow consistency with API_BASE, 2) Added axios request interceptor for token consistency, 3) Added REACT_APP_BACKEND_URL to .env. Ready for frontend testing to verify fixes."
+  - agent: "main"
     message: "Implemented comprehensive chatbot enhancement with backend API routes for tutor functionality and frontend chat history management. Need to test backend API endpoints first to ensure they work correctly before testing frontend integration. Key features implemented: chat session creation, message sending with AI responses, chat history retrieval, session deletion, and full chat session management."
   - agent: "main"
     message: "Backend tutor API testing completed successfully - all 5 endpoints working correctly. Fixed textarea visibility issue reported by user (white text on transparent background). Ready for frontend testing to verify: chat history sidebar, new chat functionality, delete chat with confirmation, session switching, textarea visibility fix, and overall chat flow integration."
