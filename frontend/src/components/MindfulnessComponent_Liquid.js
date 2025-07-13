@@ -541,7 +541,7 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
                     disabled={!moodAfter || loading}
                     className="w-full"
                   >
-                    {loading ? 'Optimizing Neural Patterns...' : '⚡ Complete Neural Session'}
+                    {loading ? 'Processing Session...' : '⚡ Complete Session'}
                   </LiquidButton>
                 </div>
               )}
