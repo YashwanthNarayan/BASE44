@@ -25,7 +25,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://eduleap-k.preview.emergentagent.com/api"
+BACKEND_URL = "http://localhost:8001/api"
 MONGO_URL = "mongodb://localhost:27017"
 DB_NAME = "test_database"
 
