@@ -258,7 +258,7 @@ backend:
     file: "backend/utils/security.py, frontend/src/services/api.js, frontend/src/App.js"
     stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: true
           agent: "main"
