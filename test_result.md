@@ -254,7 +254,7 @@ user_problem_statement: "when i try to generate a practice test i am getting thi
 backend:
   - task: "Authentication Issue Fix - Practice Test Generation 401 Error"
     implemented: true
-    working: false
+    working: true
     file: "backend/utils/security.py, frontend/src/services/api.js, frontend/src/App.js"
     stuck_count: 1
     priority: "high"
