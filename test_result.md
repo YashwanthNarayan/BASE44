@@ -47,7 +47,7 @@
     file: "frontend/src/components/CalendarComponent_Liquid.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
