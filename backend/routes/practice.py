@@ -304,6 +304,7 @@ async def get_subject_stats(
         recent_formatted = []
         for test in recent_tests:
             recent_formatted.append({
+                "id": test["id"],  # Add ID field for frontend clicking
                 "score": test["score"],
                 "total_questions": test["total_questions"],
                 "difficulty": test["difficulty"],
