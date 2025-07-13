@@ -30,13 +30,13 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
   ];
 
   const backgroundSounds = [
-    { id: 'silence', name: 'Quantum Silence', icon: '🔇' },
-    { id: 'rain', name: 'Digital Rain', icon: '🌧️' },
-    { id: 'forest', name: 'Bio-Forest', icon: '🌲' },
-    { id: 'ocean', name: 'Cyber Ocean', icon: '🌊' },
-    { id: 'wind', name: 'Neural Wind', icon: '💨' },
-    { id: 'bells', name: 'Quantum Bells', icon: '🔔' },
-    { id: 'white_noise', name: 'White Static', icon: '📡' },
+    { id: 'silence', name: 'Silence', icon: '🔇' },
+    { id: 'rain', name: 'Rain Sounds', icon: '🌧️' },
+    { id: 'forest', name: 'Forest Sounds', icon: '🌲' },
+    { id: 'ocean', name: 'Ocean Waves', icon: '🌊' },
+    { id: 'wind', name: 'Wind Sounds', icon: '💨' },
+    { id: 'bells', name: 'Meditation Bells', icon: '🔔' },
+    { id: 'white_noise', name: 'White Noise', icon: '📡' },
     { id: 'binaural', name: 'Binaural Beats', icon: '🎵' }
   ];
 
