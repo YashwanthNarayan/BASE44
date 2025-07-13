@@ -388,60 +388,136 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
         <div className="quantum-grid fixed inset-0 opacity-30" />
         
         <div className="relative z-10 flex items-center justify-center min-h-screen p-6">
-          <LiquidCard holographic className="max-w-2xl w-full">
+          <LiquidCard holographic className="max-w-4xl w-full">
             <div className="p-8 text-center">
               {/* Session Header */}
-              <div className="text-6xl mb-4 animate-pulse">{activeSession.icon}</div>
-              <h1 className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-                {activeSession.name}
-              </h1>
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="text-4xl animate-pulse">{activeSession.icon}</div>
+                  <div className="text-left">
+                    <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                      {activeSession.name}
+                    </h1>
+                    <div className={`text-xs px-2 py-1 rounded ${getDifficultyColor(activeSession.difficulty)}`}>
+                      {activeSession.difficulty}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-sm text-secondary">
+                  Sound: {backgroundSounds.find(s => s.id === selectedBackgroundSound)?.name}
+                </div>
+              </div>
               
-              {/* Quantum Timer */}
-              <div className="text-6xl font-mono text-neon-cyan mb-6 glow-cyan">
+              {/* Enhanced Timer Display */}
+              <div className="text-7xl font-mono text-neon-cyan mb-6 glow-cyan">
                 {formatTime(timeRemaining)}
               </div>
 
-              {/* Progress Circle */}
-              <div className="relative w-32 h-32 mx-auto mb-6">
-                <svg className="w-32 h-32 transform -rotate-90">
+              {/* Enhanced Progress Circle with breathing animation */}
+              <div className="relative w-40 h-40 mx-auto mb-6">
+                <svg className="w-40 h-40 transform -rotate-90">
                   <circle
-                    cx="64"
-                    cy="64"
-                    r="56"
+                    cx="80"
+                    cy="80"
+                    r="70"
                     stroke="rgba(0, 255, 255, 0.2)"
                     strokeWidth="8"
                     fill="none"
                   />
                   <circle
-                    cx="64"
-                    cy="64"
-                    r="56"
+                    cx="80"
+                    cy="80"
+                    r="70"
                     stroke="var(--neon-cyan)"
                     strokeWidth="8"
                     fill="none"
                     strokeLinecap="round"
-                    strokeDasharray={`${2 * Math.PI * 56}`}
-                    strokeDashoffset={`${2 * Math.PI * 56 * (timeRemaining / (activeSession.duration * 60))}`}
+                    strokeDasharray={`${2 * Math.PI * 70}`}
+                    strokeDashoffset={`${2 * Math.PI * 70 * (timeRemaining / (activeSession.duration * 60))}`}
                     className="transition-all duration-1000 ease-linear"
                     style={{ filter: 'drop-shadow(0 0 10px var(--neon-cyan))' }}
                   />
                 </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 rounded-full bg-gradient-primary opacity-50 animate-pulse" />
-                </div>
+                
+                {/* Breathing Animation Center */}
+                {activeSession.category === 'breathing' && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className={`w-24 h-24 rounded-full bg-gradient-primary transition-all duration-4000 ease-in-out ${
+                      breathingPhase === 'inhale' ? 'scale-125 opacity-80' :
+                      breathingPhase === 'hold-in' ? 'scale-125 opacity-80' :
+                      breathingPhase === 'exhale' ? 'scale-75 opacity-40' :
+                      'scale-75 opacity-40'
+                    }`} />
+                    <div className="absolute text-sm font-semibold text-white">
+                      {breathingPhase === 'inhale' ? 'Inhale' :
+                       breathingPhase === 'hold-in' ? 'Hold' :
+                       breathingPhase === 'exhale' ? 'Exhale' :
+                       'Hold'}
+                    </div>
+                  </div>
+                )}
+                
+                {/* General animation for other activities */}
+                {activeSession.category !== 'breathing' && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full bg-gradient-primary opacity-50 animate-pulse" />
+                  </div>
+                )}
               </div>
               
-              {/* Neural Instructions */}
-              <LiquidCard className="mb-6">
-                <div className="p-6">
-                  <h3 className="text-lg font-semibold text-primary mb-3">Neural Protocol</h3>
-                  <p className="text-secondary leading-relaxed">{activeSession.instructions}</p>
-                </div>
-              </LiquidCard>
+              {/* Neural Instructions & Benefits */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <LiquidCard className="text-left">
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
+                      <span>🧠</span> Neural Protocol
+                    </h3>
+                    <p className="text-secondary leading-relaxed text-sm">{activeSession.instructions}</p>
+                  </div>
+                </LiquidCard>
+                
+                <LiquidCard className="text-left">
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-primary mb-3 flex items-center gap-2">
+                      <span>⚡</span> Neural Benefits
+                    </h3>
+                    <ul className="text-secondary text-sm space-y-1">
+                      {activeSession.benefits?.map((benefit, index) => (
+                        <li key={index} className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-neon-cyan rounded-full"></span>
+                          {benefit}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </LiquidCard>
+              </div>
+
+              {/* Session Controls */}
+              <div className="flex justify-center gap-4 mb-6">
+                <LiquidButton
+                  variant="secondary"
+                  onClick={() => {
+                    setActiveSession(null);
+                    setTimeRemaining(0);
+                  }}
+                  className="px-8"
+                >
+                  🛑 End Session
+                </LiquidButton>
+                
+                <LiquidButton
+                  variant="secondary"
+                  onClick={() => setTimeRemaining(prev => prev + 60)}
+                  className="px-8"
+                >
+                  ⏱️ +1 Minute
+                </LiquidButton>
+              </div>
 
               {/* Post-Session Mood Selection */}
               {timeRemaining === 0 && (
-                <div className="mb-6">
+                <div className="mb-6 p-6 bg-glass rounded-lg border border-primary/20">
                   <h3 className="text-lg font-semibold text-primary mb-4">Post-Session Neural State</h3>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
                     {moods.map((mood) => (
@@ -470,12 +546,18 @@ const MindfulnessComponent = ({ student, onNavigate }) => {
                 </div>
               )}
 
-              {/* Breathing Animation */}
-              {timeRemaining > 0 && activeSession.id === 'breathing' && (
-                <div className="mt-6">
-                  <div className="w-24 h-24 mx-auto rounded-full bg-gradient-primary opacity-60 animate-pulse" 
-                       style={{ animationDuration: '4s' }} />
-                  <p className="text-secondary mt-2">Follow the quantum rhythm</p>
+              {/* Special Activity Features */}
+              {activeSession.id === 'box_breathing' && timeRemaining > 0 && (
+                <div className="mt-6 p-4 bg-glass rounded-lg">
+                  <div className="text-sm text-secondary mb-2">Box Breathing Visualization</div>
+                  <div className="relative w-24 h-24 mx-auto border-2 border-neon-cyan">
+                    <div className={`absolute w-2 h-2 bg-neon-cyan transition-all duration-4000 ease-linear ${
+                      breathingPhase === 'inhale' ? 'top-0 left-0' :
+                      breathingPhase === 'hold-in' ? 'top-0 right-0' :
+                      breathingPhase === 'exhale' ? 'bottom-0 right-0' :
+                      'bottom-0 left-0'
+                    }`} />
+                  </div>
                 </div>
               )}
             </div>
