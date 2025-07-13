@@ -526,9 +526,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Authentication Issue Fix - Practice Test Generation 401 Error"
-  stuck_tasks:
-    - "Authentication Issue Fix - Practice Test Generation 401 Error"
+    - "Practice Test Data Storage and Retrieval Investigation"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
