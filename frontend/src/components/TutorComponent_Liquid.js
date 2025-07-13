@@ -91,7 +91,7 @@ const TutorComponent = ({ student, onNavigate }) => {
       setMessages([
         {
           role: 'assistant',
-          content: `Neural connection established! I'm your ${selectedSubject} cognitive enhancement specialist. I'm here to optimize your understanding, process complex algorithms, and guide you through advanced problem-solving protocols. What neural pathways shall we explore today?`,
+          content: `Hello! I'm your ${selectedSubject} teacher, and I'm excited to help you learn! 👋\n\nI'm here to guide you through concepts step-by-step, help you solve problems by thinking through them together, and make sure you truly understand the material - not just get the right answers.\n\n**How I can help you:**\n📚 Explain concepts using examples you'll understand\n🔍 Guide you through problem-solving step by step\n💡 Help you discover answers through questions and hints\n🎯 Check your understanding before moving to new topics\n\nWhat would you like to explore in ${selectedSubject} today? Feel free to ask about:\n• A concept you're struggling with\n• Help with homework or practice problems\n• Clarification on something you learned in class\n• Or anything else you're curious about!\n\nRemember: There are no silly questions here. Let's learn together! 🌟`,
           timestamp: new Date()
         }
       ]);
