@@ -112,8 +112,8 @@ async def generate_study_plan(
         await db[Collections.STUDY_PLANS].insert_one(plan_data)
         
         # Calculate totals
-        total_work_time = sum(session.duration_minutes for session in study_plan["sessions"] if session.session_type == 'work')
-        total_break_time = sum(session.duration_minutes for session in study_plan["sessions"] if session.session_type == 'break')
+        total_work_time = sum(session["duration_minutes"] for session in study_plan["sessions"] if session["session_type"] == 'work')
+        total_break_time = sum(session["duration_minutes"] for session in study_plan["sessions"] if session["session_type"] == 'break')
         
         return StudyPlanResponse(
             plan_id=plan_id,
