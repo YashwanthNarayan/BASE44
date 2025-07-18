@@ -785,21 +785,32 @@ What's your study goal for today?"""
         Topic: {topic}
         Grade Level: {grade_level}
         
-        Please create detailed, well-structured study notes that include:
+        Please create detailed, well-structured study notes in clean markdown format that include:
         1. Clear explanations of key concepts
         2. Important definitions and terminology
         3. Examples and illustrations where applicable
-        4. Key formulas, equations, or processes (if relevant)
+        4. Key formulas, equations, or processes (if relevant) - use LaTeX format for math: $inline$ or $$block$$
         5. Important facts and figures
         6. Memory aids or mnemonics
         7. Practice questions or self-assessment points
         8. Summary of main points
         
-        Format the notes in a clear, organized manner with proper headings and bullet points.
+        FORMATTING REQUIREMENTS:
+        - Use proper markdown headers (# ## ###)
+        - Use bullet points with - or *
+        - Use **bold** for important terms
+        - Use *italic* for emphasis
+        - Use LaTeX for math: $x^2$ for inline, $$x^2 + y^2 = z^2$$ for block equations
+        - Use code blocks with ``` for code or special formatting
+        - Use > for important notes or tips
+        - Keep paragraphs well-spaced
+        - Use numbered lists for steps
+        
         Make sure the content is appropriate for {grade_level} grade level.
         Focus on making the content educational, engaging, and easy to understand.
         
         The notes should be comprehensive enough to serve as a complete study resource for this topic.
+        Return ONLY the markdown content without any wrapper text.
         """
         
         try:
@@ -809,9 +820,44 @@ What's your study goal for today?"""
             # Clean up the content
             content = content.strip()
             
+            # Remove any markdown code block wrappers if they exist
+            if content.startswith('```markdown'):
+                content = content[11:]
+            if content.startswith('```'):
+                content = content[3:]
+            if content.endswith('```'):
+                content = content[:-3]
+            
+            content = content.strip()
+            
             # Ensure we have substantive content
             if len(content) < 100:
-                content = f"# {topic}\n\n## Key Concepts\n\n{content}\n\n## Important Points\n\n• This is a complex topic that requires careful study\n• Review the fundamentals before moving to advanced concepts\n• Practice problems and examples are essential for mastery\n\n## Study Tips\n\n• Break down complex concepts into smaller parts\n• Use visual aids and diagrams when possible\n• Connect new information to previously learned material\n• Regular review and practice are key to retention"
+                content = f"""# {topic}
+
+## Overview
+This is a comprehensive study guide for **{topic}** in {subject} for {grade_level} grade level.
+
+## Key Concepts
+- {topic} is an important concept in {subject}
+- Understanding the fundamentals is crucial for success
+- This topic builds upon previous knowledge in the subject
+
+## Important Points
+- Review class materials and textbooks for detailed information
+- Practice problems and examples help reinforce learning
+- Ask questions if concepts are unclear
+- Connect this topic to real-world applications
+
+## Study Tips
+- Create visual aids and diagrams
+- Form study groups for discussion
+- Review regularly for better retention
+- Use multiple learning resources
+
+## Summary
+**{topic}** is a fundamental concept in {subject} that requires careful study and practice. Focus on understanding the core principles and their applications.
+
+> **Note:** This is a generated study guide. Please supplement with your textbook and class materials for complete understanding."""
             
             return content
             
@@ -821,29 +867,29 @@ What's your study goal for today?"""
             return f"""# {topic}
 
 ## Overview
-This is a comprehensive study guide for {topic} in {subject} for {grade_level} grade level.
+This is a comprehensive study guide for **{topic}** in {subject} for {grade_level} grade level.
 
 ## Key Concepts
-• {topic} is an important concept in {subject}
-• Understanding the fundamentals is crucial for success
-• This topic builds upon previous knowledge in the subject
+- {topic} is an important concept in {subject}
+- Understanding the fundamentals is crucial for success
+- This topic builds upon previous knowledge in the subject
 
 ## Important Points
-• Review class materials and textbooks for detailed information
-• Practice problems and examples help reinforce learning
-• Ask questions if concepts are unclear
-• Connect this topic to real-world applications
+- Review class materials and textbooks for detailed information
+- Practice problems and examples help reinforce learning
+- Ask questions if concepts are unclear
+- Connect this topic to real-world applications
 
 ## Study Tips
-• Create visual aids and diagrams
-• Form study groups for discussion
-• Review regularly for better retention
-• Use multiple learning resources
+- Create visual aids and diagrams
+- Form study groups for discussion
+- Review regularly for better retention
+- Use multiple learning resources
 
 ## Summary
-{topic} is a fundamental concept in {subject} that requires careful study and practice. Focus on understanding the core principles and their applications.
+**{topic}** is a fundamental concept in {subject} that requires careful study and practice. Focus on understanding the core principles and their applications.
 
-Note: This is a generated study guide. Please supplement with your textbook and class materials for complete understanding."""
+> **Note:** This is a generated study guide. Please supplement with your textbook and class materials for complete understanding."""
 
 # Global AI service instance
 ai_service = AIService()
