@@ -770,20 +770,80 @@ What's your study goal for today?"""
         import random
         return random.choice(activities)
 
-    def _generate_study_tips(self, subjects: List[Dict]) -> List[str]:
-        """Generate personalized study tips"""
-        tips = [
-            "🎯 Stay focused during each 25-minute session - avoid distractions",
-            "💧 Stay hydrated - keep a water bottle nearby",
-            "📝 Take notes during study sessions to reinforce learning",
-            "🧘 Use break time to relax and recharge your mind",
-            "📱 Put your phone in another room during study sessions",
-            "🎵 Try instrumental music or nature sounds for focus",
-            "✅ Check off completed sessions for motivation",
-            "🌟 Reward yourself after completing the full study plan"
-        ]
+    async def generate_study_notes(
+        self,
+        subject: str,
+        topic: str,
+        grade_level: str
+    ) -> str:
+        """Generate comprehensive study notes for a given subject and topic"""
         
-        return tips[:4]  # Return top 4 tips
+        prompt = f"""
+        Generate comprehensive study notes for the following:
+        
+        Subject: {subject}
+        Topic: {topic}
+        Grade Level: {grade_level}
+        
+        Please create detailed, well-structured study notes that include:
+        1. Clear explanations of key concepts
+        2. Important definitions and terminology
+        3. Examples and illustrations where applicable
+        4. Key formulas, equations, or processes (if relevant)
+        5. Important facts and figures
+        6. Memory aids or mnemonics
+        7. Practice questions or self-assessment points
+        8. Summary of main points
+        
+        Format the notes in a clear, organized manner with proper headings and bullet points.
+        Make sure the content is appropriate for {grade_level} grade level.
+        Focus on making the content educational, engaging, and easy to understand.
+        
+        The notes should be comprehensive enough to serve as a complete study resource for this topic.
+        """
+        
+        try:
+            response = self.model.generate_content(prompt)
+            content = response.text
+            
+            # Clean up the content
+            content = content.strip()
+            
+            # Ensure we have substantive content
+            if len(content) < 100:
+                content = f"# {topic}\n\n## Key Concepts\n\n{content}\n\n## Important Points\n\n• This is a complex topic that requires careful study\n• Review the fundamentals before moving to advanced concepts\n• Practice problems and examples are essential for mastery\n\n## Study Tips\n\n• Break down complex concepts into smaller parts\n• Use visual aids and diagrams when possible\n• Connect new information to previously learned material\n• Regular review and practice are key to retention"
+            
+            return content
+            
+        except Exception as e:
+            print(f"Error generating study notes: {e}")
+            # Return a fallback response
+            return f"""# {topic}
+
+## Overview
+This is a comprehensive study guide for {topic} in {subject} for {grade_level} grade level.
+
+## Key Concepts
+• {topic} is an important concept in {subject}
+• Understanding the fundamentals is crucial for success
+• This topic builds upon previous knowledge in the subject
+
+## Important Points
+• Review class materials and textbooks for detailed information
+• Practice problems and examples help reinforce learning
+• Ask questions if concepts are unclear
+• Connect this topic to real-world applications
+
+## Study Tips
+• Create visual aids and diagrams
+• Form study groups for discussion
+• Review regularly for better retention
+• Use multiple learning resources
+
+## Summary
+{topic} is a fundamental concept in {subject} that requires careful study and practice. Focus on understanding the core principles and their applications.
+
+Note: This is a generated study guide. Please supplement with your textbook and class materials for complete understanding."""
 
 # Global AI service instance
 ai_service = AIService()
