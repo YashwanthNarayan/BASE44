@@ -4,7 +4,7 @@ import { LiquidCard, LiquidButton, LiquidInput } from './ui/LiquidComponents';
 import MessageFormatter from './MessageFormatter';
 import '../styles/liquid-glass.css';
 
-const StudyPlannerComponent = ({ student, onNavigate }) => {
+const StudyPlannerComponent = ({ student, onNavigate, onStartStudySession }) => {
   const [messages, setMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [loading, setLoading] = useState(false);
