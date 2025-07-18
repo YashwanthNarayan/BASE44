@@ -9,6 +9,7 @@ import StudentDashboard from './components/StudentDashboard_Liquid';
 import TeacherDashboard from './components/TeacherDashboard_Liquid';
 import NotesComponent from './components/NotesComponent_Liquid';
 import PracticeTestComponent from './components/PracticeTestComponent_Liquid';
+import StudyTimer from './components/StudyTimer';
 
 // Import lazy-loaded components (now with liquid versions)
 const MindfulnessComponent = React.lazy(() => import('./components/MindfulnessComponent_Liquid'));
@@ -37,6 +38,10 @@ function App() {
   const [user, setUser] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  // Study timer state
+  const [activeStudyPlan, setActiveStudyPlan] = useState(null);
+  const [showStudyTimer, setShowStudyTimer] = useState(false);
 
   useEffect(() => {
     checkAuthStatus();
