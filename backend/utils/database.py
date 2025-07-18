@@ -88,4 +88,8 @@ async def create_indexes():
     await db[Collections.CALENDAR_EVENTS].create_index([("user_id", 1), ("start_time", 1)])
     await db[Collections.NOTIFICATIONS].create_index([("user_id", 1), ("created_at", -1)])
     
+    # Study planner indexes
+    await db[Collections.STUDY_PLANS].create_index([("user_id", 1), ("created_at", -1)])
+    await db[Collections.STUDY_PLANS].create_index("plan_id", unique=True)
+    
     print("Database indexes created successfully")
