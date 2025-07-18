@@ -691,7 +691,7 @@ What's your study goal for today?"""
         prompt = f"""
         As an educational expert, optimize the order of these subjects for maximum learning efficiency:
         
-        Subjects: {', '.join([f"{subj['subject']} ({subj['duration']} minutes)" for subj in subjects])}
+        Subjects: {', '.join([f"{subj['subject']} ({subj['duration_minutes']} minutes)" for subj in subjects])}
         
         Consider these factors:
         1. Cognitive load and mental fatigue
