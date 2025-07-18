@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 import { notesAPI } from '../services/api';
 import { subjects } from '../utils/constants';
 import { truncateText, formatTimeAgo } from '../utils/helpers';
