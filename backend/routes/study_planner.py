@@ -103,7 +103,7 @@ async def generate_study_plan(
             "user_id": current_user["sub"],
             "total_duration_minutes": request.total_duration_minutes,
             "subjects": [subj.dict() for subj in request.subjects],
-            "pomodoro_sessions": [session.dict() for session in study_plan["sessions"]],
+            "pomodoro_sessions": study_plan["sessions"],
             "study_tips": study_plan["tips"],
             "created_at": datetime.utcnow(),
             "used": False
