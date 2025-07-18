@@ -93,6 +93,14 @@ const StudentDashboard = ({ student, onNavigate, onLogout }) => {
       gradient: 'from-pink-500/10 to-rose-500/10'
     },
     {
+      id: 'study-planner',
+      title: 'Study Planner',
+      description: 'AI-powered Pomodoro study sessions',
+      icon: '🗓️',
+      route: 'study-planner',
+      gradient: 'from-blue-500/10 to-cyan-500/10'
+    },
+    {
       id: 'mindfulness',
       title: 'Mindfulness',
       description: 'Relaxation and focus exercises',
