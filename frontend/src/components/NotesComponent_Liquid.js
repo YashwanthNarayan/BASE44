@@ -404,7 +404,18 @@ const NotesComponent = ({ student, onNavigate }) => {
                     {note.subject} • {note.grade_level} Grade
                   </p>
                   <p className="text-primary text-sm line-clamp-3 mb-4">
-                    {truncateText(note.content, 100)}
+                    {truncateText(
+                      note.content
+                        .replace(/\$\$[^$]*\$\$/g, '[Math Formula]') // Replace LaTeX blocks
+                        .replace(/\$[^$]*\$/g, '[Math]') // Replace inline LaTeX
+                        .replace(/#{1,6}\s/g, '') // Remove markdown headers
+                        .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold markdown
+                        .replace(/\*(.*?)\*/g, '$1') // Remove italic markdown
+                        .replace(/`(.*?)`/g, '$1') // Remove code markdown
+                        .replace(/\n+/g, ' ') // Replace line breaks with spaces
+                        .trim(), 
+                      100
+                    )}
                   </p>
 
                   {/* Note Footer */}
