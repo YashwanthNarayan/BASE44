@@ -199,6 +199,11 @@ export const tutorAPI = {
 
 // Notes API
 export const notesAPI = {
+  getAll: async () => {
+    const response = await axios.get(`${API_BASE}/api/notes/`);
+    return response.data;
+  },
+  
   generate: async (subject, topic, gradeLevel) => {
     const response = await axios.post(`${API_BASE}/api/notes/generate`, {
       subject,
@@ -208,18 +213,18 @@ export const notesAPI = {
     return response.data;
   },
   
-  getAll: async () => {
-    const response = await axios.get(`${API_BASE}/api/notes`);
+  getById: async (noteId) => {
+    const response = await axios.get(`${API_BASE}/api/notes/${noteId}`);
+    return response.data;
+  },
+  
+  favorite: async (noteId) => {
+    const response = await axios.put(`${API_BASE}/api/notes/${noteId}/favorite`);
     return response.data;
   },
   
   delete: async (noteId) => {
     const response = await axios.delete(`${API_BASE}/api/notes/${noteId}/delete`);
-    return response.data;
-  },
-  
-  toggleFavorite: async (noteId) => {
-    const response = await axios.put(`${API_BASE}/api/notes/${noteId}/favorite`);
     return response.data;
   }
 };
