@@ -70,7 +70,7 @@ const NotesComponent = ({ student, onNavigate }) => {
   };
 
   const deleteNote = async (noteId) => {
-    if (window.confirm('Delete this neural note?')) {
+    if (window.confirm('Delete this study note?')) {
       try {
         await notesAPI.delete(noteId);
         loadNotes();
