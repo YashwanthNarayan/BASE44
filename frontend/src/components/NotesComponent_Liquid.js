@@ -325,19 +325,19 @@ const NotesComponent = ({ student, onNavigate }) => {
       <div className="quantum-grid fixed inset-0 opacity-30" />
       
       <div className="relative z-10 p-6 max-w-6xl mx-auto">
-        {/* Neural Header */}
+        {/* Header */}
         <div className="text-center mb-8">
           <LiquidButton
             variant="secondary"
             onClick={() => onNavigate('student-dashboard')}
             className="mb-4"
           >
-            ← Neural Dashboard
+            ← Back to Dashboard
           </LiquidButton>
           <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-            📚 Neural Knowledge Library
+            📚 Study Notes Library
           </h1>
-          <p className="text-secondary">Your quantum-enhanced study materials collection</p>
+          <p className="text-secondary">Your AI-generated study materials collection</p>
         </div>
 
         {/* Action Bar */}
@@ -347,12 +347,12 @@ const NotesComponent = ({ student, onNavigate }) => {
               <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center">
                 <span className="text-sm font-bold">📖</span>
               </div>
-              <h2 className="text-xl font-bold text-primary">Knowledge Matrix</h2>
-              <span className="text-secondary">({notes.length} neural notes)</span>
+              <h2 className="text-xl font-bold text-primary">Study Notes</h2>
+              <span className="text-secondary">({notes.length} notes)</span>
             </div>
             
             <LiquidButton onClick={() => setCurrentView('generate')}>
-              ⚡ Synthesize New Notes
+              ⚡ Generate New Notes
             </LiquidButton>
           </div>
         </LiquidCard>
@@ -361,17 +361,17 @@ const NotesComponent = ({ student, onNavigate }) => {
         {loading ? (
           <LiquidCard className="text-center p-12">
             <div className="quantum-loader mx-auto mb-4" />
-            <p className="text-secondary">Loading neural library...</p>
+            <p className="text-secondary">Loading notes library...</p>
           </LiquidCard>
         ) : notes.length === 0 ? (
           <LiquidCard className="text-center p-12">
             <div className="text-6xl mb-6">🧠</div>
-            <h2 className="text-2xl font-bold text-primary mb-4">Neural Library Empty</h2>
+            <h2 className="text-2xl font-bold text-primary mb-4">Notes Library Empty</h2>
             <p className="text-secondary mb-6">
-              Your quantum knowledge vault awaits. Generate your first neural notes to begin.
+              Your study notes collection awaits. Generate your first AI-powered study notes to begin.
             </p>
             <LiquidButton onClick={() => setCurrentView('generate')}>
-              ⚡ Synthesize First Notes
+              ⚡ Generate First Notes
             </LiquidButton>
           </LiquidCard>
         ) : (
