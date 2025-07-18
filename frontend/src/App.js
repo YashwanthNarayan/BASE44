@@ -114,6 +114,29 @@ function App() {
     setCurrentView(view);
   };
 
+  // Study timer functions
+  const startStudySession = (studyPlan) => {
+    setActiveStudyPlan(studyPlan);
+    setShowStudyTimer(true);
+  };
+
+  const handleSessionComplete = (currentSession, nextSession) => {
+    // Could add notifications or other logic here
+    console.log('Session completed:', currentSession);
+    if (nextSession) {
+      console.log('Next session:', nextSession);
+    } else {
+      console.log('All sessions completed!');
+      setShowStudyTimer(false);
+      setActiveStudyPlan(null);
+    }
+  };
+
+  const handleTimerStop = () => {
+    setShowStudyTimer(false);
+    setActiveStudyPlan(null);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
