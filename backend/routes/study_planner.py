@@ -4,7 +4,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 import uuid
 
-from backend.utils.database import get_database, Collections
+from backend.utils.database import get_database, Collections, convert_objectid_to_str
 from backend.utils.security import get_current_student
 from backend.services.ai_service import AIService
 from backend.models.user import Subject
