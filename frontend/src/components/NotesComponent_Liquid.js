@@ -334,6 +334,7 @@ const NotesComponent = ({ student, onNavigate }) => {
   // Library View
   return (
     <div className="min-h-screen bg-dark-space text-primary">
+      <style>{notesStyle}</style>
       <div className="quantum-grid fixed inset-0 opacity-30" />
       
       <div className="relative z-10 p-6 max-w-6xl mx-auto">
