@@ -152,145 +152,111 @@ function App() {
     return <AuthPortal onAuthSuccess={handleAuthSuccess} />;
   }
 
-  // Route to different views
-  if (currentView === 'student-dashboard' && userType === 'student') {
-    return (
-      <StudentDashboard 
-        student={user} 
-        onNavigate={navigate}
-        dashboardData={dashboardData}
-        onLogout={handleLogout}
-      />
-    );
-  }
-
-  if (currentView === 'teacher-dashboard' && userType === 'teacher') {
-    return (
-      <TeacherDashboard 
-        teacher={user} 
-        onNavigate={navigate}
-        onLogout={handleLogout}
-      />
-    );
-  }
-
-  if (currentView === 'notes') {
-    return <NotesComponent student={user} onNavigate={navigate} />;
-  }
-
-  if (currentView === 'practice') {
-    return <PracticeTestComponent student={user} onNavigate={navigate} />;
-  }
-
-  // Lazy-loaded components with Suspense
-  const LoadingFallback = ({ message = "Loading component..." }) => (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-600">{message}</p>
-      </div>
-    </div>
-  );
-
-  if (currentView === 'mindfulness') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Mindfulness..." />}>
-        <MindfulnessComponent student={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'calendar') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Calendar..." />}>
-        <CalendarComponent student={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'progress') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Progress..." />}>
-        <ProgressComponent student={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'tutor') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading AI Tutor..." />}>
-        <TutorComponent student={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'notifications') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Notifications..." />}>
-        <NotificationsComponent student={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'classes') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Classes..." />}>
-        <ClassesComponent student={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'study-planner') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Study Planner..." />}>
-        <StudyPlannerComponent student={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'teacher-analytics') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Analytics..." />}>
-        <TeacherAnalyticsDashboard teacher={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'create-class') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Create Class..." />}>
-        <CreateClassComponent teacher={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'manage-classes') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Class Management..." />}>
-        <ManageClassesComponent teacher={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  if (currentView === 'assignments') {
-    return (
-      <React.Suspense fallback={<LoadingFallback message="Loading Assignments..." />}>
-        <AssignmentsComponent teacher={user} onNavigate={navigate} />
-      </React.Suspense>
-    );
-  }
-
-  // Default fallback
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Page Not Found</h1>
-        <button
-          onClick={() => navigate(userType === 'student' ? 'student-dashboard' : 'teacher-dashboard')}
-          className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          Return to Dashboard
-        </button>
+    <div className="App">
+      {/* Study Timer - Always visible when active */}
+      {showStudyTimer && activeStudyPlan && (
+        <StudyTimer 
+          studyPlan={activeStudyPlan}
+          onSessionComplete={handleSessionComplete}
+          onTimerStop={handleTimerStop}
+        />
+      )}
+      
+      {/* Main content with padding when timer is visible */}
+      <div className={showStudyTimer ? 'pt-24' : ''}>
+        {/* Route to different views */}
+        {currentView === 'student-dashboard' && userType === 'student' && (
+          <StudentDashboard 
+            student={user} 
+            onNavigate={navigate}
+            dashboardData={dashboardData}
+            onLogout={handleLogout}
+          />
+        )}
+
+        {currentView === 'teacher-dashboard' && userType === 'teacher' && (
+          <TeacherDashboard 
+            teacher={user} 
+            onNavigate={navigate}
+            onLogout={handleLogout}
+          />
+        )}
+
+        {currentView === 'notes' && (
+          <NotesComponent student={user} onNavigate={navigate} />
+        )}
+
+        {currentView === 'practice' && (
+          <PracticeTestComponent student={user} onNavigate={navigate} />
+        )}
+
+        {/* Lazy-loaded components with Suspense */}
+        <React.Suspense fallback={<LoadingFallback />}>
+          {currentView === 'mindfulness' && (
+            <MindfulnessComponent student={user} onNavigate={navigate} />
+          )}
+
+          {currentView === 'calendar' && (
+            <CalendarComponent student={user} onNavigate={navigate} />
+          )}
+
+          {currentView === 'progress' && (
+            <ProgressComponent student={user} onNavigate={navigate} />
+          )}
+
+          {currentView === 'tutor' && (
+            <TutorComponent student={user} onNavigate={navigate} />
+          )}
+
+          {currentView === 'notifications' && (
+            <NotificationsComponent student={user} onNavigate={navigate} />
+          )}
+
+          {currentView === 'classes' && (
+            <ClassesComponent student={user} onNavigate={navigate} />
+          )}
+
+          {currentView === 'study-planner' && (
+            <StudyPlannerComponent 
+              student={user} 
+              onNavigate={navigate}
+              onStartStudySession={startStudySession}
+            />
+          )}
+
+          {currentView === 'teacher-analytics' && (
+            <TeacherAnalyticsDashboard teacher={user} onNavigate={navigate} />
+          )}
+
+          {currentView === 'create-class' && (
+            <CreateClassComponent teacher={user} onNavigate={navigate} />
+          )}
+
+          {currentView === 'manage-classes' && (
+            <ManageClassesComponent teacher={user} onNavigate={navigate} />
+          )}
+
+          {currentView === 'assignments' && (
+            <AssignmentsComponent teacher={user} onNavigate={navigate} />
+          )}
+        </React.Suspense>
+
+        {/* Default fallback */}
+        {!['student-dashboard', 'teacher-dashboard', 'notes', 'practice', 'mindfulness', 'calendar', 'progress', 'tutor', 'notifications', 'classes', 'study-planner', 'teacher-analytics', 'create-class', 'manage-classes', 'assignments'].includes(currentView) && (
+          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-gray-900 mb-4">Page Not Found</h1>
+              <p className="text-gray-600 mb-8">The page you're looking for doesn't exist.</p>
+              <button
+                onClick={() => navigate(userType === 'student' ? 'student-dashboard' : 'teacher-dashboard')}
+                className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Go to Dashboard
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
