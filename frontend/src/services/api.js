@@ -263,4 +263,35 @@ export const notificationsAPI = {
   }
 };
 
+// Study Planner API
+export const studyPlannerAPI = {
+  chat: async (message, context = null) => {
+    const response = await axios.post(`${API_BASE}/api/study-planner/chat`, {
+      message,
+      context
+    });
+    return response.data;
+  },
+  
+  generatePlan: async (planRequest) => {
+    const response = await axios.post(`${API_BASE}/api/study-planner/generate-plan`, planRequest);
+    return response.data;
+  },
+  
+  getMyPlans: async () => {
+    const response = await axios.get(`${API_BASE}/api/study-planner/my-plans`);
+    return response.data;
+  },
+  
+  startSession: async (planId) => {
+    const response = await axios.post(`${API_BASE}/api/study-planner/start-session/${planId}`);
+    return response.data;
+  },
+  
+  deletePlan: async (planId) => {
+    const response = await axios.delete(`${API_BASE}/api/study-planner/plan/${planId}`);
+    return response.data;
+  }
+};
+
 export default API_BASE;
