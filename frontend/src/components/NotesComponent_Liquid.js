@@ -269,10 +269,48 @@ const NotesComponent = ({ student, onNavigate }) => {
 
               {/* Note Content */}
               <div className="prose prose-invert max-w-none">
-                <div 
-                  className="text-primary leading-relaxed whitespace-pre-wrap"
-                  dangerouslySetInnerHTML={{ __html: selectedNote.content.replace(/\n/g, '<br/>') }}
-                />
+                <ReactMarkdown 
+                  remarkPlugins={[remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
+                  className="text-primary leading-relaxed"
+                  components={{
+                    // Custom components for better styling
+                    h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-primary mb-4 border-b border-primary/20 pb-2" {...props} />,
+                    h2: ({node, ...props}) => <h2 className="text-2xl font-semibold text-primary mb-3 mt-6" {...props} />,
+                    h3: ({node, ...props}) => <h3 className="text-xl font-semibold text-primary mb-2 mt-4" {...props} />,
+                    p: ({node, ...props}) => <p className="text-primary mb-4 leading-relaxed" {...props} />,
+                    ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-4 text-primary space-y-1" {...props} />,
+                    ol: ({node, ...props}) => <ol className="list-decimal pl-6 mb-4 text-primary space-y-1" {...props} />,
+                    li: ({node, ...props}) => <li className="text-primary" {...props} />,
+                    strong: ({node, ...props}) => <strong className="text-accent-blue font-bold" {...props} />,
+                    em: ({node, ...props}) => <em className="text-accent-cyan italic" {...props} />,
+                    code: ({node, inline, ...props}) => 
+                      inline ? (
+                        <code className="bg-glass px-2 py-1 rounded text-accent-green font-mono text-sm" {...props} />
+                      ) : (
+                        <code className="block bg-glass p-4 rounded-lg text-accent-green font-mono text-sm overflow-x-auto" {...props} />
+                      ),
+                    blockquote: ({node, ...props}) => (
+                      <blockquote className="border-l-4 border-accent-blue pl-4 italic text-secondary my-4" {...props} />
+                    ),
+                    table: ({node, ...props}) => (
+                      <div className="overflow-x-auto my-4">
+                        <table className="min-w-full border border-primary/20 rounded-lg" {...props} />
+                      </div>
+                    ),
+                    th: ({node, ...props}) => (
+                      <th className="bg-glass border border-primary/20 px-4 py-2 text-primary font-semibold" {...props} />
+                    ),
+                    td: ({node, ...props}) => (
+                      <td className="border border-primary/20 px-4 py-2 text-primary" {...props} />
+                    ),
+                    hr: ({node, ...props}) => (
+                      <hr className="border-primary/20 my-6" {...props} />
+                    )
+                  }}
+                >
+                  {selectedNote.content}
+                </ReactMarkdown>
               </div>
             </div>
           </LiquidCard>
