@@ -212,6 +212,14 @@ function App() {
     );
   }
 
+  if (currentView === 'study-planner') {
+    return (
+      <React.Suspense fallback={<LoadingFallback message="Loading Study Planner..." />}>
+        <StudyPlannerComponent student={user} onNavigate={navigate} />
+      </React.Suspense>
+    );
+  }
+
   if (currentView === 'teacher-analytics') {
     return (
       <React.Suspense fallback={<LoadingFallback message="Loading Analytics..." />}>
