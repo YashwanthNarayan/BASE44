@@ -218,13 +218,13 @@ const NotesComponent = ({ student, onNavigate }) => {
         <div className="quantum-grid fixed inset-0 opacity-30" />
         
         <div className="relative z-10 p-6 max-w-4xl mx-auto">
-          {/* Neural Header */}
+          {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <LiquidButton
               variant="secondary"
               onClick={() => setCurrentView('library')}
             >
-              ← Neural Library
+              ← Notes Library
             </LiquidButton>
             
             <div className="flex items-center space-x-3">
