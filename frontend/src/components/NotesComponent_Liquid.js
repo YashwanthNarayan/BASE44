@@ -228,6 +228,7 @@ const NotesComponent = ({ student, onNavigate }) => {
   if (currentView === 'view' && selectedNote) {
     return (
       <div className="min-h-screen bg-dark-space text-primary">
+        <style>{notesStyle}</style>
         <div className="quantum-grid fixed inset-0 opacity-30" />
         
         <div className="relative z-10 p-6 max-w-4xl mx-auto">
