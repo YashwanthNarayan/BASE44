@@ -137,14 +137,36 @@ export const LiquidSelect = ({
           ${error ? 'border-accent-pink/50' : ''}
           ${className}
         `}
+        style={{
+          // Override default select styling to ensure dropdown options are readable
+          color: 'inherit'
+        }}
         {...props}
       >
         {options.map((option, index) => (
-          <option key={index} value={option.value}>
+          <option 
+            key={index} 
+            value={option.value}
+            style={{
+              // Ensure option text is dark for readability on light dropdown background
+              color: '#1a202c',
+              backgroundColor: '#ffffff'
+            }}
+          >
             {option.label}
           </option>
         ))}
-        {children}
+        {React.Children.map(children, (child, index) => 
+          React.cloneElement(child, {
+            key: index,
+            style: {
+              // Ensure all option children have dark text
+              color: '#1a202c',
+              backgroundColor: '#ffffff',
+              ...child.props.style
+            }
+          })
+        )}
       </select>
       {error && (
         <p className="text-sm text-accent-pink">{error}</p>
