@@ -2980,11 +2980,17 @@ class TestStudyPlannerAPI(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    # Run the V3 tests
-    print("\n==== TESTING PROJECT K V3 BACKEND ====\n")
+    print("🚀 Starting AIR Project K Backend Testing Suite V3.0")
+    print(f"Testing against API: {API_URL}")
+    print("=" * 80)
     
-    # First run the tutor API tests (current focus)
-    print("\n==== RUNNING TUTOR API TESTS (CURRENT FOCUS) ====\n")
+    # First run the study planner tests (NEW - CURRENT FOCUS)
+    print("\n==== RUNNING STUDY PLANNER API TESTS (CURRENT FOCUS) ====\n")
+    study_planner_suite = unittest.TestLoader().loadTestsFromTestCase(TestStudyPlannerAPI)
+    study_planner_result = unittest.TextTestRunner().run(study_planner_suite)
+    
+    # Then run the tutor API tests
+    print("\n==== RUNNING TUTOR API TESTS ====\n")
     tutor_suite = unittest.TestLoader().loadTestsFromTestCase(TestTutorAPIRoutes)
     tutor_result = unittest.TextTestRunner().run(tutor_suite)
     
