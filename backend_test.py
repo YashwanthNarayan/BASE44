@@ -2391,6 +2391,594 @@ class TestTutorAPIRoutes(unittest.TestCase):
         
         print("✅ Error handling tests completed")
 
+class TestStudyPlannerAPI(unittest.TestCase):
+    """Test cases specifically for the Smart Calendar Bot Study Planner API endpoints"""
+
+    def setUp(self):
+        """Set up test case - create student account for study planner testing"""
+        self.student_token = None
+        self.student_id = None
+        self.plan_id = None
+        
+        # Register student for study planner testing
+        self.register_student()
+
+    def register_student(self):
+        """Register a student for study planner testing"""
+        print("\n🔍 Setting up student account for study planner testing...")
+        url = f"{API_URL}/auth/register"
+        payload = {
+            "email": f"study_planner_student_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Arjun Mehta",
+            "user_type": UserType.STUDENT.value,
+            "grade_level": GradeLevel.GRADE_10.value
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 200:
+                data = response.json()
+                self.student_token = data.get("access_token")
+                self.student_id = data.get("user", {}).get("id")
+                print(f"Registered study planner test student with ID: {self.student_id}")
+            else:
+                print(f"Failed to register study planner test student: {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error registering study planner test student: {str(e)}")
+
+    def test_01_study_planner_chat_greeting(self):
+        """Test POST /api/study-planner/chat - Initial greeting"""
+        print("\n🔍 Testing Study Planner Chat - Initial Greeting...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/study-planner/chat"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        payload = {
+            "message": "Hello",
+            "context": None
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f"Study Planner Chat Greeting Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to get study planner greeting")
+            data = response.json()
+            
+            # Verify response structure
+            self.assertIn("response", data, "Response should be present")
+            self.assertIn("needs_input", data, "Needs input should be present")
+            self.assertIn("input_type", data, "Input type should be present")
+            self.assertIn("suggested_actions", data, "Suggested actions should be present")
+            
+            # Verify greeting content
+            response_text = data.get("response", "")
+            self.assertIn("Smart Study Planner", response_text, "Should mention Smart Study Planner")
+            self.assertIn("Pomodoro", response_text, "Should mention Pomodoro technique")
+            self.assertTrue(data.get("needs_input"), "Should need input after greeting")
+            self.assertEqual(data.get("input_type"), "requirements", "Should ask for requirements")
+            
+            # Verify suggested actions
+            suggested_actions = data.get("suggested_actions", [])
+            self.assertIsInstance(suggested_actions, list, "Suggested actions should be a list")
+            self.assertTrue(len(suggested_actions) > 0, "Should have suggested actions")
+            
+            print("✅ Study planner greeting test passed")
+            print(f"Bot response preview: {response_text[:100]}...")
+            
+        except Exception as e:
+            print(f"❌ Study planner greeting test failed: {str(e)}")
+            self.fail(f"Study planner greeting test failed: {str(e)}")
+
+    def test_02_study_planner_chat_requirements_gathering(self):
+        """Test POST /api/study-planner/chat - Requirements gathering conversation"""
+        print("\n🔍 Testing Study Planner Chat - Requirements Gathering...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/study-planner/chat"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test different requirement gathering scenarios
+        test_scenarios = [
+            {
+                "message": "I want to study for 2 hours total - 1 hour math and 1 hour physics",
+                "description": "Complete requirements in one message",
+                "expected_stage": "confirmation"
+            },
+            {
+                "message": "I need to study for 90 minutes",
+                "description": "Duration only",
+                "expected_stage": "collecting_requirements"
+            },
+            {
+                "message": "I want to study math and physics",
+                "description": "Subjects only",
+                "expected_stage": "collecting_requirements"
+            }
+        ]
+        
+        for scenario in test_scenarios:
+            payload = {
+                "message": scenario["message"],
+                "context": {"stage": "collecting_requirements", "requirements": {}}
+            }
+            
+            try:
+                print(f"Testing scenario: {scenario['description']}")
+                response = requests.post(url, json=payload, headers=headers)
+                print(f"Requirements Gathering Response: {response.status_code}")
+                
+                self.assertEqual(response.status_code, 200, f"Failed to process requirements: {scenario['description']}")
+                data = response.json()
+                
+                # Verify response structure
+                self.assertIn("response", data, "Response should be present")
+                self.assertIn("needs_input", data, "Needs input should be present")
+                self.assertIn("context", data, "Context should be present")
+                
+                # Verify context progression
+                context = data.get("context", {})
+                if scenario["expected_stage"] == "confirmation":
+                    # Should move to confirmation stage if complete requirements provided
+                    self.assertIn("requirements", context, "Requirements should be stored in context")
+                    requirements = context.get("requirements", {})
+                    self.assertTrue(len(requirements) > 0, "Requirements should not be empty")
+                
+                response_text = data.get("response", "")
+                print(f"Bot response preview: {response_text[:100]}...")
+                print("✅ Requirements gathering scenario passed")
+                
+            except Exception as e:
+                print(f"❌ Requirements gathering scenario failed: {str(e)}")
+                self.fail(f"Requirements gathering scenario failed: {str(e)}")
+
+    def test_03_study_planner_generate_plan(self):
+        """Test POST /api/study-planner/generate-plan - Generate Pomodoro study plan"""
+        print("\n🔍 Testing Study Planner - Generate Plan...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/study-planner/generate-plan"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test plan generation with realistic study requirements
+        payload = {
+            "total_duration_minutes": 120,  # 2 hours
+            "subjects": [
+                {
+                    "subject": "math",
+                    "duration_minutes": 60,
+                    "priority": "high",
+                    "notes": "Focus on algebra and geometry"
+                },
+                {
+                    "subject": "physics",
+                    "duration_minutes": 60,
+                    "priority": "medium",
+                    "notes": "Mechanics and thermodynamics"
+                }
+            ],
+            "preferred_start_time": "09:00",
+            "break_preferences": {
+                "short_break_activity": "stretch",
+                "long_break_activity": "walk"
+            }
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f"Generate Plan Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to generate study plan")
+            data = response.json()
+            
+            # Verify response structure
+            required_fields = [
+                "plan_id", "total_duration_minutes", "total_work_time", 
+                "total_break_time", "pomodoro_sessions", "study_tips", "created_at"
+            ]
+            
+            for field in required_fields:
+                self.assertIn(field, data, f"Field '{field}' should be present in plan response")
+            
+            # Verify plan data
+            self.assertEqual(data.get("total_duration_minutes"), 120, "Total duration should match request")
+            self.assertIsNotNone(data.get("plan_id"), "Plan ID should not be None")
+            
+            # Store plan ID for further tests
+            self.plan_id = data.get("plan_id")
+            
+            # Verify Pomodoro sessions
+            pomodoro_sessions = data.get("pomodoro_sessions", [])
+            self.assertIsInstance(pomodoro_sessions, list, "Pomodoro sessions should be a list")
+            self.assertTrue(len(pomodoro_sessions) > 0, "Should have Pomodoro sessions")
+            
+            # Verify session structure
+            work_sessions = [s for s in pomodoro_sessions if s.get("session_type") == "work"]
+            break_sessions = [s for s in pomodoro_sessions if s.get("session_type") == "break"]
+            
+            self.assertTrue(len(work_sessions) > 0, "Should have work sessions")
+            self.assertTrue(len(break_sessions) > 0, "Should have break sessions")
+            
+            # Verify Pomodoro timing (25-minute work sessions)
+            for work_session in work_sessions:
+                duration = work_session.get("duration_minutes", 0)
+                self.assertLessEqual(duration, 25, "Work sessions should be <= 25 minutes (Pomodoro standard)")
+                self.assertIn("subject", work_session, "Work sessions should have subject")
+                self.assertIn("description", work_session, "Work sessions should have description")
+            
+            # Verify break timing (5 or 15 minute breaks)
+            for break_session in break_sessions:
+                duration = break_session.get("duration_minutes", 0)
+                self.assertIn(duration, [5, 15], "Break sessions should be 5 or 15 minutes")
+                self.assertIn("break_activity", break_session, "Break sessions should have activity")
+            
+            # Verify study tips
+            study_tips = data.get("study_tips", [])
+            self.assertIsInstance(study_tips, list, "Study tips should be a list")
+            self.assertTrue(len(study_tips) > 0, "Should have study tips")
+            
+            # Verify work/break time calculation
+            total_work_time = data.get("total_work_time", 0)
+            total_break_time = data.get("total_break_time", 0)
+            calculated_work_time = sum(s.get("duration_minutes", 0) for s in work_sessions)
+            calculated_break_time = sum(s.get("duration_minutes", 0) for s in break_sessions)
+            
+            self.assertEqual(total_work_time, calculated_work_time, "Total work time should match calculated")
+            self.assertEqual(total_break_time, calculated_break_time, "Total break time should match calculated")
+            
+            print("✅ Study plan generation test passed")
+            print(f"Generated plan ID: {self.plan_id}")
+            print(f"Work sessions: {len(work_sessions)}, Break sessions: {len(break_sessions)}")
+            print(f"Total work time: {total_work_time} min, Total break time: {total_break_time} min")
+            print(f"Study tips provided: {len(study_tips)}")
+            
+        except Exception as e:
+            print(f"❌ Study plan generation test failed: {str(e)}")
+            self.fail(f"Study plan generation test failed: {str(e)}")
+
+    def test_04_get_my_study_plans(self):
+        """Test GET /api/study-planner/my-plans - Get user's study plans"""
+        print("\n🔍 Testing Get My Study Plans...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        # Ensure we have a plan to retrieve
+        if not self.plan_id:
+            self.test_03_study_planner_generate_plan()
+        
+        url = f"{API_URL}/study-planner/my-plans"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Get My Plans Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to get study plans")
+            data = response.json()
+            
+            # Verify response is a list
+            self.assertIsInstance(data, list, "Study plans should be a list")
+            
+            if self.plan_id:
+                # Should have at least one plan
+                self.assertTrue(len(data) > 0, "Should have at least one study plan")
+                
+                # Find our created plan
+                our_plan = None
+                for plan in data:
+                    if plan.get("plan_id") == self.plan_id:
+                        our_plan = plan
+                        break
+                
+                self.assertIsNotNone(our_plan, "Should find our created plan")
+                
+                # Verify plan structure
+                required_fields = [
+                    "plan_id", "user_id", "total_duration_minutes", "subjects", 
+                    "pomodoro_sessions", "study_tips", "created_at", "used"
+                ]
+                
+                for field in required_fields:
+                    self.assertIn(field, our_plan, f"Field '{field}' should be present in plan")
+                
+                # Verify plan data
+                self.assertEqual(our_plan.get("plan_id"), self.plan_id, "Plan ID should match")
+                self.assertEqual(our_plan.get("user_id"), self.student_id, "User ID should match")
+                self.assertEqual(our_plan.get("used"), False, "Plan should not be used initially")
+                
+                print("✅ Get my study plans test passed")
+                print(f"Retrieved {len(data)} study plans")
+            else:
+                print("✅ Get my study plans test passed (no plans found)")
+                
+        except Exception as e:
+            print(f"❌ Get my study plans test failed: {str(e)}")
+            self.fail(f"Get my study plans test failed: {str(e)}")
+
+    def test_05_start_study_session(self):
+        """Test POST /api/study-planner/start-session/{plan_id} - Start a study session"""
+        print("\n🔍 Testing Start Study Session...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        # Ensure we have a plan to start
+        if not self.plan_id:
+            self.test_03_study_planner_generate_plan()
+        
+        if not self.plan_id:
+            self.skipTest("Plan ID not available")
+        
+        url = f"{API_URL}/study-planner/start-session/{self.plan_id}"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.post(url, headers=headers)
+            print(f"Start Session Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to start study session")
+            data = response.json()
+            
+            # Verify response structure
+            self.assertIn("message", data, "Message should be present")
+            self.assertIn("plan_id", data, "Plan ID should be present")
+            self.assertIn("calendar_events", data, "Calendar events should be present")
+            
+            # Verify data values
+            self.assertEqual(data.get("plan_id"), self.plan_id, "Plan ID should match")
+            self.assertIn("started successfully", data.get("message", ""), "Should confirm session started")
+            
+            # Verify calendar events
+            calendar_events = data.get("calendar_events", [])
+            self.assertIsInstance(calendar_events, list, "Calendar events should be a list")
+            
+            if len(calendar_events) > 0:
+                # Check first event structure
+                event = calendar_events[0]
+                event_fields = ["title", "description", "start_time", "end_time", "event_type", "subject"]
+                
+                for field in event_fields:
+                    self.assertIn(field, event, f"Field '{field}' should be present in calendar event")
+                
+                # Verify event data
+                self.assertEqual(event.get("event_type"), "study", "Event type should be study")
+                self.assertIn("Study:", event.get("title", ""), "Event title should indicate study")
+                
+                print(f"Generated {len(calendar_events)} calendar events")
+            
+            # Verify plan is marked as used
+            plans_url = f"{API_URL}/study-planner/my-plans"
+            plans_response = requests.get(plans_url, headers=headers)
+            
+            if plans_response.status_code == 200:
+                plans = plans_response.json()
+                started_plan = None
+                
+                for plan in plans:
+                    if plan.get("plan_id") == self.plan_id:
+                        started_plan = plan
+                        break
+                
+                if started_plan:
+                    self.assertEqual(started_plan.get("used"), True, "Plan should be marked as used")
+                    self.assertIn("started_at", started_plan, "Plan should have started_at timestamp")
+            
+            print("✅ Start study session test passed")
+            print(f"Started session for plan: {self.plan_id}")
+            
+        except Exception as e:
+            print(f"❌ Start study session test failed: {str(e)}")
+            self.fail(f"Start study session test failed: {str(e)}")
+
+    def test_06_delete_study_plan(self):
+        """Test DELETE /api/study-planner/plan/{plan_id} - Delete a study plan"""
+        print("\n🔍 Testing Delete Study Plan...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        # Create a plan specifically for deletion testing
+        create_url = f"{API_URL}/study-planner/generate-plan"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        create_payload = {
+            "total_duration_minutes": 60,
+            "subjects": [
+                {
+                    "subject": "chemistry",
+                    "duration_minutes": 60,
+                    "priority": "medium",
+                    "notes": "Organic chemistry review"
+                }
+            ]
+        }
+        
+        try:
+            # Create plan to delete
+            create_response = requests.post(create_url, json=create_payload, headers=headers)
+            if create_response.status_code != 200:
+                self.skipTest("Could not create plan for deletion test")
+            
+            plan_to_delete = create_response.json().get("plan_id")
+            if not plan_to_delete:
+                self.skipTest("Could not get plan ID for deletion test")
+            
+            print(f"Created plan for deletion: {plan_to_delete}")
+            
+            # Delete the plan
+            delete_url = f"{API_URL}/study-planner/plan/{plan_to_delete}"
+            delete_response = requests.delete(delete_url, headers=headers)
+            print(f"Delete Plan Response: {delete_response.status_code}")
+            
+            self.assertEqual(delete_response.status_code, 200, "Failed to delete study plan")
+            delete_data = delete_response.json()
+            
+            # Verify response
+            self.assertIn("message", delete_data, "Message should be present")
+            self.assertIn("deleted successfully", delete_data.get("message", ""), "Should confirm deletion")
+            
+            # Verify plan is actually deleted
+            plans_url = f"{API_URL}/study-planner/my-plans"
+            plans_response = requests.get(plans_url, headers=headers)
+            
+            if plans_response.status_code == 200:
+                plans = plans_response.json()
+                deleted_plan = None
+                
+                for plan in plans:
+                    if plan.get("plan_id") == plan_to_delete:
+                        deleted_plan = plan
+                        break
+                
+                self.assertIsNone(deleted_plan, "Deleted plan should not be found in user's plans")
+            
+            # Test deleting non-existent plan
+            fake_plan_id = str(uuid.uuid4())
+            fake_delete_url = f"{API_URL}/study-planner/plan/{fake_plan_id}"
+            fake_delete_response = requests.delete(fake_delete_url, headers=headers)
+            print(f"Delete Non-existent Plan Response: {fake_delete_response.status_code}")
+            
+            self.assertEqual(fake_delete_response.status_code, 404, "Should return 404 for non-existent plan")
+            
+            print("✅ Delete study plan test passed")
+            
+        except Exception as e:
+            print(f"❌ Delete study plan test failed: {str(e)}")
+            self.fail(f"Delete study plan test failed: {str(e)}")
+
+    def test_07_study_planner_authentication(self):
+        """Test study planner endpoints require authentication"""
+        print("\n🔍 Testing Study Planner Authentication Requirements...")
+        
+        # Test all endpoints without authentication
+        endpoints = [
+            ("POST", f"{API_URL}/study-planner/chat", {"message": "Hello"}),
+            ("POST", f"{API_URL}/study-planner/generate-plan", {"total_duration_minutes": 60, "subjects": []}),
+            ("GET", f"{API_URL}/study-planner/my-plans", None),
+            ("POST", f"{API_URL}/study-planner/start-session/fake-id", None),
+            ("DELETE", f"{API_URL}/study-planner/plan/fake-id", None)
+        ]
+        
+        for method, url, payload in endpoints:
+            try:
+                print(f"Testing {method} {url.split('/')[-1]} without auth...")
+                
+                if method == "POST":
+                    response = requests.post(url, json=payload) if payload else requests.post(url)
+                elif method == "GET":
+                    response = requests.get(url)
+                elif method == "DELETE":
+                    response = requests.delete(url)
+                
+                print(f"Response: {response.status_code}")
+                
+                # Should require authentication
+                self.assertIn(response.status_code, [401, 403], 
+                             f"{method} {url} should require authentication")
+                
+            except Exception as e:
+                print(f"❌ Error testing {method} {url}: {str(e)}")
+                self.fail(f"Error testing {method} {url}: {str(e)}")
+        
+        print("✅ Study planner authentication test passed")
+
+    def test_08_study_planner_ai_integration(self):
+        """Test study planner AI integration and optimization"""
+        print("\n🔍 Testing Study Planner AI Integration...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        # Test AI-powered subject optimization
+        url = f"{API_URL}/study-planner/generate-plan"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test with multiple subjects to verify AI optimization
+        payload = {
+            "total_duration_minutes": 150,  # 2.5 hours
+            "subjects": [
+                {
+                    "subject": "math",
+                    "duration_minutes": 50,
+                    "priority": "high",
+                    "notes": "Calculus and algebra"
+                },
+                {
+                    "subject": "english",
+                    "duration_minutes": 50,
+                    "priority": "medium", 
+                    "notes": "Literature analysis"
+                },
+                {
+                    "subject": "physics",
+                    "duration_minutes": 50,
+                    "priority": "high",
+                    "notes": "Mechanics and waves"
+                }
+            ]
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f"AI Integration Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to generate AI-optimized plan")
+            data = response.json()
+            
+            # Verify AI optimization features
+            pomodoro_sessions = data.get("pomodoro_sessions", [])
+            work_sessions = [s for s in pomodoro_sessions if s.get("session_type") == "work"]
+            
+            # Verify subject alternation (AI optimization)
+            if len(work_sessions) >= 3:
+                subjects_order = [s.get("subject") for s in work_sessions]
+                
+                # Check that subjects are alternated (not all same subject in a row)
+                consecutive_same = 0
+                max_consecutive = 0
+                
+                for i in range(1, len(subjects_order)):
+                    if subjects_order[i] == subjects_order[i-1]:
+                        consecutive_same += 1
+                        max_consecutive = max(max_consecutive, consecutive_same + 1)
+                    else:
+                        consecutive_same = 0
+                
+                # AI should optimize to avoid too many consecutive sessions of same subject
+                self.assertLessEqual(max_consecutive, 2, 
+                                   "AI should optimize subject ordering to avoid too many consecutive sessions")
+                
+                print(f"Subject order: {subjects_order}")
+                print(f"Max consecutive same subject: {max_consecutive}")
+            
+            # Verify study tips are AI-generated and relevant
+            study_tips = data.get("study_tips", [])
+            self.assertTrue(len(study_tips) >= 3, "Should have multiple AI-generated study tips")
+            
+            # Verify tips contain Pomodoro-related advice
+            tips_text = " ".join(study_tips).lower()
+            pomodoro_keywords = ["focus", "break", "session", "distraction", "25", "minute"]
+            found_keywords = sum(1 for keyword in pomodoro_keywords if keyword in tips_text)
+            
+            self.assertGreaterEqual(found_keywords, 2, 
+                                  "Study tips should contain Pomodoro-related advice")
+            
+            print("✅ Study planner AI integration test passed")
+            print(f"AI optimization verified with {len(work_sessions)} work sessions")
+            print(f"Study tips generated: {len(study_tips)}")
+            
+        except Exception as e:
+            print(f"❌ Study planner AI integration test failed: {str(e)}")
+            self.fail(f"Study planner AI integration test failed: {str(e)}")
+
+
 if __name__ == "__main__":
     # Run the V3 tests
     print("\n==== TESTING PROJECT K V3 BACKEND ====\n")
