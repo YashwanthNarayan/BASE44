@@ -640,8 +640,11 @@ const StudyPlannerComponent = ({ student, onNavigate, onStartStudySession }) => 
                   {!generatedPlan.used && (
                     <LiquidButton
                       onClick={() => {
-                        startStudySession(generatedPlan.plan_id);
+                        if (onStartStudySession) {
+                          onStartStudySession(generatedPlan);
+                        }
                         setShowPlanView(false);
+                        onNavigate('student-dashboard');
                       }}
                       variant="primary"
                     >
