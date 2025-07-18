@@ -611,10 +611,13 @@ What's your study goal for today?"""
         study_tips = []
         
         # Calculate total work time and available time
-        total_work_time = sum(subj["duration"] for subj in subjects)
+        total_work_time = sum(subj.duration_minutes for subj in subjects)
+        
+        # Convert Pydantic objects to dictionaries for processing
+        subjects_dict = [subj.dict() for subj in subjects]
         
         # Optimize subject ordering using AI
-        optimized_subjects = await self._optimize_subject_order(subjects)
+        optimized_subjects = await self._optimize_subject_order(subjects_dict)
         
         # Create Pomodoro sessions
         current_time = preferred_start_time or "09:00"
