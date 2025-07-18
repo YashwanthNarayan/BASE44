@@ -651,7 +651,7 @@ What's your study goal for today?"""
                 remaining_time -= work_duration
                 
                 # Add break if not the last session
-                if remaining_time > 0 or session_count < sum(subj["duration"] // WORK_SESSION_DURATION + (1 if subj["duration"] % WORK_SESSION_DURATION > 0 else 0) for subj in optimized_subjects):
+                if remaining_time > 0 or session_count < sum(subj["duration_minutes"] // WORK_SESSION_DURATION + (1 if subj["duration_minutes"] % WORK_SESSION_DURATION > 0 else 0) for subj in optimized_subjects):
                     # Determine break type
                     if session_count % LONG_BREAK_INTERVAL == 0:
                         break_duration = LONG_BREAK_DURATION
