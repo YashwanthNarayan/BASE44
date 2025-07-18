@@ -625,7 +625,7 @@ What's your study goal for today?"""
         
         for subject_info in optimized_subjects:
             subject = subject_info["subject"]
-            duration = subject_info["duration"]
+            duration = subject_info["duration_minutes"]
             
             # Break subject time into 25-minute Pomodoro sessions
             remaining_time = duration
