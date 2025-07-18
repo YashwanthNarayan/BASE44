@@ -249,7 +249,7 @@
 
 
 
-user_problem_statement: "when i try to generate a practice test i am getting this error" - User reports getting "Authentication expired. Please log in again." error specifically when trying to generate practice tests
+user_problem_statement: "i want to make a smart calendar bot that designs a study session and stuff so that the student doesn't have to worry" - User wants a smart calendar bot that creates AI-powered study sessions using the Pomodoro technique, analyzes student needs through chat, and generates optimized study schedules automatically.
 
 backend:
   - task: "Practice Test Data Storage and Retrieval Investigation"
