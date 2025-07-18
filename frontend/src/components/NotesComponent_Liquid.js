@@ -9,6 +9,19 @@ import { truncateText, formatTimeAgo } from '../utils/helpers';
 import { LiquidCard, LiquidButton, LiquidInput, LiquidSelect } from './ui/LiquidComponents';
 import '../styles/liquid-glass.css';
 
+// Add custom CSS for KaTeX styling
+const notesStyle = `
+  .katex {
+    color: #e2e8f0 !important;
+  }
+  .katex-display {
+    margin: 1rem 0;
+  }
+  .katex .base {
+    color: #94a3b8 !important;
+  }
+`;
+
 const NotesComponent = ({ student, onNavigate }) => {
   const [currentView, setCurrentView] = useState('library');
   const [notes, setNotes] = useState([]);
