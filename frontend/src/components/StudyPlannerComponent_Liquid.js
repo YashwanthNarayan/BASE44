@@ -131,9 +131,27 @@ const StudyPlannerComponent = ({ student, onNavigate, onStartStudySession }) => 
 
   const startStudySession = async (planId) => {
     try {
+      // Get the full plan data
+      const planToStart = myPlans.find(plan => plan.plan_id === planId);
+      
+      if (!planToStart) {
+        alert('Plan not found. Please try again.');
+        return;
+      }
+      
+      // Start the session in the backend
       await studyPlannerAPI.startSession(planId);
-      alert('Study session started! Your plan has been activated.');
+      
+      // Start the timer with the plan data
+      if (onStartStudySession) {
+        onStartStudySession(planToStart);
+      }
+      
+      // Update the plan list
       loadMyPlans();
+      
+      // Navigate to dashboard so user can see the timer
+      onNavigate('student-dashboard');
     } catch (error) {
       console.error('Error starting session:', error);
       alert('Failed to start study session. Please try again.');
