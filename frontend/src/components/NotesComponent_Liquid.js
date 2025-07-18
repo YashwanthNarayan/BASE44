@@ -111,19 +111,19 @@ const NotesComponent = ({ student, onNavigate }) => {
         <div className="quantum-grid fixed inset-0 opacity-30" />
         
         <div className="relative z-10 p-6 max-w-4xl mx-auto">
-          {/* Neural Header */}
+          {/* Header */}
           <div className="text-center mb-8">
             <LiquidButton
               variant="secondary"
               onClick={() => onNavigate('student-dashboard')}
               className="mb-4"
             >
-              ← Neural Dashboard
+              ← Back to Dashboard
             </LiquidButton>
             <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-2">
-              🧠 Neural Note Synthesizer
+              🧠 Study Notes Generator
             </h1>
-            <p className="text-secondary">Generate advanced study materials using quantum AI</p>
+            <p className="text-secondary">Generate comprehensive study materials using AI</p>
           </div>
 
           <LiquidCard holographic className="max-w-2xl mx-auto">
@@ -132,20 +132,20 @@ const NotesComponent = ({ student, onNavigate }) => {
                 <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
                   <span className="text-sm font-bold">⚡</span>
                 </div>
-                <h2 className="text-xl font-bold text-primary">Neural Parameters</h2>
+                <h2 className="text-xl font-bold text-primary">Note Generation Settings</h2>
               </div>
 
               <div className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-secondary mb-2">
-                    Subject Domain
+                    Subject
                   </label>
                   <LiquidSelect
                     value={generateForm.subject}
                     onChange={(e) => setGenerateForm({...generateForm, subject: e.target.value})}
-                    placeholder="Select subject domain..."
+                    placeholder="Select subject..."
                   >
-                    <option value="">Choose quantum domain...</option>
+                    <option value="">Choose a subject...</option>
                     {Object.entries(subjects).map(([key, subject]) => (
                       <option key={key} value={key}>
                         {getSubjectIcon(key)} {subject.name}
@@ -156,20 +156,20 @@ const NotesComponent = ({ student, onNavigate }) => {
 
                 <div>
                   <label className="block text-sm font-medium text-secondary mb-2">
-                    Neural Topic Focus
+                    Topic
                   </label>
                   <LiquidInput
                     type="text"
                     value={generateForm.topic}
                     onChange={(e) => setGenerateForm({...generateForm, topic: e.target.value})}
-                    placeholder="e.g., Quantum mechanics, DNA structure, Shakespeare..."
+                    placeholder="e.g., Quadratic equations, DNA structure, Shakespeare..."
                     className="w-full"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-secondary mb-2">
-                    Academic Level
+                    Grade Level
                   </label>
                   <LiquidSelect
                     value={generateForm.grade_level}
@@ -188,7 +188,7 @@ const NotesComponent = ({ student, onNavigate }) => {
                   onClick={() => setCurrentView('library')}
                   disabled={generating}
                 >
-                  Cancel Synthesis
+                  Cancel
                 </LiquidButton>
                 <LiquidButton
                   onClick={generateNotes}
@@ -198,10 +198,10 @@ const NotesComponent = ({ student, onNavigate }) => {
                   {generating ? (
                     <>
                       <div className="quantum-loader w-4 h-4 mr-2" />
-                      Synthesizing...
+                      Generating...
                     </>
                   ) : (
-                    '⚡ Synthesize Neural Notes'
+                    '⚡ Generate Study Notes'
                   )}
                 </LiquidButton>
               </div>
