@@ -272,7 +272,6 @@ const NotesComponent = ({ student, onNavigate }) => {
                 <ReactMarkdown 
                   remarkPlugins={[remarkMath]}
                   rehypePlugins={[rehypeKatex]}
-                  className="text-primary leading-relaxed"
                   components={{
                     // Custom components for better styling
                     h1: ({node, ...props}) => <h1 className="text-3xl font-bold text-primary mb-4 border-b border-primary/20 pb-2" {...props} />,
