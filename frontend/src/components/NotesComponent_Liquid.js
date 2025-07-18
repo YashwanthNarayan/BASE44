@@ -42,19 +42,19 @@ const NotesComponent = ({ student, onNavigate }) => {
 
   const generateNotes = async () => {
     if (!generateForm.subject || !generateForm.topic) {
-      alert('Please fill in all neural parameters');
+      alert('Please fill in all required fields');
       return;
     }
 
     setGenerating(true);
     try {
       await notesAPI.generate(generateForm.subject, generateForm.topic, generateForm.grade_level);
-      alert('Neural notes synthesized successfully!');
+      alert('Study notes generated successfully!');
       setGenerateForm({ subject: '', topic: '', grade_level: student?.grade_level || '10th' });
       setCurrentView('library');
     } catch (error) {
       console.error('Error generating notes:', error);
-      alert('Neural synthesis failed. Please try again.');
+      alert('Failed to generate notes. Please try again.');
     } finally {
       setGenerating(false);
     }
