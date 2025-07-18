@@ -52,6 +52,7 @@ class BotResponse(BaseModel):
     needs_input: bool
     input_type: Optional[str] = None  # 'subjects', 'duration', 'confirmation'
     suggested_actions: List[str] = []
+    context: Optional[Dict[str, Any]] = None
 
 # Initialize AI service
 ai_service = AIService()
