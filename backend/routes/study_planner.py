@@ -141,6 +141,10 @@ async def get_my_study_plans(
             "user_id": current_user["sub"]
         }).sort("created_at", -1).limit(10).to_list(length=10)
         
+        # Convert ObjectId to string for JSON serialization
+        for plan in plans:
+            plan = convert_objectid_to_str(plan)
+        
         return plans
         
     except Exception as e:
