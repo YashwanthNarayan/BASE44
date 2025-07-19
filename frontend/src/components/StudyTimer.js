@@ -254,6 +254,16 @@ const StudyTimer = ({ studyPlan, onSessionComplete, onTimerStop }) => {
                 Session {currentSessionIndex + 1} of {totalSessions}
               </div>
             </div>
+            
+            {/* Current Time Display */}
+            <div className="text-center">
+              <div className="text-lg font-semibold text-primary">
+                {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+              </div>
+              <div className="text-xs text-secondary">
+                Current Time
+              </div>
+            </div>
 
             {/* Progress Bar */}
             <div className="hidden md:flex items-center space-x-2">
