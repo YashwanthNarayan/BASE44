@@ -157,6 +157,8 @@ async def start_study_session(
 ):
     """Start a study session from a generated plan"""
     try:
+        from datetime import datetime, timedelta
+        
         db = get_database()
         
         # Get the plan
@@ -168,34 +170,58 @@ async def start_study_session(
         if not plan:
             raise HTTPException(status_code=404, detail="Study plan not found")
         
-        # Mark plan as used
+        # Update the plan with actual current time for each session
+        current_time = datetime.now()
+        updated_sessions = []
+        
+        for session in plan["pomodoro_sessions"]:
+            # Update session times to start from current time
+            session_duration = timedelta(minutes=session["duration_minutes"])
+            session["start_time"] = current_time.strftime("%H:%M")
+            session["end_time"] = (current_time + session_duration).strftime("%H:%M")
+            session["actual_start_time"] = current_time.isoformat()  # For precise timing
+            
+            updated_sessions.append(session)
+            current_time += session_duration
+        
+        # Update the plan in database with actual times
         await db[Collections.STUDY_PLANS].update_one(
             {"plan_id": plan_id},
-            {"$set": {"used": True, "started_at": datetime.utcnow()}}
+            {
+                "$set": {
+                    "used": True, 
+                    "started_at": datetime.utcnow(),
+                    "actual_start_time": datetime.now().isoformat(),
+                    "pomodoro_sessions": updated_sessions
+                }
+            }
         )
         
         # Create calendar events for each session (optional)
-        current_time = datetime.utcnow()
         calendar_events = []
         
-        for session in plan["pomodoro_sessions"]:
+        for session in updated_sessions:
             if session["session_type"] == "work":
                 event_data = {
                     "title": f"Study: {session['subject']}",
                     "description": session["description"],
-                    "start_time": current_time.isoformat(),
-                    "end_time": (current_time + timedelta(minutes=session["duration_minutes"])).isoformat(),
+                    "start_time": session.get("actual_start_time", session["start_time"]),
+                    "end_time": session["end_time"],
                     "event_type": "study",
                     "subject": session["subject"]
                 }
                 calendar_events.append(event_data)
-            
-            current_time += timedelta(minutes=session["duration_minutes"])
+        
+        # Return the updated plan with actual times
+        plan["pomodoro_sessions"] = updated_sessions
+        plan["actual_start_time"] = datetime.now().isoformat()
         
         return {
             "message": "Study session started successfully",
             "plan_id": plan_id,
-            "calendar_events": calendar_events
+            "plan": convert_objectid_to_str(plan),
+            "calendar_events": calendar_events,
+            "actual_start_time": datetime.now().isoformat()
         }
         
     except HTTPException:
