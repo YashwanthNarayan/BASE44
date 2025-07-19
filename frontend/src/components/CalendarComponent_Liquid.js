@@ -383,11 +383,23 @@ const CalendarComponent = ({ student, onNavigate }) => {
                       const eventType = eventTypes.find(t => t.value === event.event_type);
                       return (
                         <div key={index} className="p-4 bg-glass border border-primary/20 rounded-lg hover:border-neon-cyan/50 transition-colors">
-                          <div className="flex items-center mb-2">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${eventType?.color || 'bg-gray-500/20'}`}>
-                              <span className="text-lg">{eventType?.icon}</span>
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${eventType?.color || 'bg-gray-500/20'}`}>
+                                <span className="text-lg">{eventType?.icon}</span>
+                              </div>
+                              <span className="font-medium text-primary">{event.title}</span>
                             </div>
-                            <span className="font-medium text-primary">{event.title}</span>
+                            {/* Priority indicator for scheduled tests */}
+                            {event.event_type === 'review_test' && event.priority && (
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                event.priority === 'high' ? 'bg-red-500/20 text-red-400' :
+                                event.priority === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
+                                'bg-green-500/20 text-green-400'
+                              }`}>
+                                {event.priority} priority
+                              </span>
+                            )}
                           </div>
                           <div className="text-sm text-secondary">
                             {new Date(event.start_time).toLocaleDateString()} at{' '}
@@ -395,6 +407,24 @@ const CalendarComponent = ({ student, onNavigate }) => {
                           </div>
                           {event.description && (
                             <div className="text-sm text-secondary mt-2">{event.description}</div>
+                          )}
+                          {/* Additional info for scheduled tests */}
+                          {event.event_type === 'review_test' && event.original_score && (
+                            <div className="text-xs text-secondary mt-2">
+                              Original Score: {event.original_score}% • Spaced Repetition Review
+                            </div>
+                          )}
+                          {/* Action button for scheduled tests */}
+                          {event.event_type === 'review_test' && (
+                            <div className="mt-3">
+                              <LiquidButton
+                                size="sm"
+                                onClick={() => onNavigate('scheduled-tests')}
+                                className="w-full"
+                              >
+                                🚀 Take Review Test
+                              </LiquidButton>
+                            </div>
                           )}
                         </div>
                       );
