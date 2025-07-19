@@ -131,20 +131,23 @@ const StudyPlannerComponent = ({ student, onNavigate, onStartStudySession }) => 
 
   const startStudySession = async (planId) => {
     try {
-      // Get the full plan data
-      const planToStart = myPlans.find(plan => plan.plan_id === planId);
+      // Start the session in the backend (this will update times to current time)
+      const response = await studyPlannerAPI.startSession(planId);
       
-      if (!planToStart) {
+      // Get the updated plan with actual times
+      const updatedPlan = response.plan || myPlans.find(plan => plan.plan_id === planId);
+      
+      if (!updatedPlan) {
         alert('Plan not found. Please try again.');
         return;
       }
       
-      // Start the session in the backend
-      await studyPlannerAPI.startSession(planId);
+      // Add actual start time to the plan for real-time sync
+      updatedPlan.actual_start_time = response.actual_start_time || new Date().toISOString();
       
-      // Start the timer with the plan data
+      // Start the timer with the updated plan
       if (onStartStudySession) {
-        onStartStudySession(planToStart);
+        onStartStudySession(updatedPlan);
       }
       
       // Update the plan list
