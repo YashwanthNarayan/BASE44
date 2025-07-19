@@ -275,6 +275,31 @@ ROOT CAUSE IDENTIFIED AND FIXED:
 NEXT: Need to test backend endpoint `/api/practice/submit-scheduled` to ensure fix resolves the 422 validation error.
 
 backend:
+  - task: "Scheduled Test Submission Fix - Data Structure Mismatch"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/components/ScheduledTestsComponent_Liquid.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "CRITICAL BUG FIX IMPLEMENTED: Fixed the 422 Unprocessable Entity error when submitting scheduled practice tests. ROOT CAUSE: Frontend was sending TestSubmissionRequest with 'questions' field containing full question objects, but backend TestSubmissionRequest Pydantic model expects 'questions: List[str]' (question ID strings only). SOLUTION: Updated frontend in submitScheduledTest function (line 71) to send 'questions: testQuestions.map(q => q.id)' instead of 'questions: testQuestions'. The 'question_data' field already correctly sends full question objects for processing. This should resolve the validation error and allow scheduled tests to be submitted successfully."
+
+  - task: "Smart Calendar Bot Backend API Implementation" 
+    implemented: true
+    working: "NA"
+    file: "backend/routes/study_planner.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "SMART CALENDAR BOT BACKEND IMPLEMENTATION: Created comprehensive study planner backend with AI-powered Pomodoro session generation. Key features implemented: 1) Chat API endpoint (/api/study-planner/chat) for conversational study requirement gathering with multi-stage conversation flow, 2) Plan generation API (/api/study-planner/generate-plan) that creates optimized Pomodoro schedules with 25-minute work sessions and strategic breaks, 3) Session management APIs (my-plans, start-session, delete-plan) for complete study plan lifecycle, 4) Extended AI service with study_planner_response generation and pomodoro_study_plan creation, 5) New STUDY_PLANS database collection with proper indexing, 6) Intelligent subject ordering optimization alternating between analytical and creative subjects, 7) Smart break activity suggestions (short 5-min and long 15-min breaks), 8) Study tips generation and session timeline creation. Updated database collections, main.py router inclusion, and extended ai_service.py with comprehensive Pomodoro planning logic. The backend provides full conversational AI for gathering study requirements (duration, subjects, preferences) and generates scientifically-structured Pomodoro study plans with optimized subject ordering and break activities."
+
+  - task: "Practice Test Data Storage and Retrieval Investigation"
   - task: "Smart Calendar Bot Backend API Implementation" 
     implemented: true
     working: "NA"
