@@ -101,6 +101,14 @@ const StudentDashboard = ({ student, onNavigate, onLogout }) => {
       gradient: 'from-blue-500/10 to-cyan-500/10'
     },
     {
+      id: 'scheduled-tests',
+      title: 'Review Schedule',
+      description: 'Smart spaced repetition reviews',
+      icon: '📅',
+      route: 'scheduled-tests',
+      gradient: 'from-emerald-500/10 to-teal-500/10'
+    },
+    {
       id: 'mindfulness',
       title: 'Mindfulness',
       description: 'Relaxation and focus exercises',
