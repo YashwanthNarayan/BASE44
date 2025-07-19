@@ -321,12 +321,64 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
                         </div>
                       </div>
 
-                      {/* Explanation */}
-                      <div className="bg-white/5 rounded-lg p-4">
-                        <div className="text-sm text-white/60 mb-2">💡 Explanation:</div>
-                        <div className="text-white/90 text-sm leading-relaxed">
-                          {result.explanation}
+                      {/* Enhanced AI Feedback */}
+                      <div className="space-y-4">
+                        {/* Main Explanation */}
+                        <div className="bg-white/5 rounded-lg p-4">
+                          <div className="text-sm text-white/60 mb-2">💡 Explanation:</div>
+                          <div className="text-white/90 text-sm leading-relaxed">
+                            {result.explanation}
+                          </div>
                         </div>
+
+                        {/* AI Feedback (for non-MCQ questions) */}
+                        {result.question_type !== 'mcq' && result.feedback && (
+                          <div className="bg-blue-500/10 border border-blue-400/20 rounded-lg p-4">
+                            <div className="text-sm text-blue-300 mb-2">🤖 AI Teacher Feedback:</div>
+                            <div className="text-white/90 text-sm leading-relaxed mb-3">
+                              {result.feedback}
+                            </div>
+                            
+                            {/* Score Percentage for non-MCQ */}
+                            {result.score_percentage !== undefined && result.question_type !== 'mcq' && (
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-xs text-blue-300">Understanding Score:</span>
+                                <div className="bg-blue-400/20 px-2 py-1 rounded text-xs font-medium text-blue-200">
+                                  {result.score_percentage}%
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Key Concepts Identified */}
+                        {result.key_concepts_identified && result.key_concepts_identified.length > 0 && (
+                          <div className="bg-green-500/10 border border-green-400/20 rounded-lg p-4">
+                            <div className="text-sm text-green-300 mb-2">✅ Concepts You Demonstrated:</div>
+                            <div className="flex flex-wrap gap-2">
+                              {result.key_concepts_identified.map((concept, idx) => (
+                                <span key={idx} className="bg-green-400/20 text-green-200 px-2 py-1 rounded-full text-xs">
+                                  {concept}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Areas for Improvement */}
+                        {result.areas_for_improvement && result.areas_for_improvement.length > 0 && (
+                          <div className="bg-orange-500/10 border border-orange-400/20 rounded-lg p-4">
+                            <div className="text-sm text-orange-300 mb-2">📚 Areas to Focus On:</div>
+                            <ul className="space-y-1">
+                              {result.areas_for_improvement.map((area, idx) => (
+                                <li key={idx} className="text-orange-200 text-xs flex items-start gap-2">
+                                  <span className="text-orange-400">•</span>
+                                  {area}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     </LiquidCard>
                   ))}
