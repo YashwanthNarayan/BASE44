@@ -528,20 +528,29 @@ What's your study goal for today?"""
         """Extract total study duration from message"""
         import re
         
-        # Look for hour patterns
-        hour_pattern = r'(\d+(?:\.\d+)?)\s*(?:hour|hr|hours|hrs)'
-        hour_match = re.search(hour_pattern, message.lower())
+        # Look for total duration patterns
+        total_patterns = [
+            r'(?:study|work|plan)\s+for\s+(\d+(?:\.\d+)?)\s*(?:hour|hr|hours|hrs)',
+            r'(\d+(?:\.\d+)?)\s*(?:hour|hr|hours|hrs)\s+(?:total|overall|study|plan)',
+            r'(\d+)\s*(?:minute|min|minutes|mins)\s+(?:total|overall|study|plan)',
+            r'study\s+for\s+(\d+)\s*(?:minute|min|minutes|mins)',
+            r'want\s+to\s+study\s+for\s+(\d+(?:\.\d+)?)\s*(?:hour|hr|hours|hrs)',
+            r'want\s+to\s+study\s+for\s+(\d+)\s*(?:minute|min|minutes|mins)'
+        ]
         
-        if hour_match:
-            hours = float(hour_match.group(1))
-            return int(hours * 60)
+        for pattern in total_patterns:
+            match = re.search(pattern, message.lower())
+            if match:
+                duration = float(match.group(1))
+                if 'hour' in pattern:
+                    return int(duration * 60)
+                else:
+                    return int(duration)
         
-        # Look for minute patterns
-        minute_pattern = r'(\d+)\s*(?:minute|min|minutes|mins)'
-        minute_match = re.search(minute_pattern, message.lower())
-        
-        if minute_match:
-            return int(minute_match.group(1))
+        # Fallback: calculate total from individual subjects if no overall duration found
+        subjects = self._extract_subjects_from_message(message)
+        if subjects:
+            return sum(subj["duration"] for subj in subjects)
         
         return None
 
@@ -551,46 +560,81 @@ What's your study goal for today?"""
         
         subjects = []
         
-        # Common subject patterns
+        # Enhanced patterns to handle various formats
         subject_patterns = [
+            # "1 hour for math", "30 mins for physics"
+            r'(\d+(?:\.\d+)?)\s*(?:hour|hr|hours|hrs)\s+for\s+(math|mathematics|physics|chemistry|biology|english|history|geography|science)',
+            r'(\d+)\s*(?:minute|min|minutes|mins)\s+for\s+(math|mathematics|physics|chemistry|biology|english|history|geography|science)',
+            
+            # "1 hour math", "30 mins physics"  
             r'(\d+(?:\.\d+)?)\s*(?:hour|hr|hours|hrs)\s+(math|mathematics|physics|chemistry|biology|english|history|geography|science)',
             r'(\d+)\s*(?:minute|min|minutes|mins)\s+(math|mathematics|physics|chemistry|biology|english|history|geography|science)',
-            r'(math|mathematics|physics|chemistry|biology|english|history|geography|science)\s+(?:for\s+)?(\d+(?:\.\d+)?)\s*(?:hour|hr|hours|hrs)',
-            r'(math|mathematics|physics|chemistry|biology|english|history|geography|science)\s+(?:for\s+)?(\d+)\s*(?:minute|min|minutes|mins)'
+            
+            # "math for 1 hour", "physics for 30 mins"
+            r'(math|mathematics|physics|chemistry|biology|english|history|geography|science)\s+for\s+(\d+(?:\.\d+)?)\s*(?:hour|hr|hours|hrs)',
+            r'(math|mathematics|physics|chemistry|biology|english|history|geography|science)\s+for\s+(\d+)\s*(?:minute|min|minutes|mins)',
+            
+            # "math 1 hour", "physics 30 mins"
+            r'(math|mathematics|physics|chemistry|biology|english|history|geography|science)\s+(\d+(?:\.\d+)?)\s*(?:hour|hr|hours|hrs)',
+            r'(math|mathematics|physics|chemistry|biology|english|history|geography|science)\s+(\d+)\s*(?:minute|min|minutes|mins)'
         ]
         
+        # Process each pattern
         for pattern in subject_patterns:
             matches = re.findall(pattern, message.lower())
             for match in matches:
                 if len(match) == 2:
                     try:
-                        if 'hour' in pattern:
-                            if match[0].replace('.', '').isdigit():
-                                # Duration first, subject second
-                                duration = int(float(match[0]) * 60)
-                                subject = match[1]
-                            else:
-                                # Subject first, duration second
-                                subject = match[0]
-                                duration = int(float(match[1]) * 60)
+                        # Determine which element is duration and which is subject
+                        if match[0].replace('.', '').isdigit():
+                            # Duration first, subject second
+                            duration_str = match[0]
+                            subject = match[1]
                         else:
-                            if match[0].isdigit():
-                                # Duration first, subject second
-                                duration = int(match[0])
-                                subject = match[1]
-                            else:
-                                # Subject first, duration second
-                                subject = match[0]
-                                duration = int(match[1])
+                            # Subject first, duration second
+                            subject = match[0]
+                            duration_str = match[1]
                         
-                        subjects.append({
-                            "subject": subject,
-                            "duration": duration
-                        })
-                    except ValueError:
+                        # Convert duration to minutes
+                        if 'hour' in pattern:
+                            duration = int(float(duration_str) * 60)
+                        else:
+                            duration = int(duration_str)
+                        
+                        # Check if this subject already exists
+                        existing_subject = None
+                        for s in subjects:
+                            if s["subject"] == subject:
+                                existing_subject = s
+                                break
+                        
+                        if existing_subject:
+                            # Add to existing duration
+                            existing_subject["duration"] += duration
+                        else:
+                            # Add new subject
+                            subjects.append({
+                                "subject": subject,
+                                "duration": duration
+                            })
+                    except (ValueError, IndexError):
                         continue
         
-        return subjects if subjects else None
+        # Remove duplicates and clean up
+        unique_subjects = []
+        seen_subjects = set()
+        for subject in subjects:
+            if subject["subject"] not in seen_subjects:
+                unique_subjects.append(subject)
+                seen_subjects.add(subject["subject"])
+            else:
+                # Add duration to existing subject
+                for us in unique_subjects:
+                    if us["subject"] == subject["subject"]:
+                        us["duration"] += subject["duration"]
+                        break
+        
+        return unique_subjects if unique_subjects else None
 
     async def generate_pomodoro_study_plan(
         self,
