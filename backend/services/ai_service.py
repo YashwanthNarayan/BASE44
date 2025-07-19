@@ -978,20 +978,130 @@ This is a comprehensive study guide for **{topic}** in {subject} for {grade_leve
 
 > **Note:** This is a generated study guide. Please supplement with your textbook and class materials for complete understanding."""
 
-    def _generate_study_tips(self, subjects: List[Dict]) -> List[str]:
-        """Generate personalized study tips"""
-        tips = [
-            "🎯 Stay focused during each 25-minute session - avoid distractions",
-            "💧 Stay hydrated - keep a water bottle nearby",
-            "📝 Take notes during study sessions to reinforce learning",
-            "🧘 Use break time to relax and recharge your mind",
-            "📱 Put your phone in another room during study sessions",
-            "🎵 Try instrumental music or nature sounds for focus",
-            "✅ Check off completed sessions for motivation",
-            "🌟 Reward yourself after completing the full study plan"
-        ]
+    async def evaluate_answer_intelligently(
+        self,
+        question_text: str,
+        question_type: str,
+        student_answer: str,
+        correct_answer: str,
+        subject: str = "",
+        topic: str = ""
+    ) -> Dict[str, Any]:
+        """Intelligently evaluate student answers using AI for short and long answers"""
         
-        return tips[:4]  # Return top 4 tips
+        # For MCQ, use exact matching
+        if question_type == "mcq":
+            is_correct = student_answer.lower().strip() == correct_answer.lower().strip()
+            return {
+                "is_correct": is_correct,
+                "explanation": "Multiple choice answer evaluated by exact matching.",
+                "feedback": "Correct!" if is_correct else f"The correct answer is: {correct_answer}",
+                "partial_credit": 1.0 if is_correct else 0.0
+            }
+        
+        # For short and long answers, use AI evaluation
+        prompt = f"""
+        You are an expert teacher evaluating a student's answer. Please analyze the student's response and determine if it demonstrates understanding of the concept.
+
+        Question: {question_text}
+        Subject: {subject}
+        Topic: {topic}
+        
+        Correct/Expected Answer: {correct_answer}
+        Student's Answer: {student_answer}
+        
+        Please evaluate the student's answer and provide:
+        1. Whether the answer is correct (True/False)
+        2. A percentage score (0-100) representing how well the student understood the concept
+        3. Constructive feedback explaining what was correct or incorrect
+        4. If partially correct, explain what parts were right and what needs improvement
+        
+        Evaluation Criteria:
+        - Focus on conceptual understanding rather than exact wording
+        - Consider key concepts, main ideas, and critical details
+        - Be fair but thorough in your assessment
+        - For mathematical answers, check if the approach and final answer are correct
+        - For written answers, evaluate if core concepts are demonstrated
+        
+        Respond in this exact JSON format:
+        {{
+            "is_correct": true/false,
+            "score_percentage": 0-100,
+            "feedback": "Detailed feedback for the student",
+            "key_concepts_identified": ["concept1", "concept2"],
+            "areas_for_improvement": ["area1", "area2"]
+        }}
+        """
+        
+        try:
+            response = self.model.generate_content(prompt)
+            content = response.text.strip()
+            
+            # Try to extract JSON from the response
+            import json
+            import re
+            
+            # Look for JSON in the response
+            json_match = re.search(r'\{.*\}', content, re.DOTALL)
+            if json_match:
+                json_str = json_match.group()
+                evaluation = json.loads(json_str)
+                
+                return {
+                    "is_correct": evaluation.get("is_correct", False),
+                    "explanation": evaluation.get("feedback", "Answer evaluated by AI"),
+                    "feedback": evaluation.get("feedback", "Good effort!"),
+                    "partial_credit": evaluation.get("score_percentage", 0) / 100.0,
+                    "score_percentage": evaluation.get("score_percentage", 0),
+                    "key_concepts_identified": evaluation.get("key_concepts_identified", []),
+                    "areas_for_improvement": evaluation.get("areas_for_improvement", [])
+                }
+            else:
+                # Fallback if JSON parsing fails
+                return self._fallback_answer_evaluation(student_answer, correct_answer)
+                
+        except Exception as e:
+            print(f"Error in AI answer evaluation: {e}")
+            return self._fallback_answer_evaluation(student_answer, correct_answer)
+    
+    def _fallback_answer_evaluation(self, student_answer: str, correct_answer: str) -> Dict[str, Any]:
+        """Fallback evaluation when AI fails"""
+        student_lower = student_answer.lower().strip()
+        correct_lower = correct_answer.lower().strip()
+        
+        # Simple similarity check
+        if student_lower == correct_lower:
+            return {
+                "is_correct": True,
+                "explanation": "Answer matches expected response.",
+                "feedback": "Correct!",
+                "partial_credit": 1.0,
+                "score_percentage": 100
+            }
+        elif len(student_lower) > 0 and correct_lower in student_lower:
+            return {
+                "is_correct": True,
+                "explanation": "Answer contains key concepts.",
+                "feedback": "Good! Your answer includes the main concepts.",
+                "partial_credit": 0.8,
+                "score_percentage": 80
+            }
+        elif len(student_lower) > 0:
+            return {
+                "is_correct": False,
+                "explanation": "Answer does not match expected response.",
+                "feedback": f"Not quite right. The expected answer is: {correct_answer}",
+                "partial_credit": 0.2,
+                "score_percentage": 20
+            }
+        else:
+            return {
+                "is_correct": False,
+                "explanation": "No answer provided.",
+                "feedback": "Please provide an answer.",
+                "partial_credit": 0.0,
+                "score_percentage": 0
+            }
 
 # Global AI service instance
 ai_service = AIService()
