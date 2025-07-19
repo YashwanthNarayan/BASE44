@@ -234,6 +234,126 @@ async def submit_practice_test(
             detail=f"Failed to submit practice test: {str(e)}"
         )
 
+@router.post("/submit-scheduled")
+async def submit_scheduled_test(
+    test_data: TestSubmissionRequest,
+    current_user = Depends(get_current_student)
+):
+    """Submit a scheduled test with embedded question data"""
+    try:
+        db = get_database()
+        
+        # Get the questions from the request (they're embedded)
+        questions = test_data.question_data if hasattr(test_data, 'question_data') else []
+        
+        if not questions:
+            raise HTTPException(status_code=400, detail="No question data provided")
+        
+        # Process the submission the same way as regular tests
+        subject = test_data.subject or "general"
+        difficulty = getattr(test_data, 'difficulty', 'medium')
+        
+        # Calculate detailed results
+        student_answers = test_data.student_answers
+        correct_count = 0
+        total_questions = len(questions)
+        detailed_results = []
+        
+        for question in questions:
+            question_id = question.get("id", "")
+            student_answer = student_answers.get(question_id, "").strip()
+            correct_answer = question.get("correct_answer", "").strip()
+            question_type = question.get("question_type", "short_answer")
+            
+            # Use AI-powered evaluation for better accuracy
+            evaluation = await ai_service.evaluate_answer_intelligently(
+                question_text=question.get("question_text", ""),
+                question_type=question_type,
+                student_answer=student_answer,
+                correct_answer=correct_answer,
+                subject=question.get("subject", subject),
+                topic=question.get("topic", "Review")
+            )
+            
+            is_correct = evaluation["is_correct"]
+            if is_correct:
+                correct_count += 1
+            
+            # Store detailed result for this question
+            detailed_result = {
+                "question_id": question_id,
+                "question_text": question.get("question_text", ""),
+                "question_type": question_type,
+                "options": question.get("options"),
+                "student_answer": student_answer,
+                "correct_answer": correct_answer,
+                "is_correct": is_correct,
+                "explanation": evaluation.get("explanation", question.get("explanation", "No explanation available")),
+                "feedback": evaluation.get("feedback", "Good effort!"),
+                "partial_credit": evaluation.get("partial_credit", 1.0 if is_correct else 0.0),
+                "score_percentage": evaluation.get("score_percentage", 100 if is_correct else 0),
+                "key_concepts_identified": evaluation.get("key_concepts_identified", []),
+                "areas_for_improvement": evaluation.get("areas_for_improvement", []),
+                "topic": question.get("topic", "Review")
+            }
+            detailed_results.append(detailed_result)
+        
+        # Calculate overall score
+        score_percentage = (correct_count / total_questions * 100) if total_questions > 0 else 0
+        
+        # Determine grade
+        if score_percentage >= 90:
+            grade = "A"
+            xp_gained = 10
+        elif score_percentage >= 80:
+            grade = "B" 
+            xp_gained = 8
+        elif score_percentage >= 70:
+            grade = "C"
+            xp_gained = 6
+        elif score_percentage >= 60:
+            grade = "D"
+            xp_gained = 4
+        else:
+            grade = "F"
+            xp_gained = 1
+        
+        # Create attempt document
+        attempt_doc = {
+            "id": str(uuid.uuid4()),
+            "student_id": current_user["sub"],
+            "subject": subject,
+            "difficulty": difficulty,
+            "questions_count": total_questions,
+            "correct_answers": correct_count,
+            "score": score_percentage,
+            "grade": grade,
+            "xp_gained": xp_gained,
+            "time_taken": test_data.time_taken,
+            "detailed_results": detailed_results,
+            "test_type": "scheduled_review",
+            "created_at": datetime.utcnow()
+        }
+        
+        # Save attempt to database
+        await db[Collections.PRACTICE_ATTEMPTS].insert_one(attempt_doc)
+        
+        return {
+            "attempt_id": attempt_doc["id"],
+            "score": score_percentage,
+            "correct_answers": correct_count,
+            "total_questions": total_questions,
+            "grade": grade,
+            "xp_gained": xp_gained,
+            "detailed_results": detailed_results
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error submitting scheduled test: {e}")
+        raise HTTPException(status_code=500, detail="Failed to submit scheduled test")
+
 @router.get("/results/{attempt_id}")
 async def get_detailed_results(
     attempt_id: str,
