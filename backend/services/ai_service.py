@@ -680,6 +680,7 @@ What's your study goal for today?"""
         break_preferences: Optional[Dict] = None
     ) -> Dict[str, Any]:
         """Generate an optimized Pomodoro study plan"""
+        from datetime import datetime
         
         # Standard Pomodoro timings
         WORK_SESSION_DURATION = 25  # minutes
@@ -699,8 +700,14 @@ What's your study goal for today?"""
         # Optimize subject ordering using AI
         optimized_subjects = await self._optimize_subject_order(subjects_dict)
         
-        # Create Pomodoro sessions
-        current_time = preferred_start_time or "09:00"
+        # Create Pomodoro sessions - use current time if no preferred time specified
+        if preferred_start_time:
+            current_time = preferred_start_time
+        else:
+            # Use current time
+            now = datetime.now()
+            current_time = now.strftime("%H:%M")
+        
         session_count = 0
         
         for subject_info in optimized_subjects:
