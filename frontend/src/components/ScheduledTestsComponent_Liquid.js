@@ -66,13 +66,30 @@ const ScheduledTestsComponent = ({ student, onNavigate }) => {
 
   const submitScheduledTest = async () => {
     try {
-      // Submit the test using the regular practice API
-      const results = await practiceAPI.submit({
-        questions: testQuestions.map(q => q.id),
+      // Create a temporary test session to submit the answers
+      const testData = {
+        questions: testQuestions,  // Send full question objects
         student_answers: userAnswers,
         subject: selectedTest.subject,
-        time_taken: 300
+        time_taken: 300, // 5 minutes default
+        question_data: testQuestions  // Include question data for validation
+      };
+
+      // Submit using a custom endpoint for scheduled tests
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/practice/submit-scheduled`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: JSON.stringify(testData)
       });
+
+      if (!response.ok) {
+        throw new Error(`Failed to submit test: ${response.status}`);
+      }
+
+      const results = await response.json();
 
       // Mark the scheduled test as completed
       await practiceSchedulerAPI.completeScheduledTest(selectedTest.id, results.score);
