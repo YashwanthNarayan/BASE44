@@ -1104,20 +1104,151 @@ This is a comprehensive study guide for **{topic}** in {subject} for {grade_leve
                 "score_percentage": 0
             }
 
-    def _generate_study_tips(self, subjects: List[Dict]) -> List[str]:
-        """Generate personalized study tips"""
-        tips = [
-            "🎯 Stay focused during each 25-minute session - avoid distractions",
-            "💧 Stay hydrated - keep a water bottle nearby",
-            "📝 Take notes during study sessions to reinforce learning",
-            "🧘 Use break time to relax and recharge your mind",
-            "📱 Put your phone in another room during study sessions",
-            "🎵 Try instrumental music or nature sounds for focus",
-            "✅ Check off completed sessions for motivation",
-            "🌟 Reward yourself after completing the full study plan"
-        ]
+    async def generate_smart_schedule_recommendation(
+        self,
+        subject: str,
+        topics: List[str],
+        score: float,
+        difficulty: str,
+        student_id: str
+    ) -> Dict[str, Any]:
+        """Generate intelligent scheduling recommendation based on performance"""
         
-        return tips[:4]  # Return top 4 tips
+        # Determine base scheduling using spaced repetition principles
+        now = datetime.utcnow()
+        
+        # Smart scheduling algorithm based on score
+        if score >= 90:
+            # Mastery level - longer interval
+            days_to_add = 10 + (score - 90) * 0.4  # 10-14 days
+            priority = "low"
+            reason = f"Excellent performance ({score:.0f}%)! Long-term review to maintain mastery."
+            estimated_improvement = "Maintain current level and strengthen long-term retention"
+        elif score >= 80:
+            # Good understanding - medium interval  
+            days_to_add = 5 + (score - 80) * 0.5  # 5-10 days
+            priority = "medium"
+            reason = f"Good performance ({score:.0f}%). Medium-term review to strengthen understanding."
+            estimated_improvement = "Expected to reach 85-95% with focused review"
+        elif score >= 70:
+            # Adequate understanding - shorter interval
+            days_to_add = 3 + (score - 70) * 0.2  # 3-5 days
+            priority = "medium"
+            reason = f"Adequate performance ({score:.0f}%). Review needed to improve understanding."
+            estimated_improvement = "Expected to reach 80-90% with dedicated practice"
+        elif score >= 60:
+            # Poor understanding - short interval
+            days_to_add = 1 + (score - 60) * 0.2  # 1-3 days
+            priority = "high"
+            reason = f"Below expectations ({score:.0f}%). Quick review essential for improvement."
+            estimated_improvement = "Expected to reach 70-80% with intensive review"
+        else:
+            # Very poor understanding - immediate review
+            days_to_add = 0.5  # 12 hours
+            priority = "high"
+            reason = f"Needs immediate attention ({score:.0f}%). Urgent review required."
+            estimated_improvement = "Focus on fundamentals to reach 60-70%"
+        
+        # Use AI to refine the recommendation
+        prompt = f"""
+        As an expert learning coach, analyze this student's practice test performance and recommend optimal scheduling:
+        
+        Subject: {subject}
+        Topics: {', '.join(topics)}
+        Score: {score:.1f}%
+        Difficulty: {difficulty}
+        Base recommendation: Review in {days_to_add:.1f} days
+        
+        Consider these factors:
+        1. Spaced repetition principles for optimal retention
+        2. Score-based urgency (lower scores need quicker review)
+        3. Subject difficulty and complexity
+        4. Student motivation and learning patterns
+        
+        Provide:
+        1. Refined timing (adjust the {days_to_add:.1f} days if needed)
+        2. 3-5 specific study tips for improvement
+        3. Learning strategy recommendations
+        
+        Respond in JSON format:
+        {{
+            "timing_adjustment": 0.0,
+            "study_tips": ["tip1", "tip2", "tip3"],
+            "learning_strategy": "strategy description",
+            "focus_areas": ["area1", "area2"]
+        }}
+        """
+        
+        try:
+            response = self.model.generate_content(prompt)
+            content = response.text.strip()
+            
+            # Try to extract JSON from the response
+            import json
+            import re
+            
+            json_match = re.search(r'\{.*\}', content, re.DOTALL)
+            if json_match:
+                json_str = json_match.group()
+                ai_recommendation = json.loads(json_str)
+                
+                # Apply AI timing adjustment
+                timing_adjustment = ai_recommendation.get("timing_adjustment", 0)
+                final_days = max(0.25, days_to_add + timing_adjustment)  # Minimum 6 hours
+                
+                return {
+                    "recommended_date": now + timedelta(days=final_days),
+                    "priority": priority,
+                    "reason": reason,
+                    "study_tips": ai_recommendation.get("study_tips", self._get_default_study_tips(score)),
+                    "estimated_improvement": estimated_improvement,
+                    "learning_strategy": ai_recommendation.get("learning_strategy", "Review fundamentals and practice regularly"),
+                    "focus_areas": ai_recommendation.get("focus_areas", topics)
+                }
+            else:
+                # Fallback if JSON parsing fails
+                return self._get_default_schedule_recommendation(now, days_to_add, priority, reason, estimated_improvement, score)
+                
+        except Exception as e:
+            print(f"Error in AI schedule recommendation: {e}")
+            return self._get_default_schedule_recommendation(now, days_to_add, priority, reason, estimated_improvement, score)
+
+    def _get_default_schedule_recommendation(self, now, days_to_add, priority, reason, estimated_improvement, score):
+        """Fallback scheduling recommendation"""
+        return {
+            "recommended_date": now + timedelta(days=days_to_add),
+            "priority": priority,
+            "reason": reason,
+            "study_tips": self._get_default_study_tips(score),
+            "estimated_improvement": estimated_improvement,
+            "learning_strategy": "Focus on weak areas and practice regularly",
+            "focus_areas": ["Review fundamentals", "Practice more problems"]
+        }
+
+    def _get_default_study_tips(self, score: float) -> List[str]:
+        """Generate default study tips based on score"""
+        if score >= 80:
+            return [
+                "Continue practicing to maintain mastery",
+                "Try more challenging problems",
+                "Teach concepts to others to reinforce learning",
+                "Focus on application and real-world examples"
+            ]
+        elif score >= 60:
+            return [
+                "Review fundamental concepts thoroughly",
+                "Practice similar problems daily",
+                "Identify and work on specific weak areas",
+                "Seek help from teachers or tutors if needed"
+            ]
+        else:
+            return [
+                "Start with basic concepts and build up",
+                "Practice simple problems before complex ones",
+                "Create concept maps and summary notes",
+                "Schedule regular short study sessions",
+                "Don't hesitate to ask for help"
+            ]
 
 # Global AI service instance
 ai_service = AIService()
