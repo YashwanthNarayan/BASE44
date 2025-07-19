@@ -263,6 +263,17 @@
 
 user_problem_statement: "i want to make a smart calendar bot that designs a study session and stuff so that the student doesn't have to worry" - User wants a smart calendar bot that creates AI-powered study sessions using the Pomodoro technique, analyzes student needs through chat, and generates optimized study schedules automatically.
 
+## CRITICAL BUG FIX - SCHEDULED TEST SUBMISSION:
+User reported: "clicking the Complete Review button after a scheduled practice test results in 'Failed to submit test. Please try again.' error with 422 Unprocessable Entity"
+
+ROOT CAUSE IDENTIFIED AND FIXED:
+- Frontend was sending `questions: testQuestions` (full question objects) in TestSubmissionRequest
+- Backend TestSubmissionRequest model expects `questions: List[str]` (question ID strings only)
+- Fixed frontend to send `questions: testQuestions.map(q => q.id)` to match backend expectations
+- The `question_data` field was already correctly sending full question objects for processing
+
+NEXT: Need to test backend endpoint `/api/practice/submit-scheduled` to ensure fix resolves the 422 validation error.
+
 backend:
   - task: "Smart Calendar Bot Backend API Implementation" 
     implemented: true
