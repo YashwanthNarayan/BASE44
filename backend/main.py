@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from backend.utils.database import connect_to_database, close_database_connection, create_indexes
 
 # Import route modules
-from backend.routes import auth, student, practice, tutor, teacher, study_planner, notes
+from backend.routes import auth, student, practice, tutor, teacher, study_planner, notes, practice_scheduler
 from backend.routes.student import dashboard_router
 
 # Load environment variables
