@@ -109,15 +109,19 @@ async def submit_practice_test(
             question_id = question["id"]
             student_answer = student_answers.get(question_id, "").strip()
             correct_answer = question["correct_answer"].strip()
+            question_type = question.get("question_type", "mcq")
             
-            # Determine if answer is correct (case-insensitive for text answers)
-            is_correct = False
-            if question.get("question_type") == "mcq":
-                is_correct = student_answer.lower() == correct_answer.lower()
-            else:
-                # For numerical and short answers, allow for slight variations
-                is_correct = student_answer.lower() == correct_answer.lower()
+            # Use AI-powered evaluation for better accuracy
+            evaluation = await ai_service.evaluate_answer_intelligently(
+                question_text=question["question_text"],
+                question_type=question_type,
+                student_answer=student_answer,
+                correct_answer=correct_answer,
+                subject=question.get("subject", ""),
+                topic=question.get("topic", "")
+            )
             
+            is_correct = evaluation["is_correct"]
             if is_correct:
                 correct_count += 1
             
@@ -125,12 +129,17 @@ async def submit_practice_test(
             detailed_result = {
                 "question_id": question_id,
                 "question_text": question["question_text"],
-                "question_type": question["question_type"],
+                "question_type": question_type,
                 "options": question.get("options"),
                 "student_answer": student_answer,
                 "correct_answer": correct_answer,
                 "is_correct": is_correct,
-                "explanation": question.get("explanation", "No explanation available"),
+                "explanation": evaluation.get("explanation", question.get("explanation", "No explanation available")),
+                "feedback": evaluation.get("feedback", "Good effort!"),
+                "partial_credit": evaluation.get("partial_credit", 1.0 if is_correct else 0.0),
+                "score_percentage": evaluation.get("score_percentage", 100 if is_correct else 0),
+                "key_concepts_identified": evaluation.get("key_concepts_identified", []),
+                "areas_for_improvement": evaluation.get("areas_for_improvement", []),
                 "topic": question.get("topic", "General")
             }
             detailed_results.append(detailed_result)
