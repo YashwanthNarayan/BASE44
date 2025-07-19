@@ -18,7 +18,8 @@ const CalendarComponent = ({ student, onNavigate }) => {
     { value: 'study', label: 'Study Session', icon: '📚', color: 'bg-blue-500/20 border-blue-500/40' },
     { value: 'assignment', label: 'Assignment', icon: '📝', color: 'bg-green-500/20 border-green-500/40' },
     { value: 'exam', label: 'Exam', icon: '📋', color: 'bg-red-500/20 border-red-500/40' },
-    { value: 'personal', label: 'Personal', icon: '🗓️', color: 'bg-purple-500/20 border-purple-500/40' }
+    { value: 'review_test', label: 'Review Test', icon: '📅', color: 'bg-purple-500/20 border-purple-500/40' },
+    { value: 'personal', label: 'Personal', icon: '🗓️', color: 'bg-gray-500/20 border-gray-500/40' }
   ];
 
   useEffect(() => {
