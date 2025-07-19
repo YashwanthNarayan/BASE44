@@ -1103,5 +1103,20 @@ This is a comprehensive study guide for **{topic}** in {subject} for {grade_leve
                 "score_percentage": 0
             }
 
+    def _generate_study_tips(self, subjects: List[Dict]) -> List[str]:
+        """Generate personalized study tips"""
+        tips = [
+            "🎯 Stay focused during each 25-minute session - avoid distractions",
+            "💧 Stay hydrated - keep a water bottle nearby",
+            "📝 Take notes during study sessions to reinforce learning",
+            "🧘 Use break time to relax and recharge your mind",
+            "📱 Put your phone in another room during study sessions",
+            "🎵 Try instrumental music or nature sounds for focus",
+            "✅ Check off completed sessions for motivation",
+            "🌟 Reward yourself after completing the full study plan"
+        ]
+        
+        return tips[:4]  # Return top 4 tips
+
 # Global AI service instance
 ai_service = AIService()
