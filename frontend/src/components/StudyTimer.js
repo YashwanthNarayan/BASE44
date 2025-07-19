@@ -13,9 +13,44 @@ const StudyTimer = ({ studyPlan, onSessionComplete, onTimerStop }) => {
 
   useEffect(() => {
     if (studyPlan && studyPlan.pomodoro_sessions && studyPlan.pomodoro_sessions.length > 0) {
-      setTimeRemaining(studyPlan.pomodoro_sessions[0].duration_minutes * 60);
-      setIsActive(true);
-      setCurrentSessionIndex(0);
+      // Calculate which session should be active based on actual time
+      const now = new Date();
+      const actualStartTime = studyPlan.actual_start_time ? new Date(studyPlan.actual_start_time) : now;
+      
+      // Calculate elapsed time since session started
+      const elapsedSeconds = Math.floor((now - actualStartTime) / 1000);
+      
+      // Find which session should be active and how much time is remaining
+      let totalElapsed = 0;
+      let activeSessionIndex = 0;
+      let sessionStartElapsed = 0;
+      
+      for (let i = 0; i < studyPlan.pomodoro_sessions.length; i++) {
+        const sessionDuration = studyPlan.pomodoro_sessions[i].duration_minutes * 60;
+        
+        if (elapsedSeconds >= totalElapsed && elapsedSeconds < totalElapsed + sessionDuration) {
+          activeSessionIndex = i;
+          sessionStartElapsed = totalElapsed;
+          break;
+        }
+        
+        totalElapsed += sessionDuration;
+        
+        // If we've passed all sessions, stop at the last one
+        if (i === studyPlan.pomodoro_sessions.length - 1) {
+          activeSessionIndex = i;
+          sessionStartElapsed = totalElapsed - sessionDuration;
+        }
+      }
+      
+      // Calculate remaining time in current session
+      const currentSessionDuration = studyPlan.pomodoro_sessions[activeSessionIndex].duration_minutes * 60;
+      const timeIntoCurrentSession = elapsedSeconds - sessionStartElapsed;
+      const remainingTime = Math.max(0, currentSessionDuration - timeIntoCurrentSession);
+      
+      setCurrentSessionIndex(activeSessionIndex);
+      setTimeRemaining(remainingTime);
+      setIsActive(remainingTime > 0);
     }
   }, [studyPlan]);
 
