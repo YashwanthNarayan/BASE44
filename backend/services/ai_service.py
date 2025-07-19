@@ -2,6 +2,7 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 from typing import Optional, List, Dict, Any
+from datetime import datetime, timedelta
 from backend.utils.helpers import CacheUtils
 from backend.models.user import Subject, DifficultyLevel, QuestionType
 
