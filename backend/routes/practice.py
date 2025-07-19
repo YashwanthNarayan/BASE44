@@ -4,6 +4,7 @@ from backend.models.practice import PracticeTestRequest, PracticeAttempt
 from backend.models.user import Subject
 from backend.utils.security import get_current_student
 from backend.utils.database import get_database, Collections, convert_objectid_to_str
+from backend.services.ai_service import AIService
 from backend.services.ai_service import ai_service
 from backend.utils.helpers import ScoreUtils
 from datetime import datetime
