@@ -76,6 +76,7 @@ const StudyTimer = ({ studyPlan, onSessionComplete, onTimerStop }) => {
   }, [isActive, isPaused, timeRemaining]);
 
   const handleSessionComplete = () => {
+    // Check if there are more sessions
     if (currentSessionIndex < totalSessions - 1) {
       // Move to next session
       const nextIndex = currentSessionIndex + 1;
@@ -100,6 +101,46 @@ const StudyTimer = ({ studyPlan, onSessionComplete, onTimerStop }) => {
       }
     }
   };
+
+  // Add a sync function to periodically check time accuracy
+  useEffect(() => {
+    if (!isActive || !studyPlan?.actual_start_time) return;
+    
+    // Sync with actual time every 30 seconds to prevent drift
+    const syncInterval = setInterval(() => {
+      const now = new Date();
+      const actualStartTime = new Date(studyPlan.actual_start_time);
+      const elapsedSeconds = Math.floor((now - actualStartTime) / 1000);
+      
+      // Find current session and remaining time
+      let totalElapsed = 0;
+      let correctSessionIndex = 0;
+      let sessionStartElapsed = 0;
+      
+      for (let i = 0; i < studyPlan.pomodoro_sessions.length; i++) {
+        const sessionDuration = studyPlan.pomodoro_sessions[i].duration_minutes * 60;
+        
+        if (elapsedSeconds >= totalElapsed && elapsedSeconds < totalElapsed + sessionDuration) {
+          correctSessionIndex = i;
+          sessionStartElapsed = totalElapsed;
+          break;
+        }
+        
+        totalElapsed += sessionDuration;
+      }
+      
+      // Only update if we're off by more than 2 seconds
+      if (correctSessionIndex !== currentSessionIndex) {
+        setCurrentSessionIndex(correctSessionIndex);
+        const currentSessionDuration = studyPlan.pomodoro_sessions[correctSessionIndex].duration_minutes * 60;
+        const timeIntoCurrentSession = elapsedSeconds - sessionStartElapsed;
+        const correctTimeRemaining = Math.max(0, currentSessionDuration - timeIntoCurrentSession);
+        setTimeRemaining(correctTimeRemaining);
+      }
+    }, 30000); // Sync every 30 seconds
+    
+    return () => clearInterval(syncInterval);
+  }, [isActive, studyPlan?.actual_start_time, currentSessionIndex]);
 
   const showSessionNotification = (session) => {
     if (Notification.permission === 'granted') {
