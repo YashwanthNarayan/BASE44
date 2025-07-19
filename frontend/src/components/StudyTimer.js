@@ -8,8 +8,19 @@ const StudyTimer = ({ studyPlan, onSessionComplete, onTimerStop }) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
+  const [currentTime, setCurrentTime] = useState(new Date());
+
   const currentSession = studyPlan?.pomodoro_sessions?.[currentSessionIndex];
   const totalSessions = studyPlan?.pomodoro_sessions?.length || 0;
+
+  // Update current time every second
+  useEffect(() => {
+    const timeInterval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    
+    return () => clearInterval(timeInterval);
+  }, []);
 
   useEffect(() => {
     if (studyPlan && studyPlan.pomodoro_sessions && studyPlan.pomodoro_sessions.length > 0) {
