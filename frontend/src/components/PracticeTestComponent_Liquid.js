@@ -176,6 +176,31 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
                     XP Gained: <span className="font-bold text-green-400">+{testResults.xp_gained}</span>
                   </div>
                   
+                  {/* Smart Scheduling Message */}
+                  <div className="bg-glass/50 rounded-2xl p-6 mb-8 border border-accent-blue/30">
+                    <h3 className="text-lg font-semibold text-accent-blue mb-3 flex items-center">
+                      🤖 Smart Review Scheduled
+                    </h3>
+                    <p className="text-white/80 text-sm">
+                      Based on your {testResults.score}% score, your next review has been intelligently scheduled using spaced repetition principles. 
+                      {testResults.score >= 90 
+                        ? " Excellent performance! Your review is scheduled for optimal long-term retention."
+                        : testResults.score >= 70 
+                        ? " Good work! A medium-term review has been scheduled to strengthen your understanding."
+                        : " Your review is scheduled soon to help reinforce these concepts."
+                      }
+                    </p>
+                    <div className="mt-3">
+                      <LiquidButton 
+                        onClick={() => onNavigate('scheduled-tests')} 
+                        variant="secondary"
+                        size="sm"
+                      >
+                        📅 View Review Schedule
+                      </LiquidButton>
+                    </div>
+                  </div>
+                  
                   <LiquidProgress 
                     value={testResults.correct_answers} 
                     max={testResults.total_questions} 
