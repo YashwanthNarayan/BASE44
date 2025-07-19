@@ -48,7 +48,12 @@ const ScheduledTestsComponent = ({ student, onNavigate }) => {
   };
 
   const handleAnswerSubmit = (questionId, answer) => {
-    setUserAnswers(prev => ({ ...prev, [questionId]: answer }));
+    console.log('Answer submitted:', { questionId, answer, currentAnswers: userAnswers });
+    setUserAnswers(prev => {
+      const updated = { ...prev, [questionId]: answer };
+      console.log('Updated answers:', updated);
+      return updated;
+    });
   };
 
   const nextQuestion = () => {
@@ -157,19 +162,35 @@ const ScheduledTestsComponent = ({ student, onNavigate }) => {
             
             {currentQuestion.question_type === 'mcq' && currentQuestion.options && (
               <div className="space-y-3 mb-8">
-                {currentQuestion.options.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSubmit(currentQuestion.id, option)}
-                    className={`w-full p-4 rounded-xl border transition-all duration-300 text-left ${
-                      userAnswers[currentQuestion.id] === option
-                        ? 'border-accent-blue bg-accent-blue/20 text-accent-blue'
-                        : 'border-primary/20 hover:border-primary/40 hover:bg-glass'
-                    }`}
-                  >
-                    <span className="font-medium">{String.fromCharCode(65 + index)}.</span> {option}
-                  </button>
-                ))}
+                {currentQuestion.options.map((option, index) => {
+                  const isSelected = userAnswers[currentQuestion.id] === option;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSubmit(currentQuestion.id, option)}
+                      className={`w-full p-4 rounded-xl border transition-all duration-300 text-left font-medium ${
+                        isSelected
+                          ? 'border-accent-blue bg-accent-blue/30 text-accent-blue shadow-lg shadow-accent-blue/20' 
+                          : 'border-primary/20 hover:border-primary/40 hover:bg-glass/50 text-primary'
+                      }`}
+                      style={{
+                        backgroundColor: isSelected ? 'rgba(59, 130, 246, 0.2)' : undefined,
+                        borderColor: isSelected ? 'rgb(59, 130, 246)' : undefined,
+                        color: isSelected ? 'rgb(147, 197, 253)' : '#e2e8f0'
+                      }}
+                    >
+                      <span className={`font-bold mr-3 ${isSelected ? 'text-accent-blue' : 'text-secondary'}`}>
+                        {String.fromCharCode(65 + index)}.
+                      </span>
+                      <span className={isSelected ? 'text-accent-blue' : 'text-primary'}>
+                        {option}
+                      </span>
+                      {isSelected && (
+                        <span className="float-right text-accent-blue">✓</span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             )}
             

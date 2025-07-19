@@ -175,20 +175,36 @@ async def submit_practice_test(
         
         # Automatically schedule next review test based on performance
         try:
-            from backend.routes.practice_scheduler import schedule_review_test
-            
-            # Extract unique topics from the test
-            topics = list(set(q.get("topic", "General") for q in questions))
-            
-            # Schedule the next review
-            await schedule_review_test(
+            # Import AI service and create schedule recommendation
+            schedule_recommendation = await ai_service.generate_smart_schedule_recommendation(
                 subject=subject,
-                topics=topics,
+                topics=list(set(q.get("topic", "General") for q in questions)),
+                score=score_percentage,
                 difficulty=attempt_doc["difficulty"],
-                original_score=score_percentage,
-                question_count=min(total_questions, 5),  # Limit review tests to 5 questions
-                current_user=current_user
+                student_id=current_user["sub"]
             )
+            
+            # Create scheduled test record
+            scheduled_test_id = str(uuid.uuid4())
+            scheduled_test = {
+                "id": scheduled_test_id,
+                "user_id": current_user["sub"],
+                "subject": subject,
+                "topics": list(set(q.get("topic", "General") for q in questions)),
+                "difficulty": attempt_doc["difficulty"],
+                "question_count": min(total_questions, 5),  # Limit review tests to 5 questions
+                "scheduled_for": schedule_recommendation["recommended_date"],
+                "created_at": datetime.utcnow(),
+                "reason": schedule_recommendation["reason"],
+                "priority": schedule_recommendation["priority"],
+                "original_score": score_percentage,
+                "is_completed": False,
+                "study_tips": schedule_recommendation.get("study_tips", []),
+                "estimated_improvement": schedule_recommendation.get("estimated_improvement", "")
+            }
+            
+            # Save to database
+            await db[Collections.SCHEDULED_TESTS].insert_one(scheduled_test)
             
         except Exception as e:
             print(f"Warning: Failed to schedule automatic review: {e}")

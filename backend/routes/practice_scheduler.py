@@ -153,19 +153,50 @@ async def take_scheduled_test(
         if not scheduled_test:
             raise HTTPException(status_code=404, detail="Scheduled test not found")
         
-        # Generate practice test questions
-        from backend.routes.practice import practiceAPI
-        questions_response = await practiceAPI.generate({
-            "subject": scheduled_test["subject"],
-            "topics": scheduled_test["topics"],
-            "difficulty": scheduled_test["difficulty"],
-            "question_count": scheduled_test["question_count"]
-        })
+        # Generate practice test questions using AI service directly
+        from backend.services.ai_service import ai_service
+        from backend.models.user import Subject, DifficultyLevel, QuestionType
         
-        return {
-            "scheduled_test": convert_objectid_to_str(scheduled_test),
-            "questions": questions_response["questions"]
-        }
+        try:
+            # Convert string values to enums
+            subject_enum = Subject(scheduled_test["subject"])
+            difficulty_enum = DifficultyLevel(scheduled_test["difficulty"])
+            question_types = [QuestionType.MCQ, QuestionType.SHORT_ANSWER]
+            
+            questions = await ai_service.generate_practice_questions(
+                subject=subject_enum,
+                topics=scheduled_test["topics"],
+                difficulty=difficulty_enum,
+                question_count=scheduled_test["question_count"],
+                question_types=question_types
+            )
+            
+            return {
+                "scheduled_test": convert_objectid_to_str(scheduled_test),
+                "questions": questions
+            }
+            
+        except Exception as e:
+            print(f"Error generating questions for scheduled test: {e}")
+            # Fallback: create simple questions if AI fails
+            fallback_questions = [
+                {
+                    "id": f"scheduled_{test_id}_{i}",
+                    "question_text": f"Review question {i+1} for {scheduled_test['subject']} - {', '.join(scheduled_test['topics'])}",
+                    "question_type": "short_answer",
+                    "correct_answer": "Please review the topic thoroughly",
+                    "explanation": "This is a review question for reinforcement",
+                    "topic": scheduled_test["topics"][0] if scheduled_test["topics"] else "General",
+                    "subject": scheduled_test["subject"],
+                    "difficulty": scheduled_test["difficulty"]
+                }
+                for i in range(min(scheduled_test["question_count"], 3))
+            ]
+            
+            return {
+                "scheduled_test": convert_objectid_to_str(scheduled_test),
+                "questions": fallback_questions
+            }
         
     except HTTPException:
         raise
