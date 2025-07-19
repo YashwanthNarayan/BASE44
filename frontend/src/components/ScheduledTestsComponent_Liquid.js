@@ -68,7 +68,7 @@ const ScheduledTestsComponent = ({ student, onNavigate }) => {
     try {
       // Create a temporary test session to submit the answers
       const testData = {
-        questions: testQuestions,  // Send full question objects
+        questions: testQuestions.map(q => q.id),  // Send question IDs only (as strings)
         student_answers: userAnswers,
         subject: selectedTest.subject,
         time_taken: 300, // 5 minutes default
