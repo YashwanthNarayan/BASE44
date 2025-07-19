@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { calendarAPI } from '../services/api';
+import { calendarAPI, practiceSchedulerAPI } from '../services/api';
 import { LiquidCard, LiquidButton, LiquidInput, LiquidSelect } from './ui/LiquidComponents';
 import '../styles/liquid-glass.css';
 
