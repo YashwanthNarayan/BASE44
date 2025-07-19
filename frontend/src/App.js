@@ -20,6 +20,7 @@ const NotificationsComponent = React.lazy(() => import('./components/Notificatio
 const ClassesComponent = React.lazy(() => import('./components/ClassesComponent_Liquid'));
 const TeacherAnalyticsDashboard = React.lazy(() => import('./components/TeacherAnalyticsDashboard_Liquid'));
 const StudyPlannerComponent = React.lazy(() => import('./components/StudyPlannerComponent_Liquid'));
+const ScheduledTestsComponent = React.lazy(() => import('./components/ScheduledTestsComponent_Liquid'));
 
 // Teacher-specific components
 const CreateClassComponent = React.lazy(() => import('./components/CreateClassComponent_Liquid'));
