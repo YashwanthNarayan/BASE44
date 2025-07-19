@@ -367,6 +367,42 @@ Remember: You're a teacher who wants students to LEARN and UNDERSTAND, not just 
         
         # Generate appropriate response based on stage
         if stage == "greeting":
+            # Check if the first message already contains requirements
+            if duration_info and subjects_info:
+                # User provided everything in first message, skip greeting
+                requirements.update({
+                    "total_duration": duration_info,
+                    "subjects": subjects_info
+                })
+                
+                # Generate confirmation response
+                subjects_text = ", ".join([f"{subj['duration']} minutes {subj['subject']}" for subj in subjects_info])
+                
+                response = f"""Perfect! I understand you want to study for **{duration_info} minutes total** with these subjects:
+
+📚 **Your Study Plan:**
+{subjects_text}
+
+⏱️ **I'll structure this using the Pomodoro Technique:**
+• 25-minute focused study sessions
+• 5-minute breaks between sessions
+• Longer 15-minute breaks after every 4 sessions
+
+🎯 **I'll optimize the order of subjects** for maximum learning efficiency and suggest refreshing break activities.
+
+**Would you like me to generate your personalized study schedule now?**
+
+Type "yes" to create your plan or tell me if you'd like to make any changes!"""
+                
+                return {
+                    "response": response,
+                    "needs_input": True,
+                    "input_type": "confirmation",
+                    "context": {"stage": "confirmation", "requirements": requirements},
+                    "suggested_actions": ["Yes, create my plan!", "Let me make changes"]
+                }
+            
+            # Otherwise, show greeting
             response = """👋 Hello! I'm your Smart Study Planner bot! I'll help you create the perfect study schedule using the Pomodoro Technique.
 
 🎯 **Here's what I can do for you:**
