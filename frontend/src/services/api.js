@@ -299,4 +299,40 @@ export const studyPlannerAPI = {
   }
 };
 
+// Practice Scheduler API
+export const practiceSchedulerAPI = {
+  getUpcomingTests: async () => {
+    const response = await axios.get(`${API_BASE}/api/practice-scheduler/upcoming-tests`);
+    return response.data;
+  },
+  
+  takeScheduledTest: async (testId) => {
+    const response = await axios.post(`${API_BASE}/api/practice-scheduler/take-scheduled-test/${testId}`);
+    return response.data;
+  },
+  
+  completeScheduledTest: async (testId, score) => {
+    const response = await axios.post(`${API_BASE}/api/practice-scheduler/complete-scheduled-test/${testId}`, {
+      score
+    });
+    return response.data;
+  },
+  
+  cancelTest: async (testId) => {
+    const response = await axios.delete(`${API_BASE}/api/practice-scheduler/cancel-test/${testId}`);
+    return response.data;
+  },
+  
+  scheduleReview: async (subject, topics, difficulty, originalScore, questionCount) => {
+    const response = await axios.post(`${API_BASE}/api/practice-scheduler/schedule-review`, {
+      subject,
+      topics,
+      difficulty,
+      original_score: originalScore,
+      question_count: questionCount
+    });
+    return response.data;
+  }
+};
+
 export default API_BASE;
