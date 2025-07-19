@@ -236,6 +236,13 @@ function App() {
             />
           )}
 
+          {currentView === 'scheduled-tests' && (
+            <ScheduledTestsComponent 
+              student={user} 
+              onNavigate={navigate}
+            />
+          )}
+
           {currentView === 'teacher-analytics' && (
             <TeacherAnalyticsDashboard teacher={user} onNavigate={navigate} />
           )}
