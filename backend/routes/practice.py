@@ -170,7 +170,29 @@ async def submit_practice_test(
             "completed_at": datetime.utcnow()
         }
         
+        # Save attempt to database
         await db[Collections.PRACTICE_ATTEMPTS].insert_one(attempt_doc)
+        
+        # Automatically schedule next review test based on performance
+        try:
+            from backend.routes.practice_scheduler import schedule_review_test
+            
+            # Extract unique topics from the test
+            topics = list(set(q.get("topic", "General") for q in questions))
+            
+            # Schedule the next review
+            await schedule_review_test(
+                subject=subject,
+                topics=topics,
+                difficulty=attempt_doc["difficulty"],
+                original_score=score_percentage,
+                question_count=min(total_questions, 5),  # Limit review tests to 5 questions
+                current_user=current_user
+            )
+            
+        except Exception as e:
+            print(f"Warning: Failed to schedule automatic review: {e}")
+            # Don't fail the entire test submission if scheduling fails
         
         # Update student profile
         await update_student_stats(current_user["sub"], score_percentage, subject)
