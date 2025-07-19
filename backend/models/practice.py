@@ -42,3 +42,11 @@ class PracticeAttempt(BaseModel):
     difficulty: DifficultyLevel
     time_taken: int  # in seconds
     completed_at: datetime = Field(default_factory=datetime.utcnow)
+
+class TestSubmissionRequest(BaseModel):
+    questions: List[str]  # Question IDs
+    student_answers: Dict[str, str]  # Question ID -> Answer
+    subject: str
+    time_taken: int  # in seconds
+    difficulty: Optional[str] = "medium"
+    question_data: Optional[List[Dict[str, Any]]] = None  # For scheduled tests with embedded questions
