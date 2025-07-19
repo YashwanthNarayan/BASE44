@@ -23,7 +23,7 @@ from datetime import datetime
 from motor.motor_asyncio import AsyncIOMotorClient
 
 # Configuration
-BACKEND_URL = "https://400d3d69-721a-4d00-8fab-41a05cc88f67.preview.emergentagent.com/api"
+BACKEND_URL = "https://5dc579ef-675e-4006-84a0-6dbff9c9e674.preview.emergentagent.com/api"
 MONGO_URL = "mongodb://localhost:27017"
 DB_NAME = "test_database"
 

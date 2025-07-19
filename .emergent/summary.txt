@@ -1,72 +1,85 @@
 <analysis>
-The AI engineer's work on  initially focused on a persistent, multifaceted authentication issue that repeatedly resurfaced due to misconfigurations in frontend Axios, environment variables, and incorrect token handling (JSON.stringify adding quotes). This involved numerous debugging loops, often requiring reconciliation between backend functionality (confirmed via ) and frontend client-side issues (Axios vs. native fetch, interceptor logic). Once authentication was stabilized, the engineer pivoted to feature enhancements, including fixing inconsistent progress data (null subjects in DB), making detailed test results clickable, enhancing the basic mindfulness feature into a comprehensive wellness platform, fixing teacher dashboard analytics (wrong database collection, missing endpoints), and removing confusing neural/quantum terminology. The most recent work involves transforming the AI chatbot into a more guided, teacher-like entity and integrating practice test corrections into the chatbot.
+The AI engineer successfully guided the  application through multiple significant feature enhancements and critical bug fixes. Initially, the focus was on a pervasive authentication issue, followed by a pivot to specific user-requested features. Key milestones include the development of a Smart Calendar Bot with Pomodoro integration and real-time synchronization, a complete overhaul and implementation of the Notes feature with proper markdown and mathematical rendering, and the creation of an AI-powered Smart Spaced Repetition system for practice tests. Each major feature involved extensive full-stack development, from new backend endpoints and AI service logic to frontend components, UI adjustments, and dynamic data handling. The engineer demonstrated proficiency in debugging complex issues, including MongoDB ObjectId serialization errors and intricate AI parsing logic. The work concluded with debugging a submission issue for scheduled tests, indicating a focus on robust user experience and backend data integrity.
 </analysis>
 
 <product_requirements>
-The  application is a full-stack educational platform built with React, FastAPI, and MongoDB, nearing completion (95%). The core problem initially was a critical 401 Unauthorized error, preventing test generation.
-Key requirements include:
-1.  **Authentication Stability**: Resolve persistent Authentication expired and login issues.
-2.  **Enhanced Progress Tracking**: Display all practice test data (not just math) and enable a detailed question-by-question view upon clicking assessments.
-3.  **AI Chatbot Evolution**: Implement conversational memory, chat management (view/new/delete), high-quality message formatting (markdown, LaTeX), and transform it into a guided AI teacher that understands student patterns and avoids direct solutions.
-4.  **Mindfulness Enhancement**: Improve the basic mindfulness feature with more activities, background sounds, progress tracking, and personalization.
-5.  **Teacher Dashboard Functionality**: Fix 500 errors and ensure accurate display of class management and detailed student analytics (practice test scores, class performance).
-6.  **Terminology Refinement**: Remove confusing neural and quantum jargon, replacing it with conventional educational terms.
+The  application is a nearly complete full-stack educational platform (React, FastAPI, MongoDB) that began by resolving a critical 401 Unauthorized error preventing test generation. The user's explicit requests and the problem statement driving development are:
+
+1.  **Authentication Stability**: Ensure robust login and session management, eliminating Authentication expired issues.
+2.  **Enhanced Progress Tracking**: Display all practice test data and enable detailed question-by-question review upon clicking assessments.
+3.  **AI Chatbot Evolution**: Implement conversational memory, chat management, high-quality message formatting (markdown, LaTeX), and transform the AI chatbot into a guided, teacher-like entity that understands student patterns and avoids direct solutions.
+4.  **Mindfulness Enhancement**: Improve the basic mindfulness feature with diverse activities, background sounds, progress tracking, and personalization.
+5.  **Teacher Dashboard Functionality**: Resolve 500 errors and ensure accurate display of class management and detailed student analytics (test scores, class performance).
+6.  **Terminology Refinement**: Replace neural and quantum jargon with conventional educational terms.
 7.  **New Feature (In-progress)**: Integrate practice test results with the chatbot for guided corrections, focusing on incorrect answers and tracking strengths/weaknesses.
+8.  **Smart Calendar Bot**: Develop a bot that designs personalized study sessions using the Pomodoro technique, based on student input (e.g., duration, subjects).
+9.  **Real-Time Calendar Bot**: Ensure the study planner integrates with the actual computer time for session scheduling and tracking.
+10. **Practice Test Smart Evaluation**: Enable the AI to check short/long answers based on content meaning, not just exact matches, and fix white font in answer inputs.
+11. **Smart Spaced Repetition**: Implement an AI-powered system to automatically schedule the next practice test based on student performance (e.g., higher scores mean longer review intervals).
+12. **Calendar Integration for Scheduled Tests**: Display scheduled practice tests on the calendar component.
 </product_requirements>
 
 <key_technical_concepts>
--   **Full-stack Architecture:** React, FastAPI, MongoDB.
--   **Authentication:** JWT, , Axios interceptors (, request/response interceptors), /.
--   **AI/LLM Integration:** Google Gemini API (), conversational context.
--   **Frontend UI:** Tailwind CSS, , , , .
--   **Backend API:** Pydantic models, API routing, Motor (MongoDB driver).
--   **Error Handling:** CORS, Mixed Content (HTTP/HTTPS), JWT validation, data structure consistency.
--   **Process Management:** Supervisor for service control.
+-   **Full-stack Architecture**: React (frontend), FastAPI (backend), MongoDB (database).
+-   **Authentication**: JWT, , Axios interceptors, secure API calls.
+-   **AI/LLM Integration**: Google Gemini API (), conversational context, intelligent parsing and generation.
+-   **Frontend UI/UX**: Tailwind CSS, , , , , liquid glass design.
+-   **Backend API**: Pydantic models, API routing, Motor (MongoDB driver), UUID for IDs.
+-   **Data Handling**: MongoDB ObjectId serialization, real-time data synchronization.
+-   **Process Management**: Supervisor for service control and monitoring.
 </key_technical_concepts>
 
 <code_architecture>
-The application uses a modular full-stack architecture.
+The application employs a modular full-stack architecture with clear separation of concerns.
 
 
 
 -   ****: Entry point.
-    -   **Changes Made**: Added middleware to log incoming requests/headers for debugging.
--   ****: Authentication endpoints.
-    -   **Changes Made**: Examined for login/registration flow.
+    -   **Changes Made**: Routers for , , and  were added to integrate new API endpoints.
+-   ****: Pydantic models for practice tests.
+    -   **Changes Made**: The  model was defined/updated to include a  field, crucial for submitting scheduled tests with embedded question information.
+-   ****: **[NEW FILE]** Handles smart calendar bot APIs.
+    -   **Importance**: Defines endpoints for AI chat-based study plan generation, persistence, and retrieval (, , , ).
+    -   **Changes Made**: Implemented endpoints for creating, retrieving, and managing study plans, including ObjectId serialization fixes.
+-   ****: **[NEW FILE]** Manages study notes APIs.
+    -   **Importance**: Provides CRUD operations and AI-powered note generation endpoints (, , , ).
 -   ****: Practice test APIs.
-    -   **Changes Made**: Fixed subject storage to handle  values, ensuring  field consistency. Ensured  and  endpoints consistently return uid=0(root) gid=0(root) groups=0(root) fields (was  or missing). Removed duplicate .
--   ****: Teacher-specific APIs.
-    -   **Changes Made**: Corrected collection name from  to . Fixed  to  mapping. Added missing  and  endpoints.
--   ****: Student-specific APIs.
-    -   **Changes Made**: Added debugging to  endpoint during authentication troubleshooting.
+    -   **Changes Made**: Integrated  for smart answer evaluation. Added a new endpoint  to handle submissions for tests retrieved from the scheduler, which expects  within the request body. Also integrated automatic scheduling logic to trigger after test submission.
+-   ****: **[NEW FILE]** Manages scheduled practice tests.
+    -   **Importance**: Defines endpoints for scheduling tests based on performance (, ).
+    -   **Changes Made**: Implemented the logic for smart spaced repetition, allowing the AI to determine optimal re-test times based on scores.
 -   ****: AI logic.
-    -   **Changes Made**: Updated  to implement teacher-like Socratic guidance, learning pattern analysis, and question classification instead of direct answers. Ensured subjects are correctly set for practice questions.
--   ****: JWT validation.
-    -   **Changes Made**: Fixed  handling. Increased  to 168. Added detailed logging for authentication debugging.
+    -   **Changes Made**:
+        -   Enhanced  for study planner chat flow (greeting, requirement collection, plan generation).
+        -   Improved  and  for more robust natural language parsing.
+        -   Implemented  and related methods for study plan and scheduled test recommendations.
+        -   Integrated AI for smart answer evaluation in practice tests ().
+        -   Updated note generation to produce cleaner markdown.
+        -   Updated  to use actual current time () instead of hardcoded start times.
+        -   Re-added  (likely after an accidental removal).
 -   ****: Database collection definitions.
-    -   **Changes Made**: Verified  collection exists.
+    -   **Changes Made**: Added new collections:  for the calendar bot and  for the spaced repetition system.
 -   ****: Main React component.
-    -   **Changes Made**: Significantly refactored authentication state handling. Removed problematic Axios interceptor and simplified token validation. Updated  to use direct .
--   ****: Login/Registration UI.
-    -   **Changes Made**: Modified to store  directly in  instead of  utility to prevent  from adding quotes to the token.
--   ****: Progress UI.
-    -   **Changes Made**: Debugged and fixed the click functionality for Recent Neural Assessments by ensuring  was consistently available from the backend API. Removed temporary debug logs. Terminology updated.
+    -   **Changes Made**: Integrated new routes and navigation links for  and . Added  and passed necessary props for session management.
+-   ****: **[NEW FILE]** AI-powered study session planner UI.
+    -   **Importance**: Provides the chat interface for planning study sessions, displaying generated plans, and initiating study sessions.
+-   ****: **[NEW FILE]** Persistent timer for study sessions.
+    -   **Importance**: Displays current session type, remaining time, and overall progress, synchronized with real computer time. Provides controls (pause, skip, stop).
+    -   **Changes Made**: Implemented real-time clock functionality, session tracking, and display updates.
+-   ****: Notes UI.
+    -   **Changes Made**: Integrated with the new notes backend API. Refactored to properly render markdown and LaTeX content using , , . Terminology updated.
 -   ****: Practice test UI.
-    -   **Changes Made**: Updated  to include the  in the submission data. Terminology updated. Started adding Get Help with Mistakes button.
--   ****: Mindfulness UI.
-    -   **Changes Made**: Massively enhanced with 15+ new activities, background sounds, progress tracking, achievements, and smart recommendations. Terminology updated.
--   ****: AI Tutor UI.
-    -   **Changes Made**: Updated welcome message, interface labels, and added teaching prompts to align with the new AI teacher persona. Terminology updated.
--   ****: Teacher Analytics UI.
-    -   **Changes Made**: Examined for data display issues.
+    -   **Changes Made**: Fixed font color in answer input text area. Updated to display enhanced AI feedback for short/long answers. Integrated success messages for test scheduling. Adjusted submission logic for scheduled tests.
+-   ****: Reusable UI components.
+    -   **Changes Made**: Modified  component to ensure dropdown option text is dark and readable, fixing the white-on-white font issue.
+-   ****: **[NEW FILE]** Displays upcoming scheduled tests.
+    -   **Importance**: Provides a dashboard-like view of tests due today, this week, or later, with priority indicators and direct links to start reviews.
+-   ****: Calendar UI.
+    -   **Changes Made**: Integrated scheduled practice tests into the calendar view, displaying them as events with priority indicators and action buttons to start tests.
 -   ****: Centralized Axios calls.
-    -   **Changes Made**: Repeatedly modified  for dynamic URL handling. Added/removed/fixed Axios interceptors (removed automatic page reload on 401, removed conflicting request interceptor). Updated  to use direct .
--   ****: Utility functions.
-    -   **Changes Made**: Identified  in  as the cause of JWT token quotes issue. This utility was bypassed for token storage.
--   ****: Application constants.
-    -   **Changes Made**: Confirmed subject names were already clean; no changes needed here.
--   ****: Frontend environment variables.
-    -   **Changes Made**:  was modified multiple times (localhost, specific IP, dynamic , HTTPS) to resolve mixed content and cross-origin issues, finally set to dynamically determine based on frontend URL.
+    -   **Changes Made**: Added API calls for  (chat, generate, my plans, start session),  (generate, list, delete, favorite), and  (take scheduled test, upcoming tests). Modified existing practice API calls to align with new backend requirements (e.g., ). Updated calendar API to fetch scheduled tests.
+-   **, , **: CSS files.
+    -   **Changes Made**: Minor CSS adjustments were made to ensure proper KaTeX rendering for mathematical expressions within notes.
 </code_architecture>
 
 <pending_tasks>
@@ -74,19 +87,21 @@ The application uses a modular full-stack architecture.
 </pending_tasks>
 
 <current_work>
-Immediately before this summary, the AI engineer was tasked with a new major enhancement: enabling the AI chatbot to analyze practice test results and provide conversational corrections to students.
+Immediately before this summary request, the AI engineer was addressing an issue where clicking the Complete Review button after a scheduled practice test resulted in a Failed to submit test. Please try again. error.
 
-The specific steps being worked on are:
-1.  **Add Get Help with Mistakes button** to the practice test results view in .
-2.  Once this button is clicked, the system should:
-    *   Initiate a conversation with the AI chatbot.
-    *   Focus **only on questions the student answered incorrectly**.
-    *   Engage in a **conversational, teacher-like manner**, asking the student what they think went wrong to guide their understanding.
-    *   **Continue this conversation within the student's current subject chat session** to maintain context.
+This problem manifested as a  error on the  endpoint, indicating a **validation error** with the request data format. The AI engineer identified that the frontend was likely sending data that did not perfectly match the backend's  Pydantic model structure.
 
-The AI engineer has already started implementing the Get Help with Mistakes button in . This involves modifying the JSX to include the button and hooking up its functionality to trigger the next steps of the conversational correction flow.
+Prior to this specific issue, the engineer had successfully implemented the core smart spaced repetition system, including:
+1.  A new backend route () and database collection ().
+2.  Integration of smart scheduling logic into  to determine optimal review times based on test scores.
+3.  Automatic scheduling of the next test after a practice test submission ().
+4.  Frontend components () to display upcoming tests.
+5.  Calendar integration () to show scheduled tests.
+6.  The backend also introduced a new endpoint () and updated the  model in  to include , allowing questions to be embedded directly in the submission request.
+
+The current challenge is to diagnose and fix the precise data mismatch that leads to the 422 error, ensuring the  from the frontend aligns perfectly with the backend's expectations for scheduled test submissions.
 </current_work>
 
 <optional_next_step>
-I will continue implementing the Get Help with Mistakes button and its associated logic to initiate a conversational correction session with the AI chatbot.
+Investigate the  model and the frontend's submission payload for the  endpoint to resolve the 422 validation error.
 </optional_next_step>
