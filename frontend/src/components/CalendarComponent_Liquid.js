@@ -35,8 +35,34 @@ const CalendarComponent = ({ student, onNavigate }) => {
 
   const loadEvents = async () => {
     try {
-      const response = await calendarAPI.getEvents();
-      setEvents(response);
+      // Load regular calendar events
+      const calendarEvents = await calendarAPI.getEvents();
+      
+      // Load scheduled practice tests
+      const scheduledTests = await practiceSchedulerAPI.getUpcomingTests();
+      
+      // Convert scheduled tests to calendar event format
+      const testEvents = [];
+      Object.values(scheduledTests).flat().forEach(test => {
+        if (!test.is_completed) {
+          testEvents.push({
+            id: `scheduled-test-${test.id}`,
+            title: `📅 Review: ${test.subject} - ${test.topics.join(', ')}`,
+            event_type: 'review_test',
+            start_time: test.scheduled_for,
+            end_time: test.scheduled_for, // Point event
+            description: test.reason,
+            subject: test.subject,
+            priority: test.priority,
+            original_score: test.original_score,
+            scheduled_test_data: test // Store full test data
+          });
+        }
+      });
+      
+      // Combine all events
+      const allEvents = [...calendarEvents, ...testEvents];
+      setEvents(allEvents);
     } catch (error) {
       console.error('Error loading calendar events:', error);
     }
