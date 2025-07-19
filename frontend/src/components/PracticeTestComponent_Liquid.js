@@ -429,7 +429,11 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
               {currentQuestion.question_type !== 'mcq' && (
                 <div className="mb-8">
                   <textarea
-                    className="w-full p-6 glass rounded-2xl text-white placeholder-white/40 border border-white/20 focus:border-white/40 focus:glass-strong transition-all duration-300"
+                    className="w-full p-6 glass rounded-2xl text-primary placeholder-secondary border border-primary/20 focus:border-accent-blue/40 focus:glass-strong transition-all duration-300 bg-glass/80"
+                    style={{
+                      color: '#e2e8f0', // Ensure text is always light colored
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)' // Slight background to improve contrast
+                    }}
                     rows="6"
                     placeholder="Enter your answer here..."
                     value={userAnswers[currentQuestion.id] || ''}
