@@ -60,6 +60,7 @@ class Collections:
     MINDFULNESS_ACTIVITIES = "mindfulness_activities"
     NOTIFICATIONS = "notifications"
     STUDY_PLANS = "study_plans"
+    SCHEDULED_TESTS = "scheduled_tests"
 
 async def create_indexes():
     """Create database indexes for better performance"""
