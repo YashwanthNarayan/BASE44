@@ -93,4 +93,9 @@ async def create_indexes():
     await db[Collections.STUDY_PLANS].create_index([("user_id", 1), ("created_at", -1)])
     await db[Collections.STUDY_PLANS].create_index("plan_id", unique=True)
     
+    # Scheduled tests indexes
+    await db[Collections.SCHEDULED_TESTS].create_index([("user_id", 1), ("scheduled_for", 1)])
+    await db[Collections.SCHEDULED_TESTS].create_index("id", unique=True)
+    await db[Collections.SCHEDULED_TESTS].create_index([("user_id", 1), ("is_completed", 1)])
+    
     print("Database indexes created successfully")
