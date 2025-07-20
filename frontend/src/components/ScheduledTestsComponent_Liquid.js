@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { practiceSchedulerAPI, practiceAPI } from '../services/api';
-import API_BASE from '../services/api';  // Import the dynamic API base URL
+import API_BASE, { practiceSchedulerAPI, practiceAPI } from '../services/api';  // Fixed import syntax
 import { LiquidCard, LiquidButton } from './ui/LiquidComponents';
 import '../styles/liquid-glass.css';
 
