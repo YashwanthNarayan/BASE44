@@ -77,7 +77,7 @@ const ScheduledTestsComponent = ({ student, onNavigate }) => {
       };
 
       // Submit using a custom endpoint for scheduled tests
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/practice/submit-scheduled`, {
+      const response = await fetch(`${API_BASE}/api/practice/submit-scheduled`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
