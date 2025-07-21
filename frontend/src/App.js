@@ -244,6 +244,13 @@ function App() {
             />
           )}
 
+          {currentView === 'strengths-weaknesses' && (
+            <StrengthsWeaknessesComponent 
+              student={user} 
+              onNavigate={navigate}
+            />
+          )}
+
           {currentView === 'teacher-analytics' && (
             <TeacherAnalyticsDashboard teacher={user} onNavigate={navigate} />
           )}
