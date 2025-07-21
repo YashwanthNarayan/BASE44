@@ -18,23 +18,35 @@ const StrengthsWeaknessesComponent = ({ student, onNavigate }) => {
     try {
       setLoading(true);
       
-      // Load all analytics data
+      // Load all analytics data with proper error handling
       const [strengthsWeaknesses, trends, subjects, insights] = await Promise.all([
         fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/strengths-weaknesses`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-        }).then(r => r.json()),
+        }).then(async r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
+          return r.json();
+        }),
         
         fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/performance-trends`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-        }).then(r => r.json()),
+        }).then(async r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
+          return r.json();
+        }),
         
         fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/subject-breakdown`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-        }).then(r => r.json()),
+        }).then(async r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
+          return r.json();
+        }),
         
         fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/learning-insights`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-        }).then(r => r.json())
+        }).then(async r => {
+          if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
+          return r.json();
+        })
       ]);
       
       setAnalyticsData(strengthsWeaknesses);
