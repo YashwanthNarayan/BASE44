@@ -208,7 +208,7 @@ async def take_scheduled_test(
 @router.post("/complete-scheduled-test/{test_id}")
 async def complete_scheduled_test(
     test_id: str,
-    score: float,
+    request: CompleteTestRequest,
     current_user = Depends(get_current_student)
 ):
     """Mark a scheduled test as completed and potentially schedule the next one"""
@@ -222,7 +222,7 @@ async def complete_scheduled_test(
                 "$set": {
                     "is_completed": True,
                     "completed_at": datetime.utcnow(),
-                    "final_score": score
+                    "actual_score": request.score  # Use score from request body
                 }
             }
         )
@@ -234,12 +234,12 @@ async def complete_scheduled_test(
         completed_test = await db[Collections.SCHEDULED_TESTS].find_one({"id": test_id})
         
         # Automatically schedule next review if score is below mastery (95%)
-        if score < 95.0:
+        if request.score < 95.0:
             await schedule_review_test(
                 subject=completed_test["subject"],
                 topics=completed_test["topics"],
                 difficulty=completed_test["difficulty"],
-                original_score=score,
+                original_score=request.score,
                 question_count=completed_test["question_count"],
                 current_user=current_user
             )
