@@ -299,7 +299,7 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
                   <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center">
                     <span className="text-sm font-bold">📋</span>
                   </div>
-                  <h2 className="text-xl font-bold text-primary">Comprehensive Neural Assessment Matrix</h2>
+                  <h2 className="text-xl font-bold text-primary">Detailed Test Results</h2>
                 </div>
                 
                 <div className="overflow-x-auto">
@@ -307,10 +307,10 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
                     <thead>
                       <tr className="border-b border-primary/20">
                         <th className="text-left p-3 text-secondary font-medium">Student Name</th>
-                        <th className="text-left p-3 text-secondary font-medium">Subject Domain</th>
-                        <th className="text-left p-3 text-secondary font-medium">Neural Score</th>
-                        <th className="text-left p-3 text-secondary font-medium">Data Points</th>
-                        <th className="text-left p-3 text-secondary font-medium">Timestamp</th>
+                        <th className="text-left p-3 text-secondary font-medium">Subject</th>
+                        <th className="text-left p-3 text-secondary font-medium">Score</th>
+                        <th className="text-left p-3 text-secondary font-medium">Questions</th>
+                        <th className="text-left p-3 text-secondary font-medium">Date</th>
                       </tr>
                     </thead>
                     <tbody>
