@@ -2979,13 +2979,644 @@ class TestStudyPlannerAPI(unittest.TestCase):
             self.fail(f"Study planner AI integration test failed: {str(e)}")
 
 
+class TestStudentAnalyticsEndpoints(unittest.TestCase):
+    """Test cases specifically for the newly implemented Student Analytics endpoints"""
+
+    def setUp(self):
+        """Set up test case - create student account with practice test data"""
+        self.student_token = None
+        self.student_id = None
+        self.student_with_data_token = None
+        self.student_with_data_id = None
+        
+        # Register student accounts
+        self.register_student_no_data()
+        self.register_student_with_data()
+        self.create_practice_test_data()
+
+    def register_student_no_data(self):
+        """Register a student with no practice test data"""
+        print("\n🔍 Setting up student account with no data for analytics testing...")
+        url = f"{API_URL}/auth/register"
+        payload = {
+            "email": f"analytics_no_data_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Priya Sharma",
+            "user_type": UserType.STUDENT.value,
+            "grade_level": GradeLevel.GRADE_10.value
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 200:
+                data = response.json()
+                self.student_token = data.get("access_token")
+                self.student_id = data.get("user", {}).get("id")
+                print(f"Registered student (no data) with ID: {self.student_id}")
+            else:
+                print(f"Failed to register student (no data): {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error registering student (no data): {str(e)}")
+
+    def register_student_with_data(self):
+        """Register a student who will have practice test data"""
+        print("\n🔍 Setting up student account with data for analytics testing...")
+        url = f"{API_URL}/auth/register"
+        payload = {
+            "email": f"analytics_with_data_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Arjun Kumar",
+            "user_type": UserType.STUDENT.value,
+            "grade_level": GradeLevel.GRADE_11.value
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 200:
+                data = response.json()
+                self.student_with_data_token = data.get("access_token")
+                self.student_with_data_id = data.get("user", {}).get("id")
+                print(f"Registered student (with data) with ID: {self.student_with_data_id}")
+            else:
+                print(f"Failed to register student (with data): {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error registering student (with data): {str(e)}")
+
+    def create_practice_test_data(self):
+        """Create comprehensive practice test data for analytics testing"""
+        print("\n🔍 Creating comprehensive practice test data for analytics...")
+        
+        if not self.student_with_data_token:
+            print("⚠️ Student with data token not available, skipping data creation")
+            return
+        
+        # Create practice tests with different subjects and performance patterns
+        test_scenarios = [
+            # Math - Strong performance (should be identified as strength)
+            (Subject.MATH.value, ["Algebra"], 88, "Strong math performance"),
+            (Subject.MATH.value, ["Geometry"], 92, "Strong math performance"),
+            (Subject.MATH.value, ["Calculus"], 85, "Strong math performance"),
+            (Subject.MATH.value, ["Statistics"], 90, "Strong math performance"),
+            
+            # Physics - Weak performance (should be identified as weakness)
+            (Subject.PHYSICS.value, ["Mechanics"], 55, "Weak physics performance"),
+            (Subject.PHYSICS.value, ["Thermodynamics"], 58, "Weak physics performance"),
+            (Subject.PHYSICS.value, ["Optics"], 52, "Weak physics performance"),
+            
+            # Chemistry - Improving performance (should show trend)
+            (Subject.CHEMISTRY.value, ["Organic Chemistry"], 65, "Improving chemistry - early"),
+            (Subject.CHEMISTRY.value, ["Inorganic Chemistry"], 72, "Improving chemistry - middle"),
+            (Subject.CHEMISTRY.value, ["Physical Chemistry"], 78, "Improving chemistry - recent"),
+            
+            # Biology - Declining performance (should show trend)
+            (Subject.BIOLOGY.value, ["Cell Biology"], 82, "Declining biology - early"),
+            (Subject.BIOLOGY.value, ["Genetics"], 75, "Declining biology - middle"),
+            (Subject.BIOLOGY.value, ["Ecology"], 68, "Declining biology - recent"),
+        ]
+        
+        created_tests = 0
+        for subject, topics, target_score, description in test_scenarios:
+            try:
+                # Generate practice test
+                gen_url = f"{API_URL}/practice/generate"
+                headers = {"Authorization": f"Bearer {self.student_with_data_token}"}
+                gen_payload = {
+                    "subject": subject,
+                    "topics": topics,
+                    "difficulty": DifficultyLevel.MEDIUM.value,
+                    "question_count": 5
+                }
+                
+                gen_response = requests.post(gen_url, json=gen_payload, headers=headers)
+                if gen_response.status_code == 200:
+                    gen_data = gen_response.json()
+                    questions = gen_data.get("questions", [])
+                    
+                    if questions:
+                        # Create student answers to achieve target score
+                        student_answers = {}
+                        correct_answers_needed = int((target_score / 100) * len(questions))
+                        
+                        for i, question in enumerate(questions):
+                            question_id = question.get("id")
+                            if i < correct_answers_needed:
+                                # Give correct answer
+                                student_answers[question_id] = question.get("correct_answer", "correct")
+                            else:
+                                # Give wrong answer
+                                student_answers[question_id] = "wrong_answer"
+                        
+                        # Submit the test
+                        submit_url = f"{API_URL}/practice/submit"
+                        submit_payload = {
+                            "questions": [q.get("id") for q in questions],
+                            "student_answers": student_answers,
+                            "subject": subject,
+                            "time_taken": 300 + (created_tests * 30)  # Vary time taken
+                        }
+                        
+                        submit_response = requests.post(submit_url, json=submit_payload, headers=headers)
+                        if submit_response.status_code == 200:
+                            submit_data = submit_response.json()
+                            actual_score = submit_data.get('score', 0)
+                            print(f"✅ Created {subject} test: {actual_score}% (target: {target_score}%) - {description}")
+                            created_tests += 1
+                            
+                            # Add small delay to ensure different timestamps
+                            time.sleep(0.5)
+                        else:
+                            print(f"❌ Failed to submit {subject} test: {submit_response.text}")
+                    else:
+                        print(f"❌ No questions generated for {subject}")
+                else:
+                    print(f"❌ Failed to generate {subject} test: {gen_response.text}")
+                    
+            except Exception as e:
+                print(f"❌ Error creating practice test for {subject}: {str(e)}")
+        
+        print(f"✅ Created {created_tests} practice tests for analytics testing")
+
+    def test_01_strengths_weaknesses_analysis_with_data(self):
+        """Test GET /api/student/analytics/strengths-weaknesses with student who has data"""
+        print("\n🔍 Testing Student Analytics - Strengths & Weaknesses Analysis (With Data)...")
+        
+        if not self.student_with_data_token:
+            self.skipTest("Student with data token not available")
+        
+        url = f"{API_URL}/student/analytics/strengths-weaknesses"
+        headers = {"Authorization": f"Bearer {self.student_with_data_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Strengths & Weaknesses Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to get strengths & weaknesses analysis")
+            data = response.json()
+            
+            # Verify response structure
+            required_fields = [
+                "strengths", "weaknesses", "improving_areas", "declining_areas",
+                "overall_performance", "recommendations", "analysis_date"
+            ]
+            
+            for field in required_fields:
+                self.assertIn(field, data, f"Field '{field}' should be present in analysis")
+            
+            # Verify data types
+            self.assertIsInstance(data.get("strengths"), list, "Strengths should be a list")
+            self.assertIsInstance(data.get("weaknesses"), list, "Weaknesses should be a list")
+            self.assertIsInstance(data.get("improving_areas"), list, "Improving areas should be a list")
+            self.assertIsInstance(data.get("declining_areas"), list, "Declining areas should be a list")
+            self.assertIsInstance(data.get("overall_performance"), dict, "Overall performance should be a dict")
+            self.assertIsInstance(data.get("recommendations"), list, "Recommendations should be a list")
+            
+            # Verify overall performance structure
+            overall = data.get("overall_performance", {})
+            performance_fields = ["average_score", "total_tests", "subjects_tested", "highest_score", "lowest_score"]
+            
+            for field in performance_fields:
+                self.assertIn(field, overall, f"Field '{field}' should be present in overall performance")
+            
+            # Verify we have meaningful data
+            total_tests = overall.get("total_tests", 0)
+            subjects_tested = overall.get("subjects_tested", 0)
+            average_score = overall.get("average_score", 0)
+            
+            self.assertGreater(total_tests, 0, "Should have practice test data")
+            self.assertGreater(subjects_tested, 0, "Should have tested multiple subjects")
+            self.assertGreater(average_score, 0, "Should have calculated average score")
+            
+            print(f"✅ Overall Performance: {total_tests} tests, {subjects_tested} subjects, {average_score}% avg")
+            
+            # Verify strengths and weaknesses logic
+            strengths = data.get("strengths", [])
+            weaknesses = data.get("weaknesses", [])
+            
+            print(f"✅ Found {len(strengths)} strengths and {len(weaknesses)} weaknesses")
+            
+            # Check if math is identified as strength (avg >= 80% with >= 3 attempts)
+            math_strength = any(s.get("subject") == "math" for s in strengths)
+            if math_strength:
+                print("✅ Math correctly identified as strength")
+            
+            # Check if physics is identified as weakness (avg <= 60% with >= 3 attempts)
+            physics_weakness = any(w.get("subject") == "physics" for w in weaknesses)
+            if physics_weakness:
+                print("✅ Physics correctly identified as weakness")
+            
+            # Verify recommendations are generated
+            recommendations = data.get("recommendations", [])
+            self.assertGreater(len(recommendations), 0, "Should have generated recommendations")
+            
+            for rec in recommendations:
+                self.assertIn("type", rec, "Recommendation should have type")
+                self.assertIn("priority", rec, "Recommendation should have priority")
+                self.assertIn("message", rec, "Recommendation should have message")
+                self.assertIn("suggested_actions", rec, "Recommendation should have suggested actions")
+            
+            print(f"✅ Generated {len(recommendations)} personalized recommendations")
+            print("✅ Strengths & Weaknesses analysis test passed")
+            
+        except Exception as e:
+            print(f"❌ Strengths & Weaknesses analysis test failed: {str(e)}")
+            self.fail(f"Strengths & Weaknesses analysis test failed: {str(e)}")
+
+    def test_02_strengths_weaknesses_analysis_no_data(self):
+        """Test GET /api/student/analytics/strengths-weaknesses with student who has no data"""
+        print("\n🔍 Testing Student Analytics - Strengths & Weaknesses Analysis (No Data)...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/student/analytics/strengths-weaknesses"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Strengths & Weaknesses (No Data) Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Should handle students with no data gracefully")
+            data = response.json()
+            
+            # Verify empty state structure
+            self.assertEqual(len(data.get("strengths", [])), 0, "Should have no strengths with no data")
+            self.assertEqual(len(data.get("weaknesses", [])), 0, "Should have no weaknesses with no data")
+            self.assertEqual(len(data.get("improving_areas", [])), 0, "Should have no improving areas with no data")
+            self.assertEqual(len(data.get("declining_areas", [])), 0, "Should have no declining areas with no data")
+            
+            # Verify overall performance shows zeros
+            overall = data.get("overall_performance", {})
+            self.assertEqual(overall.get("total_tests", -1), 0, "Should show 0 total tests")
+            self.assertEqual(overall.get("subjects_tested", -1), 0, "Should show 0 subjects tested")
+            self.assertEqual(overall.get("average_score", -1), 0, "Should show 0 average score")
+            
+            print("✅ Correctly handles student with no practice test data")
+            
+        except Exception as e:
+            print(f"❌ No data analysis test failed: {str(e)}")
+            self.fail(f"No data analysis test failed: {str(e)}")
+
+    def test_03_performance_trends_analysis(self):
+        """Test GET /api/student/analytics/performance-trends"""
+        print("\n🔍 Testing Student Analytics - Performance Trends...")
+        
+        if not self.student_with_data_token:
+            self.skipTest("Student with data token not available")
+        
+        # Test with different time periods
+        time_periods = [7, 14, 30, 60]
+        
+        for days in time_periods:
+            url = f"{API_URL}/student/analytics/performance-trends?days={days}"
+            headers = {"Authorization": f"Bearer {self.student_with_data_token}"}
+            
+            try:
+                print(f"Testing performance trends for {days} days...")
+                response = requests.get(url, headers=headers)
+                print(f"Performance Trends ({days} days) Response: {response.status_code}")
+                
+                self.assertEqual(response.status_code, 200, f"Failed to get performance trends for {days} days")
+                data = response.json()
+                
+                # Verify response structure
+                required_fields = ["trend_data", "trend_direction", "total_tests_period", "period_days"]
+                
+                for field in required_fields:
+                    self.assertIn(field, data, f"Field '{field}' should be present in trends")
+                
+                # Verify data types
+                self.assertIsInstance(data.get("trend_data"), list, "Trend data should be a list")
+                self.assertIn(data.get("trend_direction"), ["improving", "declining", "stable"], "Trend direction should be valid")
+                self.assertEqual(data.get("period_days"), days, f"Period days should match requested {days}")
+                
+                # Verify trend data structure if present
+                trend_data = data.get("trend_data", [])
+                if len(trend_data) > 0:
+                    first_trend = trend_data[0]
+                    trend_fields = ["week", "average_score", "test_count", "highest_score", "lowest_score"]
+                    
+                    for field in trend_fields:
+                        self.assertIn(field, first_trend, f"Field '{field}' should be present in trend data")
+                    
+                    print(f"✅ Found {len(trend_data)} weeks of trend data for {days} days period")
+                    print(f"✅ Trend direction: {data.get('trend_direction')}")
+                else:
+                    print(f"✅ No trend data for {days} days (expected for recent tests)")
+                
+            except Exception as e:
+                print(f"❌ Performance trends test failed for {days} days: {str(e)}")
+                self.fail(f"Performance trends test failed for {days} days: {str(e)}")
+        
+        print("✅ Performance trends analysis test passed")
+
+    def test_04_subject_breakdown_analysis(self):
+        """Test GET /api/student/analytics/subject-breakdown"""
+        print("\n🔍 Testing Student Analytics - Subject Breakdown...")
+        
+        if not self.student_with_data_token:
+            self.skipTest("Student with data token not available")
+        
+        url = f"{API_URL}/student/analytics/subject-breakdown"
+        headers = {"Authorization": f"Bearer {self.student_with_data_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Subject Breakdown Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to get subject breakdown")
+            data = response.json()
+            
+            # Verify response structure
+            required_fields = ["subject_breakdown", "total_subjects", "best_subject", "analysis_date"]
+            
+            for field in required_fields:
+                self.assertIn(field, data, f"Field '{field}' should be present in breakdown")
+            
+            # Verify data types
+            self.assertIsInstance(data.get("subject_breakdown"), list, "Subject breakdown should be a list")
+            self.assertIsInstance(data.get("total_subjects"), int, "Total subjects should be an integer")
+            
+            # Verify we have subject data
+            breakdown = data.get("subject_breakdown", [])
+            total_subjects = data.get("total_subjects", 0)
+            
+            self.assertGreater(len(breakdown), 0, "Should have subject breakdown data")
+            self.assertEqual(len(breakdown), total_subjects, "Total subjects should match breakdown length")
+            
+            print(f"✅ Found breakdown for {total_subjects} subjects")
+            
+            # Verify subject breakdown structure
+            for subject_data in breakdown:
+                subject_fields = [
+                    "subject", "subject_display", "total_tests", "average_score",
+                    "highest_score", "lowest_score", "total_time_minutes",
+                    "avg_time_per_test", "performance_grade"
+                ]
+                
+                for field in subject_fields:
+                    self.assertIn(field, subject_data, f"Field '{field}' should be present in subject data")
+                
+                # Verify data validity
+                self.assertGreater(subject_data.get("total_tests", 0), 0, "Should have tests for each subject")
+                self.assertGreaterEqual(subject_data.get("average_score", -1), 0, "Average score should be >= 0")
+                self.assertLessEqual(subject_data.get("average_score", 101), 100, "Average score should be <= 100")
+                self.assertIn(subject_data.get("performance_grade"), ["A", "B", "C", "D", "F"], "Should have valid grade")
+                
+                subject_name = subject_data.get("subject_display", "Unknown")
+                avg_score = subject_data.get("average_score", 0)
+                grade = subject_data.get("performance_grade", "?")
+                total_tests = subject_data.get("total_tests", 0)
+                
+                print(f"✅ {subject_name}: {total_tests} tests, {avg_score}% avg, Grade {grade}")
+            
+            # Verify best subject is identified
+            best_subject = data.get("best_subject")
+            if best_subject:
+                self.assertIsInstance(best_subject, dict, "Best subject should be a dict")
+                self.assertIn("subject_display", best_subject, "Best subject should have display name")
+                print(f"✅ Best subject identified: {best_subject.get('subject_display')}")
+            
+            print("✅ Subject breakdown analysis test passed")
+            
+        except Exception as e:
+            print(f"❌ Subject breakdown analysis test failed: {str(e)}")
+            self.fail(f"Subject breakdown analysis test failed: {str(e)}")
+
+    def test_05_learning_insights_analysis(self):
+        """Test GET /api/student/analytics/learning-insights"""
+        print("\n🔍 Testing Student Analytics - Learning Insights...")
+        
+        if not self.student_with_data_token:
+            self.skipTest("Student with data token not available")
+        
+        url = f"{API_URL}/student/analytics/learning-insights"
+        headers = {"Authorization": f"Bearer {self.student_with_data_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Learning Insights Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to get learning insights")
+            data = response.json()
+            
+            # Verify response structure
+            required_fields = ["insights", "study_tips", "recent_activity"]
+            
+            for field in required_fields:
+                self.assertIn(field, data, f"Field '{field}' should be present in insights")
+            
+            # Verify data types
+            self.assertIsInstance(data.get("insights"), list, "Insights should be a list")
+            self.assertIsInstance(data.get("study_tips"), list, "Study tips should be a list")
+            self.assertIsInstance(data.get("recent_activity"), dict, "Recent activity should be a dict")
+            
+            # Verify insights structure
+            insights = data.get("insights", [])
+            self.assertGreater(len(insights), 0, "Should have generated insights")
+            
+            for insight in insights:
+                insight_fields = ["type", "title", "message", "icon", "action"]
+                
+                for field in insight_fields:
+                    self.assertIn(field, insight, f"Field '{field}' should be present in insight")
+                
+                # Verify insight types are valid
+                valid_types = [
+                    "frequency", "consistency", "time_management", "variety",
+                    "progress", "encouragement", "getting_started"
+                ]
+                self.assertIn(insight.get("type"), valid_types, "Insight type should be valid")
+                
+                print(f"✅ Insight: {insight.get('title')} ({insight.get('type')})")
+            
+            # Verify study tips
+            study_tips = data.get("study_tips", [])
+            self.assertGreater(len(study_tips), 0, "Should have study tips")
+            
+            for tip in study_tips:
+                self.assertIsInstance(tip, str, "Study tip should be a string")
+                self.assertGreater(len(tip), 0, "Study tip should not be empty")
+            
+            print(f"✅ Generated {len(study_tips)} study tips")
+            
+            # Verify recent activity
+            recent_activity = data.get("recent_activity", {})
+            activity_fields = ["tests_taken", "average_score", "subjects_practiced"]
+            
+            for field in activity_fields:
+                self.assertIn(field, recent_activity, f"Field '{field}' should be present in recent activity")
+            
+            tests_taken = recent_activity.get("tests_taken", 0)
+            avg_score = recent_activity.get("average_score", 0)
+            subjects_practiced = recent_activity.get("subjects_practiced", 0)
+            
+            print(f"✅ Recent Activity: {tests_taken} tests, {avg_score}% avg, {subjects_practiced} subjects")
+            
+            print("✅ Learning insights analysis test passed")
+            
+        except Exception as e:
+            print(f"❌ Learning insights analysis test failed: {str(e)}")
+            self.fail(f"Learning insights analysis test failed: {str(e)}")
+
+    def test_06_learning_insights_no_data(self):
+        """Test GET /api/student/analytics/learning-insights with student who has no data"""
+        print("\n🔍 Testing Student Analytics - Learning Insights (No Data)...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/student/analytics/learning-insights"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Learning Insights (No Data) Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Should handle students with no data gracefully")
+            data = response.json()
+            
+            # Verify getting started message
+            insights = data.get("insights", [])
+            self.assertGreater(len(insights), 0, "Should have getting started insight")
+            
+            first_insight = insights[0]
+            self.assertEqual(first_insight.get("type"), "getting_started", "Should show getting started insight")
+            self.assertIn("Start Your Learning Journey", first_insight.get("title", ""), "Should have appropriate title")
+            
+            # Verify study tips are still provided
+            study_tips = data.get("study_tips", [])
+            self.assertGreater(len(study_tips), 0, "Should still provide study tips")
+            
+            print("✅ Correctly handles student with no data - shows getting started message")
+            
+        except Exception as e:
+            print(f"❌ Learning insights no data test failed: {str(e)}")
+            self.fail(f"Learning insights no data test failed: {str(e)}")
+
+    def test_07_authentication_requirements(self):
+        """Test that all analytics endpoints require proper authentication"""
+        print("\n🔍 Testing Student Analytics - Authentication Requirements...")
+        
+        endpoints = [
+            "/student/analytics/strengths-weaknesses",
+            "/student/analytics/performance-trends",
+            "/student/analytics/subject-breakdown",
+            "/student/analytics/learning-insights"
+        ]
+        
+        for endpoint in endpoints:
+            url = f"{API_URL}{endpoint}"
+            
+            try:
+                # Test without authentication
+                response = requests.get(url)
+                print(f"No Auth {endpoint}: {response.status_code}")
+                
+                self.assertIn(response.status_code, [401, 403], f"Endpoint {endpoint} should require authentication")
+                
+                # Test with invalid token
+                invalid_headers = {"Authorization": "Bearer invalid.token.here"}
+                invalid_response = requests.get(url, headers=invalid_headers)
+                print(f"Invalid Token {endpoint}: {invalid_response.status_code}")
+                
+                self.assertIn(invalid_response.status_code, [401, 403], f"Endpoint {endpoint} should reject invalid tokens")
+                
+            except Exception as e:
+                print(f"❌ Authentication test failed for {endpoint}: {str(e)}")
+                self.fail(f"Authentication test failed for {endpoint}: {str(e)}")
+        
+        print("✅ All analytics endpoints properly require authentication")
+
+    def test_08_comprehensive_workflow_verification(self):
+        """Test the complete workflow of all analytics endpoints working together"""
+        print("\n🔍 Testing Student Analytics - Comprehensive Workflow Verification...")
+        
+        if not self.student_with_data_token:
+            self.skipTest("Student with data token not available")
+        
+        headers = {"Authorization": f"Bearer {self.student_with_data_token}"}
+        
+        # Test all endpoints in sequence
+        endpoints_data = {}
+        
+        endpoints = [
+            ("strengths-weaknesses", "/student/analytics/strengths-weaknesses"),
+            ("performance-trends", "/student/analytics/performance-trends?days=30"),
+            ("subject-breakdown", "/student/analytics/subject-breakdown"),
+            ("learning-insights", "/student/analytics/learning-insights")
+        ]
+        
+        try:
+            for name, endpoint in endpoints:
+                url = f"{API_URL}{endpoint}"
+                response = requests.get(url, headers=headers)
+                
+                self.assertEqual(response.status_code, 200, f"Endpoint {name} should return 200")
+                data = response.json()
+                endpoints_data[name] = data
+                
+                print(f"✅ {name} endpoint working correctly")
+            
+            # Verify data consistency across endpoints
+            print("🔍 Verifying data consistency across endpoints...")
+            
+            # Get subject data from different endpoints
+            strengths_data = endpoints_data["strengths-weaknesses"]
+            breakdown_data = endpoints_data["subject-breakdown"]
+            
+            # Verify total tests consistency
+            total_tests_overall = strengths_data.get("overall_performance", {}).get("total_tests", 0)
+            total_tests_breakdown = sum(s.get("total_tests", 0) for s in breakdown_data.get("subject_breakdown", []))
+            
+            self.assertEqual(total_tests_overall, total_tests_breakdown, 
+                           "Total tests should be consistent across endpoints")
+            
+            # Verify subjects consistency
+            subjects_overall = strengths_data.get("overall_performance", {}).get("subjects_tested", 0)
+            subjects_breakdown = breakdown_data.get("total_subjects", 0)
+            
+            self.assertEqual(subjects_overall, subjects_breakdown,
+                           "Subject count should be consistent across endpoints")
+            
+            # Verify insights are relevant to performance
+            insights_data = endpoints_data["learning-insights"]
+            insights = insights_data.get("insights", [])
+            
+            # Should have insights relevant to the student's performance pattern
+            insight_types = [i.get("type") for i in insights]
+            
+            # With multiple subjects and tests, should have meaningful insights
+            self.assertGreater(len(insights), 0, "Should have generated insights")
+            
+            print("✅ Data consistency verified across all endpoints")
+            print("✅ Comprehensive workflow verification passed")
+            
+            # Print summary
+            print("\n📊 STUDENT ANALYTICS SYSTEM SUMMARY:")
+            print(f"   • Total Tests: {total_tests_overall}")
+            print(f"   • Subjects Tested: {subjects_overall}")
+            print(f"   • Strengths Identified: {len(strengths_data.get('strengths', []))}")
+            print(f"   • Weaknesses Identified: {len(strengths_data.get('weaknesses', []))}")
+            print(f"   • Recommendations Generated: {len(strengths_data.get('recommendations', []))}")
+            print(f"   • Learning Insights: {len(insights)}")
+            
+        except Exception as e:
+            print(f"❌ Comprehensive workflow verification failed: {str(e)}")
+            self.fail(f"Comprehensive workflow verification failed: {str(e)}")
+
+
 if __name__ == "__main__":
     print("🚀 Starting AIR Project K Backend Testing Suite V3.0")
     print(f"Testing against API: {API_URL}")
     print("=" * 80)
     
-    # First run the study planner tests (NEW - CURRENT FOCUS)
-    print("\n==== RUNNING STUDY PLANNER API TESTS (CURRENT FOCUS) ====\n")
+    # First run the Student Analytics tests (NEW - CURRENT FOCUS)
+    print("\n==== RUNNING STUDENT ANALYTICS API TESTS (CURRENT FOCUS) ====\n")
+    analytics_suite = unittest.TestLoader().loadTestsFromTestCase(TestStudentAnalyticsEndpoints)
+    analytics_result = unittest.TextTestRunner().run(analytics_suite)
+    
+    # Then run the study planner tests
+    print("\n==== RUNNING STUDY PLANNER API TESTS ====\n")
     study_planner_suite = unittest.TestLoader().loadTestsFromTestCase(TestStudyPlannerAPI)
     study_planner_result = unittest.TextTestRunner().run(study_planner_suite)
     
