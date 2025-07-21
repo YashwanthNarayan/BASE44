@@ -335,4 +335,27 @@ export const practiceSchedulerAPI = {
   }
 };
 
+// Student Analytics API
+export const studentAnalyticsAPI = {
+  getStrengthsWeaknesses: async () => {
+    const response = await axios.get(`${API_BASE}/api/student/analytics/strengths-weaknesses`);
+    return response.data;
+  },
+  
+  getPerformanceTrends: async (days = 30) => {
+    const response = await axios.get(`${API_BASE}/api/student/analytics/performance-trends?days=${days}`);
+    return response.data;
+  },
+  
+  getSubjectBreakdown: async () => {
+    const response = await axios.get(`${API_BASE}/api/student/analytics/subject-breakdown`);
+    return response.data;
+  },
+  
+  getLearningInsights: async () => {
+    const response = await axios.get(`${API_BASE}/api/student/analytics/learning-insights`);
+    return response.data;
+  }
+};
+
 export default API_BASE;
