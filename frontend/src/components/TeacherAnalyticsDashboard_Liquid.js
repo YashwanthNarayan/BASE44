@@ -292,7 +292,7 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
                     <tbody>
                       {analyticsData.testResults.map((test, index) => (
                         <tr key={index} className="border-b border-primary/10 hover:bg-glass transition-colors">
-                          <td className="p-3 text-primary font-medium">{test.student_id}</td>
+                          <td className="p-3 text-primary font-medium">{test.student_name || 'Unknown Student'}</td>
                           <td className="p-3 text-primary capitalize">{test.subject}</td>
                           <td className="p-3">
                             <span className={`font-bold ${getPerformanceColor(test.score)}`}>
