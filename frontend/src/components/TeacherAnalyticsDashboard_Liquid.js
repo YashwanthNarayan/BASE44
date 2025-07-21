@@ -180,30 +180,30 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
 
         {analyticsData?.overview ? (
           <>
-            {/* Neural Performance Metrics */}
+            {/* Performance Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
               <LiquidStatsCard
-                title="Neural Tests"
+                title="Total Tests"
                 value={analyticsData.overview.total_tests}
                 icon="📝"
                 gradient="from-blue-500/20 to-cyan-500/20"
-                trend="Cognitive assessments"
+                trend="Practice assessments"
               />
               
               <LiquidStatsCard
-                title="Active Minds"
+                title="Active Students"
                 value={analyticsData.overview.total_students}
-                icon="🧠"
+                icon="👥"
                 gradient="from-green-500/20 to-emerald-500/20"
-                trend="Neural connections"
+                trend="Enrolled learners"
               />
               
               <LiquidStatsCard
-                title="Neural Average"
+                title="Average Score"
                 value={`${analyticsData.overview.average_score.toFixed(1)}%`}
                 icon="📊"
                 gradient="from-purple-500/20 to-indigo-500/20"
-                trend="Cognitive performance"
+                trend="Class performance"
               />
               
               <LiquidStatsCard
@@ -217,7 +217,7 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
 
             {/* Performance Distribution & Recent Tests */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              {/* Neural Grade Distribution */}
+              {/* Grade Distribution */}
               <LiquidCard>
                 <div className="p-6">
                   <div className="flex items-center space-x-3 mb-6">
