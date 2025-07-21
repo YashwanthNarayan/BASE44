@@ -16,11 +16,11 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
   const loadAnalyticsData = async () => {
     setLoading(true);
     try {
-      // Load test results with filters
-      const testResults = await teacherAPI.getTestResults({
-        class_id: selectedClass !== 'all' ? selectedClass : undefined,
-        subject: selectedSubject !== 'all' ? selectedSubject : undefined
-      });
+      // Load test results with filters - FIX: Pass individual parameters, not object
+      const classId = selectedClass !== 'all' ? selectedClass : undefined;
+      const subject = selectedSubject !== 'all' ? selectedSubject : undefined;
+      
+      const testResults = await teacherAPI.getTestResults(classId, undefined, subject);
       
       // Load class performance data if a specific class is selected
       let classPerformance = null;
