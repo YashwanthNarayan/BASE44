@@ -50,3 +50,6 @@ class TestSubmissionRequest(BaseModel):
     time_taken: int  # in seconds
     difficulty: Optional[str] = "medium"
     question_data: Optional[List[Dict[str, Any]]] = None  # For scheduled tests with embedded questions
+
+class CompleteTestRequest(BaseModel):
+    score: float
