@@ -87,7 +87,7 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
       <div className="quantum-grid fixed inset-0 opacity-30" />
       
       <div className="relative z-10 p-6 max-w-7xl mx-auto">
-        {/* Neural Header */}
+        {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8">
           <div className="space-y-2">
             <LiquidButton
@@ -95,25 +95,25 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
               onClick={() => onNavigate('teacher-dashboard')}
               className="mb-4"
             >
-              ← Neural Command Center
+              ← Teacher Dashboard
             </LiquidButton>
             <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              📊 Advanced Neural Analytics
+              📊 Advanced Analytics
             </h1>
             <p className="text-secondary text-lg">
-              Deep cognitive performance analysis and student progression matrices
+              Comprehensive performance analysis and student progress tracking
             </p>
           </div>
         </div>
 
-        {/* Neural Filter Controls */}
+        {/* Filter Controls */}
         <LiquidCard className="mb-8" holographic>
           <div className="p-6">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center">
                 <span className="text-sm font-bold">🎯</span>
               </div>
-              <h2 className="text-xl font-semibold text-primary">Neural Filter Matrix</h2>
+              <h2 className="text-xl font-semibold text-primary">Filter Options</h2>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
