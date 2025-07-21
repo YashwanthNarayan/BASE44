@@ -74,7 +74,7 @@ class ScheduledTestCompletionFixTest:
             # Register student
             student_data = {
                 "email": f"test_{uuid.uuid4().hex[:8]}@example.com",
-                "password": "testpass123",
+                "password": "TestPass123!",
                 "name": "Test Student",
                 "user_type": "student"
             }
