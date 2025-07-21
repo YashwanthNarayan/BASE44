@@ -21,6 +21,7 @@ const ClassesComponent = React.lazy(() => import('./components/ClassesComponent_
 const TeacherAnalyticsDashboard = React.lazy(() => import('./components/TeacherAnalyticsDashboard_Liquid'));
 const StudyPlannerComponent = React.lazy(() => import('./components/StudyPlannerComponent_Liquid'));
 const ScheduledTestsComponent = React.lazy(() => import('./components/ScheduledTestsComponent_Liquid'));
+const StrengthsWeaknessesComponent = React.lazy(() => import('./components/StrengthsWeaknessesComponent_Liquid'));
 
 // Teacher-specific components
 const CreateClassComponent = React.lazy(() => import('./components/CreateClassComponent_Liquid'));
