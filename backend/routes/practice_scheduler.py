@@ -7,6 +7,7 @@ import uuid
 from backend.utils.database import get_database, Collections, convert_objectid_to_str
 from backend.utils.security import get_current_student
 from backend.services.ai_service import AIService
+from backend.models.practice import CompleteTestRequest
 
 router = APIRouter(prefix="/api/practice-scheduler", tags=["practice-scheduler"])
 
