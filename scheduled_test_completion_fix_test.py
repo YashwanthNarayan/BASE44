@@ -73,11 +73,10 @@ class ScheduledTestCompletionFixTest:
         try:
             # Register student
             student_data = {
-                "username": f"test_student_{uuid.uuid4().hex[:8]}",
                 "email": f"test_{uuid.uuid4().hex[:8]}@example.com",
                 "password": "testpass123",
-                "user_type": "student",
-                "full_name": "Test Student"
+                "name": "Test Student",
+                "user_type": "student"
             }
             
             async with self.session.post(f"{API_BASE}/api/auth/register", json=student_data) as response:
