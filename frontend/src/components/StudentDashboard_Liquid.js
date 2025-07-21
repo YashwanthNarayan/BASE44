@@ -109,6 +109,14 @@ const StudentDashboard = ({ student, onNavigate, onLogout }) => {
       gradient: 'from-emerald-500/10 to-teal-500/10'
     },
     {
+      id: 'strengths-weaknesses',
+      title: 'Learning Analytics',
+      description: 'Discover your strengths and areas for improvement',
+      icon: '🎯',
+      route: 'strengths-weaknesses',
+      gradient: 'from-amber-500/10 to-orange-500/10'
+    },
+    {
       id: 'mindfulness',
       title: 'Mindfulness',
       description: 'Relaxation and focus exercises',
