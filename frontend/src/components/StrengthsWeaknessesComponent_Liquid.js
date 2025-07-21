@@ -351,7 +351,7 @@ const StrengthsWeaknessesComponent = ({ student, onNavigate }) => {
         {/* Trends Tab */}
         {activeTab === 'trends' && trendsData && (
           <div className="space-y-6">
-            {trendsData.trend_data.length > 0 ? (
+            {trendsData.trend_data && trendsData.trend_data.length > 0 ? (
               <>
                 <LiquidCard className="p-6">
                   <div className="flex items-center space-x-3 mb-6">
