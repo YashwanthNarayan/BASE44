@@ -282,7 +282,7 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
                   <table className="w-full">
                     <thead>
                       <tr className="border-b border-primary/20">
-                        <th className="text-left p-3 text-secondary font-medium">Student Neural ID</th>
+                        <th className="text-left p-3 text-secondary font-medium">Student Name</th>
                         <th className="text-left p-3 text-secondary font-medium">Subject Domain</th>
                         <th className="text-left p-3 text-secondary font-medium">Neural Score</th>
                         <th className="text-left p-3 text-secondary font-medium">Data Points</th>
