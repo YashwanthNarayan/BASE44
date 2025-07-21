@@ -119,35 +119,59 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-secondary mb-2">
-                  Neural Class Domain
+                  Select Class
                 </label>
                 <select
                   value={selectedClass}
                   onChange={(e) => setSelectedClass(e.target.value)}
                   className="w-full p-3 bg-glass border border-primary/20 rounded-lg focus:ring-2 focus:ring-neon-cyan focus:border-transparent text-primary"
+                  style={{
+                    color: '#e2e8f0'
+                  }}
                 >
-                  <option value="all">🌐 All Neural Classes</option>
+                  <option value="all" style={{ color: '#1a202c', backgroundColor: '#ffffff' }}>
+                    📚 All Classes
+                  </option>
                   {/* Dynamic class options would go here */}
                 </select>
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-secondary mb-2">
-                  Subject Protocol
+                  Subject Filter
                 </label>
                 <select
                   value={selectedSubject}
                   onChange={(e) => setSelectedSubject(e.target.value)}
                   className="w-full p-3 bg-glass border border-primary/20 rounded-lg focus:ring-2 focus:ring-neon-cyan focus:border-transparent text-primary"
+                  style={{
+                    color: '#e2e8f0'
+                  }}
                 >
-                  <option value="all">🧠 All Subject Domains</option>
-                  <option value="math">🔢 Quantum Mathematics</option>
-                  <option value="physics">⚛️ Neural Physics</option>
-                  <option value="chemistry">🧪 Molecular Chemistry</option>
-                  <option value="biology">🧬 Bio-Neural Science</option>
-                  <option value="english">📚 Linguistic Protocols</option>
-                  <option value="history">🏛️ Temporal Archives</option>
-                  <option value="geography">🌍 Planetary Systems</option>
+                  <option value="all" style={{ color: '#1a202c', backgroundColor: '#ffffff' }}>
+                    📖 All Subjects
+                  </option>
+                  <option value="math" style={{ color: '#1a202c', backgroundColor: '#ffffff' }}>
+                    🔢 Mathematics
+                  </option>
+                  <option value="physics" style={{ color: '#1a202c', backgroundColor: '#ffffff' }}>
+                    ⚛️ Physics
+                  </option>
+                  <option value="chemistry" style={{ color: '#1a202c', backgroundColor: '#ffffff' }}>
+                    🧪 Chemistry
+                  </option>
+                  <option value="biology" style={{ color: '#1a202c', backgroundColor: '#ffffff' }}>
+                    🧬 Biology
+                  </option>
+                  <option value="english" style={{ color: '#1a202c', backgroundColor: '#ffffff' }}>
+                    📚 English
+                  </option>
+                  <option value="history" style={{ color: '#1a202c', backgroundColor: '#ffffff' }}>
+                    🏛️ History
+                  </option>
+                  <option value="geography" style={{ color: '#1a202c', backgroundColor: '#ffffff' }}>
+                    🌍 Geography
+                  </option>
                 </select>
               </div>
             </div>
