@@ -18,41 +18,105 @@ const StrengthsWeaknessesComponent = ({ student, onNavigate }) => {
     try {
       setLoading(true);
       
-      // Load all analytics data with proper error handling
-      const [strengthsWeaknesses, trends, subjects, insights] = await Promise.all([
-        fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/strengths-weaknesses`, {
+      // Load analytics data individually with graceful error handling
+      let strengthsWeaknesses = null;
+      let trends = null;
+      let subjects = null;
+      let insights = null;
+
+      // Load strengths & weaknesses data
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/strengths-weaknesses`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-        }).then(async r => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
-          return r.json();
-        }),
-        
-        fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/performance-trends`, {
+        });
+        if (response.ok) {
+          strengthsWeaknesses = await response.json();
+        } else {
+          console.warn('Failed to load strengths & weaknesses data:', response.status);
+        }
+      } catch (error) {
+        console.warn('Error loading strengths & weaknesses data:', error.message);
+      }
+
+      // Load trends data
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/performance-trends`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-        }).then(async r => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
-          return r.json();
-        }),
-        
-        fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/subject-breakdown`, {
+        });
+        if (response.ok) {
+          trends = await response.json();
+        } else {
+          console.warn('Failed to load trends data:', response.status);
+        }
+      } catch (error) {
+        console.warn('Error loading trends data:', error.message);
+      }
+
+      // Load subject breakdown data
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/subject-breakdown`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-        }).then(async r => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
-          return r.json();
-        }),
-        
-        fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/learning-insights`, {
+        });
+        if (response.ok) {
+          subjects = await response.json();
+        } else {
+          console.warn('Failed to load subject breakdown data:', response.status);
+        }
+      } catch (error) {
+        console.warn('Error loading subject breakdown data:', error.message);
+      }
+
+      // Load learning insights data
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || window.location.origin}/api/student/analytics/learning-insights`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-        }).then(async r => {
-          if (!r.ok) throw new Error(`HTTP ${r.status}: ${await r.text()}`);
-          return r.json();
-        })
-      ]);
+        });
+        if (response.ok) {
+          insights = await response.json();
+        } else {
+          console.warn('Failed to load learning insights data:', response.status);
+        }
+      } catch (error) {
+        console.warn('Error loading learning insights data:', error.message);
+      }
+
+      // Set data with fallbacks for failed calls
+      setAnalyticsData(strengthsWeaknesses || {
+        strengths: [],
+        weaknesses: [],
+        improving_areas: [],
+        declining_areas: [],
+        overall_performance: { average_score: 0, total_tests: 0, subjects_tested: 0 },
+        recommendations: []
+      });
       
-      setAnalyticsData(strengthsWeaknesses);
-      setTrendsData(trends);
-      setSubjectBreakdown(subjects);
-      setLearningInsights(insights);
+      setTrendsData(trends || {
+        trend_data: [],
+        trend_direction: 'stable',
+        total_tests_period: 0,
+        period_days: 30
+      });
+      
+      setSubjectBreakdown(subjects || {
+        subject_breakdown: [],
+        total_subjects: 0,
+        best_subject: null
+      });
+      
+      setLearningInsights(insights || {
+        insights: [{
+          type: 'getting_started',
+          title: 'Start Your Learning Journey',
+          message: 'Take some practice tests to get personalized insights and recommendations!',
+          icon: '🚀',
+          action: 'Take your first practice test to begin analyzing your learning patterns.'
+        }],
+        study_tips: [
+          'Regular practice leads to better retention',
+          'Focus on understanding concepts, not just memorizing',
+          'Review mistakes to learn from them'
+        ]
+      });
       
     } catch (error) {
       console.error('Error loading analytics:', error);
