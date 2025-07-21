@@ -238,7 +238,7 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="font-medium text-primary">
-                              Student ID: {test.student_id}
+                              {test.student_name || 'Unknown Student'}
                             </div>
                             <div className="text-sm text-secondary">
                               {test.subject} • {new Date(test.completed_at).toLocaleDateString()}
