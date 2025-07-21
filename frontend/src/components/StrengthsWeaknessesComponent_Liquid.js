@@ -367,7 +367,7 @@ const StrengthsWeaknessesComponent = ({ student, onNavigate }) => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div className="text-center p-4 bg-glass/50 rounded-xl">
                       <div className="text-2xl font-bold text-accent-blue mb-1">
-                        {trendsData.total_tests_period}
+                        {trendsData.total_tests_period || 0}
                       </div>
                       <p className="text-secondary text-sm">Tests Taken</p>
                     </div>
@@ -379,11 +379,11 @@ const StrengthsWeaknessesComponent = ({ student, onNavigate }) => {
                         {trendsData.trend_direction === 'improving' ? '↗️' :
                          trendsData.trend_direction === 'declining' ? '↘️' : '➡️'}
                       </div>
-                      <p className="text-secondary text-sm capitalize">{trendsData.trend_direction}</p>
+                      <p className="text-secondary text-sm capitalize">{trendsData.trend_direction || 'stable'}</p>
                     </div>
                     <div className="text-center p-4 bg-glass/50 rounded-xl">
                       <div className="text-2xl font-bold text-accent-green mb-1">
-                        {trendsData.trend_data.reduce((sum, week) => sum + week.test_count, 0)}
+                        {trendsData.trend_data ? trendsData.trend_data.reduce((sum, week) => sum + week.test_count, 0) : 0}
                       </div>
                       <p className="text-secondary text-sm">Weekly Average</p>
                     </div>
