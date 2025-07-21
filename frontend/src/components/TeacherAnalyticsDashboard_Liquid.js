@@ -338,12 +338,12 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
         ) : (
           <LiquidCard className="text-center p-12">
             <div className="text-6xl mb-6">📊</div>
-            <h2 className="text-2xl font-bold text-primary mb-4">Neural Analytics Matrix Empty</h2>
+            <h2 className="text-2xl font-bold text-primary mb-4">No Analytics Data Available</h2>
             <p className="text-secondary mb-8">
-              No neural assessment data detected for the selected parameters. Students need to complete cognitive assessments to generate analytics.
+              No test data found for the selected filters. Students need to complete practice tests to generate analytics.
             </p>
             <LiquidButton onClick={() => onNavigate('teacher-dashboard')}>
-              ⚡ Return to Neural Command Center
+              ← Return to Dashboard
             </LiquidButton>
           </LiquidCard>
         )}
