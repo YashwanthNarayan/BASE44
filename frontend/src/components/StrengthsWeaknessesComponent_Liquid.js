@@ -360,7 +360,7 @@ const StrengthsWeaknessesComponent = ({ student, onNavigate }) => {
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-accent-purple">Performance Trends</h2>
-                      <p className="text-secondary">Your progress over the last {trendsData.period_days} days</p>
+                      <p className="text-secondary">Your progress over the last {trendsData.period_days || 30} days</p>
                     </div>
                   </div>
                   
