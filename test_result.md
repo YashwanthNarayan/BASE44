@@ -705,8 +705,11 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus:
+    - "Progress Component Data Display Issue"
+    - "Authentication System Fix"
+  stuck_tasks:
+    - "Progress Component Data Display Issue"
   test_all: false
   test_priority: "high_first"
 
