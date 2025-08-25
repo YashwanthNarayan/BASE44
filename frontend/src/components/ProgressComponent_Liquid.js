@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { practiceAPI } from '../services/api';
+import { practiceAPI, setupAxiosAuth } from '../services/api';
 import { LiquidCard, LiquidButton, LiquidProgress, LiquidStatsCard } from './ui/LiquidComponents';
 import '../styles/liquid-glass.css';
 
