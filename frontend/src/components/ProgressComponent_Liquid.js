@@ -20,14 +20,30 @@ const ProgressComponent = ({ student, onNavigate }) => {
   const loadProgressData = async () => {
     setLoading(true);
     try {
+      // Debug: Log the current authentication state
+      const token = localStorage.getItem('access_token');
+      console.log('🔍 Progress: Loading data with token:', token ? 'Present' : 'Missing');
+      
+      // Ensure authentication is set up before making API calls
+      if (token) {
+        setupAxiosAuth(token);
+      }
+      
       const endpoint = selectedSubject === 'all' 
         ? practiceAPI.getResults()
         : practiceAPI.getStats(selectedSubject);
         
       const response = await endpoint;
+      console.log('🔍 Progress: API response received:', response);
       setProgressData(response);
     } catch (error) {
-      console.error('Error loading progress data:', error);
+      console.error('❌ Progress: Error loading progress data:', error);
+      console.error('❌ Progress: Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        url: error.config?.url
+      });
       setProgressData(null);
     } finally {
       setLoading(false);
