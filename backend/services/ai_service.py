@@ -105,6 +105,35 @@ class AIService:
             # Always return fallback questions if AI fails
             return self._generate_fallback_questions(subject, topics, question_count)
     
+    def _generate_fallback_questions(self, subject: str, topics: List[str], question_count: int) -> List[Dict[str, Any]]:
+        """Generate fallback questions when AI service fails"""
+        import uuid
+        
+        fallback_questions = []
+        topic_str = ", ".join(topics) if topics else subject
+        
+        for i in range(question_count):
+            question = {
+                "id": str(uuid.uuid4()),
+                "question_text": f"Sample {subject} question {i+1} about {topic_str}. What is the main concept you need to understand?",
+                "question_type": "mcq",
+                "options": [
+                    f"Option A: Basic concept of {topic_str}",
+                    f"Option B: Advanced application of {topic_str}",
+                    f"Option C: Related theory in {topic_str}",
+                    f"Option D: Practical example of {topic_str}"
+                ],
+                "correct_answer": "Option A: Basic concept of " + topic_str,
+                "explanation": f"This is a sample question about {topic_str}. In a real scenario, this would contain detailed explanation of the concept.",
+                "difficulty": "medium",
+                "subject": subject,
+                "topic": topics[0] if topics else subject,
+                "points": 10
+            }
+            fallback_questions.append(question)
+        
+        return fallback_questions
+    
     async def generate_tutor_response(
         self,
         message: str,
