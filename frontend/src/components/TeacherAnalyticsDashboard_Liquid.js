@@ -241,7 +241,7 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
                     <div className="w-8 h-8 rounded-full bg-gradient-accent flex items-center justify-center">
                       <span className="text-sm font-bold">📈</span>
                     </div>
-                    <h2 className="text-xl font-bold text-primary">Neural Performance Distribution</h2>
+                    <h2 className="text-xl font-bold text-primary">Performance Distribution</h2>
                   </div>
                   
                   <div className="space-y-4">
