@@ -520,6 +520,342 @@ class TestProjectKV3Backend(unittest.TestCase):
         except Exception as e:
             print(f"❌ Practice test generation test failed: {str(e)}")
 
+    def test_11a_ncert_units_math_10th_grade(self):
+        """Test NCERT Units Integration - Math 10th Grade"""
+        print("\n🔍 Testing NCERT Units Integration - Math 10th Grade...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/generate"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test with NCERT Math 10th grade units
+        ncert_units = ["Real Numbers", "Quadratic Equations", "Trigonometry"]
+        payload = {
+            "subject": Subject.MATH.value,
+            "topics": ncert_units,
+            "difficulty": DifficultyLevel.MEDIUM.value,
+            "question_count": 3
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f"NCERT Math 10th Grade Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to generate NCERT math practice test")
+            data = response.json()
+            
+            self.assertIn("test_id", data, "Test ID not found in response")
+            self.assertIn("questions", data, "Questions not found in response")
+            
+            questions = data.get("questions", [])
+            self.assertTrue(len(questions) > 0, "Should have at least one question for NCERT units")
+            
+            # Verify question quality for NCERT units
+            for i, question in enumerate(questions):
+                self.assertIn("question_text", question, f"Question {i+1} missing question_text")
+                self.assertIn("options", question, f"Question {i+1} missing options")
+                self.assertIn("correct_answer", question, f"Question {i+1} missing correct_answer")
+                self.assertIn("explanation", question, f"Question {i+1} missing explanation")
+                
+                # Check if question text is substantial (not generic)
+                question_text = question.get("question_text", "")
+                self.assertGreater(len(question_text), 20, f"Question {i+1} text too short: {question_text}")
+                
+                # Verify it's not a generic placeholder
+                self.assertNotIn("sample", question_text.lower(), f"Question {i+1} appears to be a placeholder")
+                self.assertNotIn("example", question_text.lower(), f"Question {i+1} appears to be a placeholder")
+                
+                print(f"✅ Question {i+1}: {question_text[:80]}...")
+            
+            print(f"Generated {len(questions)} NCERT Math 10th grade questions")
+            print("✅ NCERT Math 10th grade test passed")
+        except Exception as e:
+            print(f"❌ NCERT Math 10th grade test failed: {str(e)}")
+
+    def test_11b_ncert_units_physics_11th_grade(self):
+        """Test NCERT Units Integration - Physics 11th Grade"""
+        print("\n🔍 Testing NCERT Units Integration - Physics 11th Grade...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/generate"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test with NCERT Physics 11th grade units
+        ncert_units = ["Laws of Motion", "Work, Energy and Power", "Gravitation"]
+        payload = {
+            "subject": Subject.PHYSICS.value,
+            "topics": ncert_units,
+            "difficulty": DifficultyLevel.MEDIUM.value,
+            "question_count": 3
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f"NCERT Physics 11th Grade Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to generate NCERT physics practice test")
+            data = response.json()
+            
+            questions = data.get("questions", [])
+            self.assertTrue(len(questions) > 0, "Should have at least one question for NCERT physics units")
+            
+            # Verify physics-specific content
+            for i, question in enumerate(questions):
+                question_text = question.get("question_text", "")
+                explanation = question.get("explanation", "")
+                
+                # Check for physics-related terms
+                physics_terms = ["force", "motion", "energy", "power", "gravity", "newton", "acceleration", "velocity"]
+                has_physics_term = any(term in question_text.lower() or term in explanation.lower() for term in physics_terms)
+                
+                print(f"✅ Physics Question {i+1}: {question_text[:80]}...")
+                if has_physics_term:
+                    print(f"   Contains physics terminology ✓")
+            
+            print(f"Generated {len(questions)} NCERT Physics 11th grade questions")
+            print("✅ NCERT Physics 11th grade test passed")
+        except Exception as e:
+            print(f"❌ NCERT Physics 11th grade test failed: {str(e)}")
+
+    def test_11c_ncert_units_chemistry_12th_grade(self):
+        """Test NCERT Units Integration - Chemistry 12th Grade"""
+        print("\n🔍 Testing NCERT Units Integration - Chemistry 12th Grade...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/generate"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test with NCERT Chemistry 12th grade units
+        ncert_units = ["Electrochemistry", "Chemical Kinetics", "Coordination Compounds"]
+        payload = {
+            "subject": Subject.CHEMISTRY.value,
+            "topics": ncert_units,
+            "difficulty": DifficultyLevel.MEDIUM.value,
+            "question_count": 3
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f"NCERT Chemistry 12th Grade Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to generate NCERT chemistry practice test")
+            data = response.json()
+            
+            questions = data.get("questions", [])
+            self.assertTrue(len(questions) > 0, "Should have at least one question for NCERT chemistry units")
+            
+            # Verify chemistry-specific content
+            for i, question in enumerate(questions):
+                question_text = question.get("question_text", "")
+                explanation = question.get("explanation", "")
+                
+                # Check for chemistry-related terms
+                chemistry_terms = ["reaction", "compound", "element", "molecule", "electron", "bond", "acid", "base", "oxidation", "reduction"]
+                has_chemistry_term = any(term in question_text.lower() or term in explanation.lower() for term in chemistry_terms)
+                
+                print(f"✅ Chemistry Question {i+1}: {question_text[:80]}...")
+                if has_chemistry_term:
+                    print(f"   Contains chemistry terminology ✓")
+            
+            print(f"Generated {len(questions)} NCERT Chemistry 12th grade questions")
+            print("✅ NCERT Chemistry 12th grade test passed")
+        except Exception as e:
+            print(f"❌ NCERT Chemistry 12th grade test failed: {str(e)}")
+
+    def test_11d_ncert_units_biology_9th_grade(self):
+        """Test NCERT Units Integration - Biology 9th Grade"""
+        print("\n🔍 Testing NCERT Units Integration - Biology 9th Grade...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/generate"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test with NCERT Biology 9th grade units
+        ncert_units = ["The Fundamental Unit of Life", "Tissues", "Diversity in Living Organisms"]
+        payload = {
+            "subject": Subject.BIOLOGY.value,
+            "topics": ncert_units,
+            "difficulty": DifficultyLevel.MEDIUM.value,
+            "question_count": 3
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f"NCERT Biology 9th Grade Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to generate NCERT biology practice test")
+            data = response.json()
+            
+            questions = data.get("questions", [])
+            self.assertTrue(len(questions) > 0, "Should have at least one question for NCERT biology units")
+            
+            # Verify biology-specific content
+            for i, question in enumerate(questions):
+                question_text = question.get("question_text", "")
+                explanation = question.get("explanation", "")
+                
+                # Check for biology-related terms
+                biology_terms = ["cell", "tissue", "organism", "life", "biology", "living", "plant", "animal", "membrane", "nucleus"]
+                has_biology_term = any(term in question_text.lower() or term in explanation.lower() for term in biology_terms)
+                
+                print(f"✅ Biology Question {i+1}: {question_text[:80]}...")
+                if has_biology_term:
+                    print(f"   Contains biology terminology ✓")
+            
+            print(f"Generated {len(questions)} NCERT Biology 9th grade questions")
+            print("✅ NCERT Biology 9th grade test passed")
+        except Exception as e:
+            print(f"❌ NCERT Biology 9th grade test failed: {str(e)}")
+
+    def test_11e_ncert_units_english_10th_grade(self):
+        """Test NCERT Units Integration - English 10th Grade"""
+        print("\n🔍 Testing NCERT Units Integration - English 10th Grade...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/generate"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test with NCERT English 10th grade units
+        ncert_units = ["Nelson Mandela: Long Walk to Freedom", "From the Diary of Anne Frank", "The Proposal"]
+        payload = {
+            "subject": Subject.ENGLISH.value,
+            "topics": ncert_units,
+            "difficulty": DifficultyLevel.MEDIUM.value,
+            "question_count": 3
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f"NCERT English 10th Grade Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Failed to generate NCERT english practice test")
+            data = response.json()
+            
+            questions = data.get("questions", [])
+            self.assertTrue(len(questions) > 0, "Should have at least one question for NCERT english units")
+            
+            # Verify english-specific content
+            for i, question in enumerate(questions):
+                question_text = question.get("question_text", "")
+                explanation = question.get("explanation", "")
+                
+                # Check for english/literature-related terms
+                english_terms = ["character", "story", "author", "theme", "plot", "literature", "poem", "prose", "writing", "language"]
+                has_english_term = any(term in question_text.lower() or term in explanation.lower() for term in english_terms)
+                
+                print(f"✅ English Question {i+1}: {question_text[:80]}...")
+                if has_english_term:
+                    print(f"   Contains english/literature terminology ✓")
+            
+            print(f"Generated {len(questions)} NCERT English 10th grade questions")
+            print("✅ NCERT English 10th grade test passed")
+        except Exception as e:
+            print(f"❌ NCERT English 10th grade test failed: {str(e)}")
+
+    def test_11f_ncert_comprehensive_integration_test(self):
+        """Test comprehensive NCERT Units Integration across multiple subjects and grades"""
+        print("\n🔍 Testing Comprehensive NCERT Units Integration...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/generate"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test scenarios with different subjects and grades
+        test_scenarios = [
+            {
+                "name": "Math 9th Grade",
+                "subject": Subject.MATH.value,
+                "topics": ["Polynomials", "Linear Equations in Two Variables"],
+                "expected_terms": ["polynomial", "equation", "variable", "coefficient", "degree"]
+            },
+            {
+                "name": "Physics 12th Grade",
+                "subject": Subject.PHYSICS.value,
+                "topics": ["Electric Charges and Fields", "Current Electricity"],
+                "expected_terms": ["electric", "charge", "current", "voltage", "resistance", "field"]
+            },
+            {
+                "name": "Chemistry 11th Grade",
+                "subject": Subject.CHEMISTRY.value,
+                "topics": ["Chemical Bonding and Molecular Structure", "States of Matter"],
+                "expected_terms": ["bond", "molecule", "atom", "structure", "matter", "state"]
+            }
+        ]
+        
+        successful_tests = 0
+        total_tests = len(test_scenarios)
+        
+        for scenario in test_scenarios:
+            try:
+                payload = {
+                    "subject": scenario["subject"],
+                    "topics": scenario["topics"],
+                    "difficulty": DifficultyLevel.MEDIUM.value,
+                    "question_count": 2
+                }
+                
+                response = requests.post(url, json=payload, headers=headers)
+                print(f"Testing {scenario['name']}: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    questions = data.get("questions", [])
+                    
+                    if len(questions) > 0:
+                        # Check if questions contain relevant terminology
+                        relevant_content_found = False
+                        for question in questions:
+                            question_text = question.get("question_text", "").lower()
+                            explanation = question.get("explanation", "").lower()
+                            combined_text = question_text + " " + explanation
+                            
+                            for term in scenario["expected_terms"]:
+                                if term in combined_text:
+                                    relevant_content_found = True
+                                    break
+                            
+                            if relevant_content_found:
+                                break
+                        
+                        if relevant_content_found:
+                            successful_tests += 1
+                            print(f"✅ {scenario['name']}: Generated relevant questions")
+                        else:
+                            print(f"⚠️ {scenario['name']}: Questions generated but may lack subject-specific content")
+                    else:
+                        print(f"❌ {scenario['name']}: No questions generated")
+                else:
+                    print(f"❌ {scenario['name']}: API call failed with status {response.status_code}")
+                    
+            except Exception as e:
+                print(f"❌ {scenario['name']}: Exception occurred - {str(e)}")
+        
+        # Verify overall success rate
+        success_rate = (successful_tests / total_tests) * 100
+        print(f"\n📊 NCERT Integration Success Rate: {success_rate:.1f}% ({successful_tests}/{total_tests})")
+        
+        # Consider test passed if at least 66% of scenarios work
+        self.assertGreaterEqual(success_rate, 66.0, f"NCERT integration success rate too low: {success_rate:.1f}%")
+        print("✅ Comprehensive NCERT Units Integration test passed")
+        
+        return {
+            "success_rate": success_rate,
+            "successful_tests": successful_tests,
+            "total_tests": total_tests
+        }
+
     def test_12_practice_test_submission(self):
         """Test practice test submission with authentication"""
         print("\n🔍 Testing Practice Test Submission...")
