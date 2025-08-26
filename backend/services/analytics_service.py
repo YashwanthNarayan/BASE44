@@ -321,7 +321,16 @@ class StudentAnalyticsService:
             if completed_at is not None and score is not None:
                 try:
                     print(f"🔍 ANALYTICS DEBUG: Processing attempt with completed_at={completed_at}, type={type(completed_at)}")
-                    date = datetime.fromisoformat(completed_at.replace('Z', '+00:00'))
+                    
+                    # Handle both string and datetime objects
+                    if isinstance(completed_at, str):
+                        date = datetime.fromisoformat(completed_at.replace('Z', '+00:00'))
+                    elif isinstance(completed_at, datetime):
+                        date = completed_at
+                    else:
+                        print(f"🔍 ANALYTICS DEBUG: Unexpected completed_at type: {type(completed_at)}")
+                        continue
+                        
                     print(f"🔍 ANALYTICS DEBUG: Parsed date={date}, weekday={date.weekday()}, type={type(date.weekday())}")
                     week_start = date - timedelta(days=date.weekday())
                     week_key = week_start.strftime('%Y-%m-%d')
