@@ -51,23 +51,9 @@ class AIService:
     ) -> List[Dict[str, Any]]:
         """Generate practice questions using AI"""
         
-        # Create cache key with proper randomization for variety
-        import uuid
-        import time
-        
-        # Add a unique identifier to ensure question variety for each request
-        # This prevents identical questions while still allowing some caching benefits
-        unique_id = str(uuid.uuid4())[:8]  # Short unique ID
-        current_time = int(time.time())
-        
-        # Create cache key that varies per request but allows short-term caching
-        cache_key = CacheUtils.get_cache_key(
-            f"practice_v3_{subject}_{','.join(topics)}_{difficulty}_{question_count}_{unique_id}_{current_time // 300}",  # 5-minute time windows
-            subject
-        )
-        
-        # Check cache first
-        cached_response = CacheUtils.get_cached_response(cache_key)
+        # Skip caching for practice questions to ensure variety
+        # Users should get different questions each time for better learning experience
+        cached_response = None
         if cached_response:
             try:
                 import json
