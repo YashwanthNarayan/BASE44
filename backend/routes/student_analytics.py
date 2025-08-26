@@ -49,6 +49,12 @@ async def get_performance_trends(
         db = get_database()
         student_id = current_user['sub']
         
+        # Ensure days is an integer (defensive programming)
+        if isinstance(days, str):
+            days = int(days)
+        if days is None:
+            days = 30
+        
         # Get practice attempts within the time period
         cutoff_date = datetime.utcnow() - timedelta(days=days)
         
