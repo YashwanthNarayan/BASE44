@@ -215,6 +215,355 @@ async def delete_class(
         )
 
 # Analytics endpoints (moved from server_original.py)
+@router.get("/analytics/class-strengths-weaknesses")
+async def get_class_strengths_weaknesses(
+    class_id: Optional[str] = None,
+    current_user = Depends(get_current_teacher)
+):
+    """Get comprehensive strengths and weaknesses analysis for entire class"""
+    try:
+        db = get_database()
+        teacher_id = current_user['sub']
+        
+        # Get teacher's classes
+        if class_id:
+            # Verify teacher owns this class
+            class_doc = await db[Collections.CLASSROOMS].find_one({
+                "id": class_id,
+                "teacher_id": teacher_id
+            })
+            if not class_doc:
+                raise HTTPException(status_code=404, detail="Class not found")
+            
+            all_class_ids = [class_id]
+        else:
+            # Get all teacher's classes
+            teacher_classes_cursor = db[Collections.CLASSROOMS].find({"teacher_id": teacher_id})
+            teacher_classes = await teacher_classes_cursor.to_list(100)
+            all_class_ids = [cls["id"] for cls in teacher_classes]
+        
+        if not all_class_ids:
+            return {
+                "class_strengths": [],
+                "class_weaknesses": [],
+                "subject_analysis": [],
+                "recommendations": [],
+                "total_students": 0,
+                "total_tests": 0
+            }
+        
+        # Get students in these classes
+        students_cursor = db[Collections.STUDENT_PROFILES].find({
+            "joined_classes": {"$elemMatch": {"$in": all_class_ids}}
+        })
+        students = await students_cursor.to_list(1000)
+        student_ids = [student['user_id'] for student in students]
+        
+        if not student_ids:
+            return {
+                "class_strengths": [],
+                "class_weaknesses": [],
+                "subject_analysis": [],
+                "recommendations": [],
+                "total_students": 0,
+                "total_tests": 0
+            }
+        
+        # Get all practice attempts from students in the class
+        practice_attempts_cursor = db[Collections.PRACTICE_ATTEMPTS].find({
+            "student_id": {"$in": student_ids}
+        }).sort("completed_at", -1)
+        practice_attempts = await practice_attempts_cursor.to_list(2000)
+        
+        # Analyze class-wide performance by subject
+        subject_performance = defaultdict(list)
+        student_performance = defaultdict(list)  # Track per student for individual analysis
+        
+        for attempt in practice_attempts:
+            subject = attempt.get('subject', 'general')
+            score = attempt.get('score', 0)
+            student_id = attempt.get('student_id')
+            
+            subject_performance[subject].append({
+                'score': score,
+                'student_id': student_id,
+                'attempt_id': attempt.get('id'),
+                'total_questions': attempt.get('total_questions', 0),
+                'correct_count': attempt.get('correct_count', 0)
+            })
+            
+            student_performance[student_id].append({
+                'subject': subject,
+                'score': score,
+                'attempt_id': attempt.get('id')
+            })
+        
+        # Analyze each subject for class performance
+        class_strengths = []
+        class_weaknesses = []
+        subject_analysis = []
+        
+        for subject, attempts in subject_performance.items():
+            if len(attempts) < 3:  # Need sufficient data
+                continue
+                
+            scores = [attempt['score'] for attempt in attempts]
+            unique_students = len(set(attempt['student_id'] for attempt in attempts))
+            
+            avg_score = statistics.mean(scores)
+            median_score = statistics.median(scores)
+            total_questions = sum(attempt.get('total_questions', 0) for attempt in attempts)
+            total_correct = sum(attempt.get('correct_count', 0) for attempt in attempts)
+            
+            subject_data = {
+                "subject": subject,
+                "subject_display": subject.replace('_', ' ').title(),
+                "average_score": round(avg_score, 1),
+                "median_score": round(median_score, 1),
+                "total_tests": len(attempts),
+                "students_tested": unique_students,
+                "total_questions": total_questions,
+                "total_correct": total_correct,
+                "accuracy_rate": round((total_correct / total_questions * 100), 1) if total_questions > 0 else 0,
+                "highest_score": max(scores),
+                "lowest_score": min(scores),
+                "grade": "A" if avg_score >= 90 else "B" if avg_score >= 80 else "C" if avg_score >= 70 else "D" if avg_score >= 60 else "F"
+            }
+            
+            subject_analysis.append(subject_data)
+            
+            # Classify as class strength or weakness
+            if avg_score >= 80 and unique_students >= 2:  # Strong performance with multiple students
+                class_strengths.append({
+                    **subject_data,
+                    "strength_level": "high" if avg_score >= 90 else "moderate"
+                })
+            elif avg_score <= 65 and unique_students >= 2:  # Weak performance needs attention
+                class_weaknesses.append({
+                    **subject_data,
+                    "weakness_level": "critical" if avg_score <= 50 else "moderate"
+                })
+        
+        # Generate class-wide recommendations
+        recommendations = []
+        
+        # Recommendations for class weaknesses
+        for weakness in class_weaknesses[:3]:  # Top 3 weaknesses
+            subject = weakness['subject_display']
+            avg_score = weakness['average_score']
+            students_count = weakness['students_tested']
+            
+            if avg_score < 50:
+                priority = 'critical'
+                message = f"**{subject}** requires immediate attention - class average is only {avg_score}%. Consider reviewing fundamentals with all {students_count} students."
+            else:
+                priority = 'high'
+                message = f"**{subject}** needs focused improvement - class average is {avg_score}%. Implement targeted practice sessions."
+            
+            recommendations.append({
+                "type": "class_weakness",
+                "priority": priority,
+                "subject": weakness['subject'],
+                "message": message,
+                "suggested_actions": [
+                    f"Review {subject} fundamentals with entire class",
+                    f"Create targeted practice sessions for {subject}",
+                    f"Consider additional {subject} resources or tutoring",
+                    f"Monitor individual student progress in {subject}"
+                ]
+            })
+        
+        # Recommendations for leveraging strengths
+        if class_strengths:
+            best_strength = max(class_strengths, key=lambda x: x['average_score'])
+            subject = best_strength['subject_display']
+            score = best_strength['average_score']
+            
+            recommendations.append({
+                "type": "leverage_strength",
+                "priority": "medium",
+                "subject": best_strength['subject'],
+                "message": f"**{subject}** is a class strength with {score}% average. Use this to build confidence and cross-curricular connections.",
+                "suggested_actions": [
+                    f"Use {subject} success to boost overall class confidence",
+                    f"Create interdisciplinary projects connecting {subject} to weaker areas",
+                    f"Have stronger {subject} students mentor others",
+                    f"Challenge class with advanced {subject} problems"
+                ]
+            })
+        
+        # Sort subject analysis by average score (highest first)
+        subject_analysis.sort(key=lambda x: x['average_score'], reverse=True)
+        
+        return {
+            "class_strengths": sorted(class_strengths, key=lambda x: x['average_score'], reverse=True),
+            "class_weaknesses": sorted(class_weaknesses, key=lambda x: x['average_score']),
+            "subject_analysis": subject_analysis,
+            "recommendations": recommendations,
+            "total_students": len(student_ids),
+            "total_tests": len(practice_attempts),
+            "analysis_date": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        print(f"Error analyzing class strengths/weaknesses: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to analyze class performance: {str(e)}"
+        )
+
+@router.get("/analytics/student-strengths-weaknesses/{student_id}")
+async def get_student_strengths_weaknesses(
+    student_id: str,
+    current_user = Depends(get_current_teacher)
+):
+    """Get detailed strengths and weaknesses analysis for individual student"""
+    try:
+        db = get_database()
+        teacher_id = current_user['sub']
+        
+        # Verify student is in teacher's class
+        teacher_classes_cursor = db[Collections.CLASSROOMS].find({"teacher_id": teacher_id})
+        teacher_classes = await teacher_classes_cursor.to_list(100)
+        all_class_ids = [cls["id"] for cls in teacher_classes]
+        
+        student_profile = await db[Collections.STUDENT_PROFILES].find_one({
+            "user_id": student_id,
+            "joined_classes": {"$elemMatch": {"$in": all_class_ids}}
+        })
+        
+        if not student_profile:
+            raise HTTPException(status_code=404, detail="Student not found in your classes")
+        
+        # Get student info
+        student_user = await db[Collections.USERS].find_one({"id": student_id})
+        student_name = student_user.get("name", "Unknown") if student_user else "Unknown"
+        
+        # Get student's practice attempts
+        practice_attempts_cursor = db[Collections.PRACTICE_ATTEMPTS].find({
+            "student_id": student_id
+        }).sort("completed_at", -1)
+        practice_attempts = await practice_attempts_cursor.to_list(1000)
+        
+        if not practice_attempts:
+            return {
+                "student_id": student_id,
+                "student_name": student_name,
+                "strengths": [],
+                "weaknesses": [],
+                "improving_areas": [],
+                "declining_areas": [],
+                "subject_breakdown": [],
+                "recommendations": [],
+                "overall_performance": {
+                    "average_score": 0,
+                    "total_tests": 0,
+                    "subjects_tested": 0,
+                    "best_subject": None,
+                    "weakest_subject": None
+                }
+            }
+        
+        # Use the existing analytics service for individual student analysis
+        from backend.services.analytics_service import StudentAnalyticsService
+        
+        # Convert to format expected by analytics service
+        formatted_attempts = []
+        for attempt in practice_attempts:
+            formatted_attempts.append({
+                'id': attempt.get('id'),
+                'subject': attempt.get('subject', 'general'),
+                'score': attempt.get('score', 0),
+                'completed_at': attempt.get('completed_at'),
+                'created_at': attempt.get('created_at'),
+                'questions_count': attempt.get('total_questions', 0),
+                'time_taken': attempt.get('time_taken', 0)
+            })
+        
+        # Get comprehensive analysis
+        analysis = StudentAnalyticsService.analyze_strengths_weaknesses(formatted_attempts)
+        
+        # Add student identification info
+        analysis["student_id"] = student_id
+        analysis["student_name"] = student_name
+        
+        # Calculate subject breakdown for teacher view
+        subject_breakdown = []
+        subject_performance = defaultdict(list)
+        
+        for attempt in formatted_attempts:
+            subject = attempt['subject']
+            score = attempt['score']
+            subject_performance[subject].append(score)
+        
+        for subject, scores in subject_performance.items():
+            if len(scores) >= 2:  # Need at least 2 attempts for meaningful analysis
+                avg_score = statistics.mean(scores)
+                subject_breakdown.append({
+                    "subject": subject,
+                    "subject_display": subject.replace('_', ' ').title(),
+                    "average_score": round(avg_score, 1),
+                    "test_count": len(scores),
+                    "highest_score": max(scores),
+                    "lowest_score": min(scores),
+                    "consistency": "consistent" if statistics.stdev(scores) <= 10 else "inconsistent" if len(scores) > 2 else "limited_data",
+                    "grade": "A" if avg_score >= 90 else "B" if avg_score >= 80 else "C" if avg_score >= 70 else "D" if avg_score >= 60 else "F"
+                })
+        
+        analysis["subject_breakdown"] = sorted(subject_breakdown, key=lambda x: x['average_score'], reverse=True)
+        
+        # Add teacher-specific recommendations
+        teacher_recommendations = []
+        
+        # Recommendations for student weaknesses
+        for weakness in analysis.get("weaknesses", [])[:2]:
+            subject = weakness.get('subject_display', weakness.get('subject', 'Unknown'))
+            avg_score = weakness.get('average_score', 0)
+            
+            teacher_recommendations.append({
+                "type": "student_support",
+                "priority": "high" if avg_score < 50 else "medium",
+                "subject": weakness.get('subject'),
+                "message": f"{student_name} needs support in **{subject}** (avg: {avg_score}%). Consider one-on-one attention.",
+                "suggested_actions": [
+                    f"Schedule individual help session for {subject}",
+                    f"Provide additional {subject} practice materials",
+                    f"Consider peer tutoring in {subject}",
+                    f"Break down {subject} concepts into smaller steps"
+                ]
+            })
+        
+        # Recommendations for building on strengths
+        if analysis.get("strengths"):
+            best_strength = max(analysis["strengths"], key=lambda x: x.get('average_score', 0))
+            subject = best_strength.get('subject_display', best_strength.get('subject', 'Unknown'))
+            score = best_strength.get('average_score', 0)
+            
+            teacher_recommendations.append({
+                "type": "build_confidence",
+                "priority": "medium",
+                "subject": best_strength.get('subject'),
+                "message": f"{student_name} excels in **{subject}** ({score}% avg). Use this to build overall confidence.",
+                "suggested_actions": [
+                    f"Challenge {student_name} with advanced {subject} problems",
+                    f"Have {student_name} help classmates with {subject}",
+                    f"Connect {subject} concepts to weaker subject areas",
+                    f"Acknowledge and celebrate {subject} achievements"
+                ]
+            })
+        
+        analysis["recommendations"] = teacher_recommendations + analysis.get("recommendations", [])
+        
+        return analysis
+        
+    except Exception as e:
+        print(f"Error analyzing student strengths/weaknesses: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to analyze student performance: {str(e)}"
+        )
+
+# Add the existing endpoints after these new ones
 @router.get("/analytics/overview")
 async def get_teacher_analytics_overview(
     current_user: dict = Depends(get_current_teacher)
