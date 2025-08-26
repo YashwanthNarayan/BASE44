@@ -572,7 +572,10 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
                 {Object.entries(subjects).map(([key, subject]) => (
                   <button
                     key={key}
-                    onClick={() => setSelectedSubject(key)}
+                    onClick={() => {
+                      setSelectedSubject(key);
+                      setSelectedUnits([]); // Reset units when subject changes
+                    }}
                     className={`
                       p-6 rounded-2xl transition-all duration-300 text-center relative
                       ${selectedSubject === key
@@ -593,41 +596,78 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
               </div>
             </div>
 
-            {/* Topics Selection */}
+            {/* Grade Selection */}
             {selectedSubject && (
               <div className="mb-8">
-                <h3 className="text-xl font-semibold text-white mb-4">
-                  Select Topics ({selectedUnits.length} selected)
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {subjects[selectedSubject].topics.map((topic) => (
+                <h3 className="text-xl font-semibold text-white mb-4">Select Grade</h3>
+                <div className="grid grid-cols-4 md:grid-cols-7 gap-3">
+                  {gradeLevels.map((grade) => (
                     <button
-                      key={topic}
-                      onClick={() => handleUnitToggle(topic)}
+                      key={grade}
+                      onClick={() => {
+                        setSelectedGrade(grade);
+                        setSelectedUnits([]); // Reset units when grade changes
+                      }}
                       className={`
                         p-4 rounded-xl transition-all duration-300 text-sm relative
-                        ${selectedUnits.includes(topic)
+                        ${selectedGrade === grade
+                          ? 'glass-strong border-2 border-purple-400 text-white bg-purple-400/10'
+                          : 'glass border-white/20 text-white/70 hover:text-white hover:glass-strong hover:border-white/40'
+                        }
+                      `}
+                    >
+                      {selectedGrade === grade && (
+                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-purple-400 rounded-full flex items-center justify-center">
+                          <span className="text-black text-xs font-bold">✓</span>
+                        </div>
+                      )}
+                      <div className={`text-center ${selectedGrade === grade ? 'font-semibold' : ''}`}>
+                        {grade}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* NCERT Units Selection */}
+            {selectedSubject && selectedGrade && subjects[selectedSubject].units[selectedGrade] && (
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Select NCERT Units ({selectedUnits.length} selected)
+                </h3>
+                <p className="text-white/60 text-sm mb-4">
+                  Choose units from {subjects[selectedSubject].name} - Class {selectedGrade}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {subjects[selectedSubject].units[selectedGrade].map((unit) => (
+                    <button
+                      key={unit}
+                      onClick={() => handleUnitToggle(unit)}
+                      className={`
+                        p-4 rounded-xl transition-all duration-300 text-sm relative text-left
+                        ${selectedUnits.includes(unit)
                           ? 'glass-strong border-2 border-blue-400 text-white bg-blue-400/10'
                           : 'glass border-white/20 text-white/70 hover:text-white hover:glass-strong hover:border-white/40'
                         }
                       `}
                     >
-                      {selectedUnits.includes(topic) && (
+                      {selectedUnits.includes(unit) && (
                         <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-400 rounded-full flex items-center justify-center">
                           <span className="text-black text-xs font-bold">✓</span>
                         </div>
                       )}
-                      <div className={`flex items-center gap-2 ${selectedUnits.includes(topic) ? 'font-semibold' : ''}`}>
-                        <div className={`w-3 h-3 rounded border-2 flex items-center justify-center ${
-                          selectedUnits.includes(topic) 
+                      <div className={`flex items-start gap-3 ${selectedUnits.includes(unit) ? 'font-semibold' : ''}`}>
+                        <div className={`w-4 h-4 rounded border-2 flex items-center justify-center mt-0.5 flex-shrink-0 ${
+                          selectedUnits.includes(unit) 
                             ? 'border-blue-400 bg-blue-400' 
                             : 'border-white/40'
                         }`}>
-                          {selectedUnits.includes(topic) && (
-                            <span className="text-black text-xs">✓</span>
+                          {selectedUnits.includes(unit) && (
+                            <span className="text-black text-xs font-bold">✓</span>
                           )}
                         </div>
-                        {topic}
+                        <span className="leading-5">{unit}</span>
                       </div>
                     </button>
                   ))}
