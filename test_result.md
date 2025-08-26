@@ -228,24 +228,16 @@
 ##         -agent: "main"  # or "testing" or "user"
 ##         -comment: "Detailed comment about status"
 ##
-## metadata:
-##   created_by: "main_agent"
-##   version: "1.0"
-##   test_sequence: 0
-##   run_ui: false
-##
 ## test_plan:
-##   current_focus:
-##     - "Task name 1"
-##     - "Task name 2"
-##   stuck_tasks:
-##     - "Task name with persistent issues"
-##   test_all: false
-##   test_priority: "high_first"  # or "sequential" or "stuck_first"
-##
+  current_focus:
+    - "NCERT Units Integration - Practice Test Component"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
 ## agent_communication:
-##     -agent: "main"  # or "testing" or "user"
-##     -message: "Communication message between agents"
+    - agent: "main"
+      message: "Updated PracticeTestComponent_Liquid.js to integrate NCERT units with grade selector. Ready for backend testing to ensure practice test generation works with new unit structure."
 
 # Protocol Guidelines for Main agent
 #
