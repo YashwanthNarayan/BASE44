@@ -29,7 +29,7 @@ def get_backend_url():
                     return line.split('=', 1)[1].strip().strip('"')
     except:
         pass
-    return "https://5dc579ef-675e-4006-84a0-6dbff9c9e674.preview.emergentagent.com"
+    return "https://ncert-study-hub.preview.emergentagent.com"
 
 BASE_URL = get_backend_url()
 API_BASE = f"{BASE_URL}/api"
