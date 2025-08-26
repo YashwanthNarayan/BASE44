@@ -114,189 +114,240 @@ class AIService:
             return self._generate_fallback_questions(subject, topics, question_count)
     
     def _generate_fallback_questions(self, subject: str, topics: List[str], question_count: int) -> List[Dict[str, Any]]:
-        """Generate high-quality subject-specific fallback questions when AI service fails"""
+        """Generate high-quality NCERT unit-specific fallback questions when AI service fails"""
         import uuid
         import random
         
-        # Subject-specific question banks with real educational content
-        question_banks = {
+        # NCERT unit-specific question banks with real curriculum content
+        ncert_question_banks = {
             "math": {
-                "algebra": [
+                # Class 10 NCERT Units
+                "Real Numbers": [
                     {
-                        "question": "Solve for x: 2x + 5 = 17",
-                        "options": ["x = 6", "x = 12", "x = 11", "x = 7"],
-                        "correct": "x = 6",
-                        "explanation": "Subtract 5 from both sides: 2x = 12, then divide by 2: x = 6"
+                        "question": "Which of the following is an irrational number?",
+                        "options": ["0.25", "√2", "3/4", "22/7"],
+                        "correct": "√2",
+                        "explanation": "√2 cannot be expressed as a ratio of two integers, making it irrational."
                     },
                     {
-                        "question": "What is the slope of the line y = 3x - 4?",
-                        "options": ["3", "-4", "4", "1/3"],
-                        "correct": "3",
-                        "explanation": "In y = mx + b form, m is the slope. Here m = 3."
-                    },
-                    {
-                        "question": "Factor: x² - 9",
-                        "options": ["(x + 3)(x - 3)", "(x + 9)(x - 1)", "(x - 3)²", "Cannot be factored"],
-                        "correct": "(x + 3)(x - 3)",
-                        "explanation": "This is a difference of squares: a² - b² = (a + b)(a - b)"
+                        "question": "What is the decimal expansion of a rational number?",
+                        "options": ["Always terminating", "Always non-terminating", "Either terminating or non-terminating repeating", "Always infinite"],
+                        "correct": "Either terminating or non-terminating repeating",
+                        "explanation": "Rational numbers have decimal expansions that either terminate or repeat."
                     }
                 ],
-                "geometry": [
+                "Quadratic Equations": [
                     {
-                        "question": "What is the area of a circle with radius 4?",
-                        "options": ["16π", "8π", "4π", "32π"],
-                        "correct": "16π",
-                        "explanation": "Area = πr². With r = 4, Area = π(4)² = 16π"
+                        "question": "What is the discriminant of x² - 4x + 3 = 0?",
+                        "options": ["4", "16", "12", "-4"],
+                        "correct": "4",
+                        "explanation": "Discriminant = b² - 4ac = (-4)² - 4(1)(3) = 16 - 12 = 4"
                     },
                     {
-                        "question": "In a right triangle, if one angle is 30°, what is the third angle?",
-                        "options": ["60°", "90°", "45°", "120°"],
-                        "correct": "60°",
-                        "explanation": "Sum of angles in triangle = 180°. 90° + 30° + ? = 180°, so ? = 60°"
+                        "question": "If the discriminant of a quadratic equation is zero, the roots are:",
+                        "options": ["Real and distinct", "Real and equal", "Complex", "Imaginary"],
+                        "correct": "Real and equal",
+                        "explanation": "When discriminant = 0, the quadratic has two equal real roots."
+                    }
+                ],
+                "Polynomials": [
+                    {
+                        "question": "What is the degree of the polynomial 3x³ + 2x² - x + 5?",
+                        "options": ["1", "2", "3", "5"],
+                        "correct": "3",
+                        "explanation": "The degree is the highest power of the variable, which is 3."
+                    }
+                ],
+                "Triangles": [
+                    {
+                        "question": "In triangle ABC, if AB = AC, what type of triangle is it?",
+                        "options": ["Scalene", "Isosceles", "Equilateral", "Right-angled"],
+                        "correct": "Isosceles",
+                        "explanation": "A triangle with two equal sides is called an isosceles triangle."
+                    }
+                ],
+                "Coordinate Geometry": [
+                    {
+                        "question": "What is the distance between points (0,0) and (3,4)?",
+                        "options": ["5", "7", "6", "4"],
+                        "correct": "5",
+                        "explanation": "Using distance formula: √[(3-0)² + (4-0)²] = √[9+16] = √25 = 5"
+                    }
+                ],
+                "Introduction to Trigonometry": [
+                    {
+                        "question": "What is the value of sin 30°?",
+                        "options": ["1/2", "√3/2", "1", "0"],
+                        "correct": "1/2",
+                        "explanation": "sin 30° = 1/2 is a fundamental trigonometric value."
                     }
                 ]
             },
             "physics": {
-                "mechanics": [
+                # Class 9 NCERT Units
+                "Motion": [
                     {
-                        "question": "What is Newton's first law of motion?",
-                        "options": ["F = ma", "Objects in motion stay in motion unless acted upon by a force", "For every action there's an equal and opposite reaction", "E = mc²"],
-                        "correct": "Objects in motion stay in motion unless acted upon by a force",
-                        "explanation": "Newton's first law states that objects at rest stay at rest and objects in motion stay in motion unless acted upon by an unbalanced force."
-                    },
-                    {
-                        "question": "If a car accelerates at 2 m/s² for 5 seconds, what is its change in velocity?",
-                        "options": ["10 m/s", "2.5 m/s", "7 m/s", "0.4 m/s"],
-                        "correct": "10 m/s",
-                        "explanation": "Change in velocity = acceleration × time = 2 m/s² × 5 s = 10 m/s"
+                        "question": "What is the SI unit of velocity?",
+                        "options": ["m/s²", "m/s", "km/h", "m"],
+                        "correct": "m/s",
+                        "explanation": "Velocity is measured in meters per second (m/s) in SI units."
                     }
                 ],
-                "thermodynamics": [
+                "Force and Laws of Motion": [
                     {
-                        "question": "What happens to the kinetic energy of gas molecules when temperature increases?",
-                        "options": ["Increases", "Decreases", "Stays the same", "Becomes zero"],
-                        "correct": "Increases",
-                        "explanation": "Temperature is a measure of average kinetic energy of molecules. Higher temperature means higher kinetic energy."
+                        "question": "Newton's second law states that F = ?",
+                        "options": ["mv", "ma", "mv²", "m/a"],
+                        "correct": "ma",
+                        "explanation": "Newton's second law: Force equals mass times acceleration (F = ma)."
+                    }
+                ],
+                "Work and Energy": [
+                    {
+                        "question": "What is the unit of work?",
+                        "options": ["Joule", "Watt", "Newton", "Pascal"],
+                        "correct": "Joule",
+                        "explanation": "Work is measured in Joules (J) in SI units."
+                    }
+                ],
+                # Class 11 NCERT Units
+                "Laws of Motion": [
+                    {
+                        "question": "According to Newton's first law, an object at rest will:",
+                        "options": ["Always remain at rest", "Start moving automatically", "Remain at rest unless acted upon by external force", "Move with constant velocity"],
+                        "correct": "Remain at rest unless acted upon by external force",
+                        "explanation": "Newton's first law (law of inertia) states objects maintain their state unless external force acts."
+                    }
+                ],
+                "Gravitation": [
+                    {
+                        "question": "What is the value of acceleration due to gravity on Earth?",
+                        "options": ["9.8 m/s²", "10 m/s²", "8.9 m/s²", "9.0 m/s²"],
+                        "correct": "9.8 m/s²",
+                        "explanation": "The standard value of g (acceleration due to gravity) is 9.8 m/s²."
                     }
                 ]
             },
             "chemistry": {
-                "organic": [
+                # Class 9 NCERT Units
+                "Matter in Our Surroundings": [
                     {
-                        "question": "What is the molecular formula for methane?",
-                        "options": ["CH₄", "C₂H₆", "CH₃OH", "CO₂"],
-                        "correct": "CH₄",
-                        "explanation": "Methane is the simplest hydrocarbon with one carbon atom bonded to four hydrogen atoms."
+                        "question": "At what temperature does water boil at standard pressure?",
+                        "options": ["50°C", "100°C", "150°C", "200°C"],
+                        "correct": "100°C",
+                        "explanation": "Water boils at 100°C (373 K) at standard atmospheric pressure."
                     }
                 ],
-                "inorganic": [
+                "Atoms and Molecules": [
                     {
-                        "question": "What is the chemical symbol for gold?",
-                        "options": ["Go", "Gd", "Au", "Ag"],
-                        "correct": "Au",
-                        "explanation": "Gold's symbol Au comes from its Latin name 'aurum'."
+                        "question": "What is Avogadro's number?",
+                        "options": ["6.022 × 10²³", "6.022 × 10²²", "6.022 × 10²⁴", "6.022 × 10²¹"],
+                        "correct": "6.022 × 10²³",
+                        "explanation": "Avogadro's number is 6.022 × 10²³ particles per mole."
+                    }
+                ],
+                # Class 10 NCERT Units
+                "Acids, Bases and Salts": [
+                    {
+                        "question": "What is the pH of pure water?",
+                        "options": ["6", "7", "8", "14"],
+                        "correct": "7",
+                        "explanation": "Pure water has a pH of 7, which is neutral."
+                    }
+                ],
+                "Metals and Non-metals": [
+                    {
+                        "question": "Which of the following is the most reactive metal?",
+                        "options": ["Iron", "Copper", "Sodium", "Gold"],
+                        "correct": "Sodium",
+                        "explanation": "Sodium is highly reactive and belongs to group 1 of the periodic table."
                     }
                 ]
             },
             "biology": {
-                "cell": [
+                # Class 9 NCERT Units
+                "The Fundamental Unit of Life": [
                     {
-                        "question": "What is the powerhouse of the cell?",
-                        "options": ["Nucleus", "Mitochondria", "Ribosome", "Endoplasmic reticulum"],
-                        "correct": "Mitochondria",
-                        "explanation": "Mitochondria produce ATP (energy) for cellular processes, earning the nickname 'powerhouse of the cell'."
+                        "question": "What is the basic unit of life?",
+                        "options": ["Tissue", "Cell", "Organ", "Atom"],
+                        "correct": "Cell",
+                        "explanation": "The cell is the basic structural and functional unit of all living organisms."
                     }
                 ],
-                "genetics": [
+                "Tissues": [
                     {
-                        "question": "What does DNA stand for?",
-                        "options": ["Deoxyribonucleic acid", "Deoxyribose nucleic acid", "Dinitrogen nucleic acid", "Dynamic nucleic acid"],
-                        "correct": "Deoxyribonucleic acid",
-                        "explanation": "DNA stands for Deoxyribonucleic acid, the molecule that carries genetic information."
+                        "question": "Which tissue is responsible for movement in animals?",
+                        "options": ["Epithelial", "Connective", "Muscular", "Nervous"],
+                        "correct": "Muscular",
+                        "explanation": "Muscular tissue contracts and relaxes to produce movement."
+                    }
+                ],
+                # Class 10 NCERT Units
+                "Life Processes": [
+                    {
+                        "question": "What is the process by which plants make their food?",
+                        "options": ["Respiration", "Photosynthesis", "Transpiration", "Digestion"],
+                        "correct": "Photosynthesis",
+                        "explanation": "Photosynthesis is the process where plants convert sunlight, CO₂ and water into glucose."
+                    }
+                ],
+                # Class 7 NCERT Units
+                "Nutrition in Plants": [
+                    {
+                        "question": "Which part of the plant cell contains chlorophyll?",
+                        "options": ["Nucleus", "Mitochondria", "Chloroplast", "Vacuole"],
+                        "correct": "Chloroplast",
+                        "explanation": "Chloroplasts contain chlorophyll, the green pigment essential for photosynthesis."
                     }
                 ]
             },
             "english": {
-                "grammar": [
+                # General literature questions for NCERT chapters
+                "The Fun They Had": [
                     {
-                        "question": "Which sentence is grammatically correct?",
-                        "options": ["She don't like pizza", "She doesn't like pizza", "She didn't liked pizza", "She don't likes pizza"],
-                        "correct": "She doesn't like pizza",
-                        "explanation": "With singular third person subjects like 'she', use 'doesn't' not 'don't'."
-                    }
-                ],
-                "literature": [
-                    {
-                        "question": "Who wrote 'Romeo and Juliet'?",
-                        "options": ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
-                        "correct": "William Shakespeare",
-                        "explanation": "Romeo and Juliet is one of Shakespeare's most famous tragedies, written in the early part of his career."
+                        "question": "Who wrote 'The Fun They Had'?",
+                        "options": ["Isaac Asimov", "R.K. Narayan", "Ruskin Bond", "Mark Twain"],
+                        "correct": "Isaac Asimov",
+                        "explanation": "'The Fun They Had' is a science fiction story by Isaac Asimov."
                     }
                 ]
             }
         }
         
-        fallback_questions = []
-        subject_lower = subject.lower()
+        # Find matching questions for the specific topics/units
+        matched_questions = []
         
-        # Get subject-specific questions
-        subject_bank = question_banks.get(subject_lower, {})
+        for topic in topics:
+            if subject in ncert_question_banks and topic in ncert_question_banks[subject]:
+                unit_questions = ncert_question_banks[subject][topic]
+                matched_questions.extend(unit_questions)
         
-        # If we have topic-specific questions, use them
-        relevant_questions = []
-        if topics:
-            for topic in topics:
-                topic_key = topic.lower().split()[0]  # Get first word for matching
-                for bank_topic, questions in subject_bank.items():
-                    if topic_key in bank_topic or bank_topic in topic_key:
-                        relevant_questions.extend(questions)
+        # If no specific unit matches found, use generic fallback for subject
+        if not matched_questions:
+            # Use original fallback logic for unrecognized units
+            generic_questions = self._get_generic_subject_questions(subject)
+            matched_questions.extend(generic_questions)
         
-        # If no topic-specific questions found, use all questions from subject
-        if not relevant_questions and subject_bank:
-            for questions in subject_bank.values():
-                relevant_questions.extend(questions)
+        # Randomly select questions up to question_count
+        selected_questions = random.sample(matched_questions, min(question_count, len(matched_questions)))
         
-        # Generate questions
-        for i in range(question_count):
-            if relevant_questions:
-                # Use actual educational content
-                base_question = random.choice(relevant_questions)
-                question = {
-                    "id": str(uuid.uuid4()),
-                    "question_text": base_question["question"],
-                    "question_type": "mcq",
-                    "options": base_question["options"],
-                    "correct_answer": base_question["correct"],
-                    "explanation": base_question["explanation"],
-                    "difficulty": "medium",
-                    "subject": subject,
-                    "topic": topics[0] if topics else subject,
-                    "points": 10
-                }
-            else:
-                # Generic fallback for subjects not in our bank
-                topic_str = ", ".join(topics) if topics else subject
-                question = {
-                    "id": str(uuid.uuid4()),
-                    "question_text": f"What is a fundamental concept in {topic_str}?",
-                    "question_type": "mcq",
-                    "options": [
-                        f"Basic principle of {topic_str}",
-                        f"Advanced application in {topic_str}",
-                        f"Historical development of {topic_str}",
-                        f"Modern research in {topic_str}"
-                    ],
-                    "correct_answer": f"Basic principle of {topic_str}",
-                    "explanation": f"This question tests understanding of fundamental concepts in {topic_str}.",
-                    "difficulty": "medium",
-                    "subject": subject,
-                    "topic": topics[0] if topics else subject,
-                    "points": 10
-                }
-            
-            fallback_questions.append(question)
+        # Format questions properly
+        formatted_questions = []
+        for i, q in enumerate(selected_questions):
+            question_id = str(uuid.uuid4())[:8]
+            formatted_question = {
+                "id": question_id,
+                "question_text": q["question"],
+                "question_type": "mcq",
+                "options": q["options"],
+                "correct_answer": q["correct"],
+                "explanation": q["explanation"],
+                "topic": topics[0] if topics else subject,  # Use the first topic
+                "subject": subject,
+                "difficulty": "medium"
+            }
+            formatted_questions.append(formatted_question)
         
-        return fallback_questions
+        return formatted_questions
     
     async def generate_tutor_response(
         self,
