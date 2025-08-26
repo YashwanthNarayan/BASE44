@@ -271,6 +271,12 @@ class StudentAnalyticsService:
     @staticmethod
     def get_performance_trends(practice_attempts: List[Dict], days: int = 30) -> Dict[str, Any]:
         """Get performance trends over specified time period"""
+        # Ensure days is an integer (defensive programming)
+        if isinstance(days, str):
+            days = int(days)
+        if days is None:
+            days = 30
+            
         cutoff_date = datetime.utcnow() - timedelta(days=days)
         
         # Filter recent attempts with defensive programming
