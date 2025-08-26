@@ -230,7 +230,7 @@
 ##
 ## test_plan:
   current_focus:
-    - "NCERT Extended Grades Integration - Classes 6th, 7th, and 8th"
+    - "NCERT Units Relevancy Issue - AI Prompt Improvements and Fallback System"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
