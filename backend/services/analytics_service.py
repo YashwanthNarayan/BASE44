@@ -309,14 +309,17 @@ class StudentAnalyticsService:
             
             if completed_at is not None and score is not None:
                 try:
+                    print(f"🔍 ANALYTICS DEBUG: Processing attempt with completed_at={completed_at}, type={type(completed_at)}")
                     date = datetime.fromisoformat(completed_at.replace('Z', '+00:00'))
+                    print(f"🔍 ANALYTICS DEBUG: Parsed date={date}, weekday={date.weekday()}, type={type(date.weekday())}")
                     week_start = date - timedelta(days=date.weekday())
                     week_key = week_start.strftime('%Y-%m-%d')
                     
                     # Only add numeric scores
                     if isinstance(score, (int, float)):
                         weekly_performance[week_key].append(score)
-                except (ValueError, AttributeError):
+                except (ValueError, AttributeError) as e:
+                    print(f"🔍 ANALYTICS DEBUG: Error processing attempt: {e}")
                     # Skip attempts with invalid dates or scores
                     continue
         
