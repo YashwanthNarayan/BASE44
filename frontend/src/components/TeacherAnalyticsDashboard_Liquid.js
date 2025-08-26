@@ -43,11 +43,49 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
           completion_rate: 85 // Placeholder
         } : null
       });
+
+      // Extract unique students for individual analysis
+      if (testResults.length > 0) {
+        const uniqueStudents = testResults.reduce((students, test) => {
+          if (!students.find(s => s.student_id === test.student_id)) {
+            students.push({
+              student_id: test.student_id,
+              student_name: test.student_name || `Student ${test.student_id.slice(0, 8)}`
+            });
+          }
+          return students;
+        }, []);
+        setAvailableStudents(uniqueStudents);
+      }
+      
     } catch (error) {
       console.error('Error loading analytics data:', error);
       setAnalyticsData(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadClassAnalytics = async () => {
+    if (!classAnalytics) {
+      try {
+        const classId = selectedClass !== 'all' ? selectedClass : null;
+        const data = await teacherAPI.getClassStrengthsWeaknesses(classId);
+        setClassAnalytics(data);
+      } catch (error) {
+        console.error('Error loading class analytics:', error);
+        setClassAnalytics(null);
+      }
+    }
+  };
+
+  const loadStudentAnalytics = async (studentId) => {
+    try {
+      const data = await teacherAPI.getStudentStrengthsWeaknesses(studentId);
+      setStudentAnalytics(data);
+    } catch (error) {
+      console.error('Error loading student analytics:', error);
+      setStudentAnalytics(null);
     }
   };
 
