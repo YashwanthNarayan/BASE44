@@ -230,8 +230,10 @@
 ##
 ## test_plan:
   current_focus:
+    - "NCERT Caching Fix Implementation - Question Variety Improvement"
+  stuck_tasks: 
     - "NCERT Units Relevancy Issue - AI Prompt Improvements and Fallback System"
-  stuck_tasks: []
+    - "NCERT Caching Fix Implementation - Question Variety Improvement"
   test_all: false
   test_priority: "high_first"
 
