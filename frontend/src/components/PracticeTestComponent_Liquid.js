@@ -6,7 +6,8 @@ import '../styles/liquid-glass.css';
 
 const PracticeTestComponent = ({ student, onNavigate }) => {
   const [selectedSubject, setSelectedSubject] = useState('');
-  const [selectedTopics, setSelectedTopics] = useState([]);
+  const [selectedGrade, setSelectedGrade] = useState('10th'); // Default to 10th grade
+  const [selectedUnits, setSelectedUnits] = useState([]);
   const [selectedQuestionTypes, setSelectedQuestionTypes] = useState([]);
   const [numQuestions, setNumQuestions] = useState(5);
   const [difficulty, setDifficulty] = useState('medium');
@@ -20,11 +21,11 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
   const [detailedResults, setDetailedResults] = useState([]);
   const [showDetailedResults, setShowDetailedResults] = useState(false);
 
-  const handleTopicToggle = (topic) => {
-    setSelectedTopics(prev => 
-      prev.includes(topic)
-        ? prev.filter(t => t !== topic)
-        : [...prev, topic]
+  const handleUnitToggle = (unit) => {
+    setSelectedUnits(prev => 
+      prev.includes(unit)
+        ? prev.filter(u => u !== unit)
+        : [...prev, unit]
     );
   };
 
