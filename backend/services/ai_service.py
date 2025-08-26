@@ -142,8 +142,7 @@ class AIService:
                         question["subject"] = subject
                         question["difficulty"] = difficulty
                     
-                    # Cache the response only if successful
-                    CacheUtils.cache_response(cache_key, json.dumps(questions))
+                    # No caching for practice questions to ensure variety
                     print(f"✅ Generated {len(questions)} AI questions for {subject} - {', '.join(topics)}")
                     return questions
                 
