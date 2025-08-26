@@ -51,9 +51,18 @@ class AIService:
     ) -> List[Dict[str, Any]]:
         """Generate practice questions using AI"""
         
-        # Create cache key
+        # Create cache key with randomization for variety
+        import random
+        import time
+        
+        # Add randomization to cache key to ensure question variety
+        # Use a time-based seed that changes every hour to balance caching with variety
+        time_seed = int(time.time()) // 3600  # Changes every hour
+        random.seed(time_seed + hash(str(topics)) + question_count)
+        variety_factor = random.randint(1, 5)  # 5 different question sets per hour
+        
         cache_key = CacheUtils.get_cache_key(
-            f"practice_{subject}_{','.join(topics)}_{difficulty}_{question_count}_{question_types}",
+            f"practice_v2_{subject}_{','.join(topics)}_{difficulty}_{question_count}_{question_types}_{variety_factor}",
             subject
         )
         
