@@ -5,7 +5,7 @@ import json
 
 # Simple in-memory cache (in production, use Redis)
 api_cache = {}
-CACHE_DURATION = timedelta(hours=24)  # Cache for 24 hours
+CACHE_DURATION = timedelta(hours=2)  # Reduced cache for better question variety
 
 class CacheUtils:
     @staticmethod
