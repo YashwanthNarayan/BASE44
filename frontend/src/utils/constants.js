@@ -238,6 +238,26 @@ export const subjects = {
     name: 'Chemistry', 
     icon: '🧪',
     units: {
+      '6th': [
+        'Components of Food',
+        'Sorting Materials into Groups',
+        'Separation of Substances',
+        'Changes Around Us',
+        'Water',
+        'Air Around Us'
+      ],
+      '7th': [
+        'Acids, Bases and Salts',
+        'Physical and Chemical Changes',
+        'Fibre to Fabric'
+      ],
+      '8th': [
+        'Synthetic Fibres and Plastics',
+        'Materials: Metals and Non-Metals',
+        'Coal and Petroleum',
+        'Combustion and Flame',
+        'Chemical Effects of Electric Current'
+      ],
       '9th': [
         'Matter in Our Surroundings',
         'Is Matter Around Us Pure',
