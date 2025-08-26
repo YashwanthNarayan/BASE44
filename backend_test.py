@@ -762,9 +762,9 @@ class TestProjectKV3Backend(unittest.TestCase):
         except Exception as e:
             print(f"❌ NCERT English 10th grade test failed: {str(e)}")
 
-    def test_11f_ncert_extended_grades_6th_7th_8th_integration(self):
-        """Test NCERT Units Integration for Extended Grades 6th, 7th, and 8th"""
-        print("\n🔍 Testing NCERT Extended Grades Integration (6th, 7th, 8th)...")
+    def test_11f_ncert_units_relevancy_improvements(self):
+        """Test FIXED NCERT Units Relevancy - AI Prompt Improvements and Fallback System"""
+        print("\n🔍 Testing FIXED NCERT Units Relevancy Improvements...")
         
         if not self.student_token:
             self.skipTest("Student token not available")
@@ -772,112 +772,277 @@ class TestProjectKV3Backend(unittest.TestCase):
         url = f"{API_URL}/practice/generate"
         headers = {"Authorization": f"Bearer {self.student_token}"}
         
-        # Test scenarios for NEW grade levels (6th, 7th, 8th) as requested in review
-        test_scenarios = [
+        # Test specific NCERT units mentioned in the review request
+        relevancy_test_scenarios = [
             {
-                "name": "Math 6th Grade - Basic Concepts",
+                "name": "Math Real Numbers - Unit Relevancy",
                 "subject": Subject.MATH.value,
-                "topics": ["Knowing Our Numbers", "Whole Numbers", "Fractions"],
-                "expected_terms": ["number", "whole", "fraction", "numerator", "denominator", "basic"],
-                "grade": "6th"
+                "topics": ["Real Numbers"],
+                "expected_concepts": ["rational", "irrational", "number line", "decimal", "terminating", "non-terminating"],
+                "avoid_generic": ["main concept", "sample", "example", "general"],
+                "unit_name": "Real Numbers"
             },
             {
-                "name": "Math 7th Grade - Intermediate Concepts", 
+                "name": "Math Quadratic Equations - Unit Relevancy", 
                 "subject": Subject.MATH.value,
-                "topics": ["Integers", "Simple Equations", "Rational Numbers"],
-                "expected_terms": ["integer", "equation", "rational", "positive", "negative", "solve"],
-                "grade": "7th"
+                "topics": ["Quadratic Equations"],
+                "expected_concepts": ["discriminant", "roots", "quadratic", "solving", "formula", "factoring"],
+                "avoid_generic": ["main concept", "sample", "example", "general"],
+                "unit_name": "Quadratic Equations"
             },
             {
-                "name": "Math 8th Grade - Advanced Concepts",
-                "subject": Subject.MATH.value,
-                "topics": ["Rational Numbers", "Linear Equations in One Variable", "Algebraic Expressions and Identities"],
-                "expected_terms": ["rational", "linear", "algebraic", "expression", "identity", "variable"],
-                "grade": "8th"
-            },
-            {
-                "name": "Biology 7th Grade - Life Processes",
+                "name": "Biology Nutrition in Plants - Unit Relevancy",
                 "subject": Subject.BIOLOGY.value,
-                "topics": ["Nutrition in Plants", "Respiration in Organisms", "Transportation in Animals and Plants"],
-                "expected_terms": ["nutrition", "plant", "respiration", "organism", "transportation", "photosynthesis"],
-                "grade": "7th"
+                "topics": ["Nutrition in Plants"],
+                "expected_concepts": ["photosynthesis", "chlorophyll", "stomata", "autotrophic", "glucose", "carbon dioxide"],
+                "avoid_generic": ["main concept", "sample", "example", "general"],
+                "unit_name": "Nutrition in Plants"
             },
             {
-                "name": "Physics 8th Grade - Forces and Motion",
-                "subject": Subject.PHYSICS.value,
-                "topics": ["Force and Pressure", "Friction", "Sound"],
-                "expected_terms": ["force", "pressure", "friction", "sound", "motion", "energy"],
-                "grade": "8th"
-            },
-            {
-                "name": "Chemistry 8th Grade - Materials",
+                "name": "Chemistry Acids, Bases and Salts - Unit Relevancy",
                 "subject": Subject.CHEMISTRY.value,
-                "topics": ["Materials: Metals and Non-Metals", "Combustion and Flame", "Chemical Effects of Electric Current"],
-                "expected_terms": ["metal", "non-metal", "combustion", "flame", "chemical", "reaction"],
-                "grade": "8th"
+                "topics": ["Acids, Bases and Salts"],
+                "expected_concepts": ["pH", "neutralization", "acid", "base", "salt", "indicator"],
+                "avoid_generic": ["main concept", "sample", "example", "general"],
+                "unit_name": "Acids, Bases and Salts"
+            },
+            {
+                "name": "Physics Laws of Motion - Unit Relevancy",
+                "subject": Subject.PHYSICS.value,
+                "topics": ["Laws of Motion"],
+                "expected_concepts": ["newton", "force", "acceleration", "inertia", "momentum", "motion"],
+                "avoid_generic": ["main concept", "sample", "example", "general"],
+                "unit_name": "Laws of Motion"
             }
         ]
         
         successful_tests = 0
-        total_tests = len(test_scenarios)
+        total_tests = len(relevancy_test_scenarios)
+        detailed_results = []
         
-        for scenario in test_scenarios:
+        for scenario in relevancy_test_scenarios:
             try:
                 payload = {
                     "subject": scenario["subject"],
                     "topics": scenario["topics"],
                     "difficulty": DifficultyLevel.MEDIUM.value,
-                    "question_count": 2
+                    "question_count": 3
                 }
                 
                 response = requests.post(url, json=payload, headers=headers)
-                print(f"Testing {scenario['name']}: {response.status_code}")
+                print(f"\nTesting {scenario['name']}: {response.status_code}")
                 
                 if response.status_code == 200:
                     data = response.json()
                     questions = data.get("questions", [])
                     
                     if len(questions) > 0:
-                        # Check if questions contain relevant terminology
-                        relevant_content_found = False
-                        for question in questions:
+                        unit_relevant_count = 0
+                        generic_question_count = 0
+                        topic_field_correct = 0
+                        
+                        for i, question in enumerate(questions):
                             question_text = question.get("question_text", "").lower()
                             explanation = question.get("explanation", "").lower()
+                            topic_field = question.get("topic", "").lower()
                             combined_text = question_text + " " + explanation
                             
-                            for term in scenario["expected_terms"]:
-                                if term in combined_text:
-                                    relevant_content_found = True
-                                    break
+                            print(f"  Question {i+1}: {question_text[:80]}...")
                             
-                            if relevant_content_found:
-                                break
+                            # Check for unit-specific concepts
+                            concepts_found = []
+                            for concept in scenario["expected_concepts"]:
+                                if concept.lower() in combined_text:
+                                    concepts_found.append(concept)
+                            
+                            # Check for generic placeholders (should be avoided)
+                            generic_found = []
+                            for generic in scenario["avoid_generic"]:
+                                if generic.lower() in combined_text:
+                                    generic_found.append(generic)
+                            
+                            # Check if topic field matches unit name
+                            if scenario["unit_name"].lower() in topic_field:
+                                topic_field_correct += 1
+                            
+                            if concepts_found and not generic_found:
+                                unit_relevant_count += 1
+                                print(f"    ✅ Unit-relevant concepts found: {concepts_found}")
+                            elif generic_found:
+                                generic_question_count += 1
+                                print(f"    ❌ Generic question detected: {generic_found}")
+                            else:
+                                print(f"    ⚠️ No specific unit concepts found")
                         
-                        if relevant_content_found:
+                        # Calculate relevancy metrics
+                        relevancy_score = (unit_relevant_count / len(questions)) * 100
+                        generic_score = (generic_question_count / len(questions)) * 100
+                        topic_accuracy = (topic_field_correct / len(questions)) * 100
+                        
+                        print(f"  📊 Relevancy Score: {relevancy_score:.1f}% ({unit_relevant_count}/{len(questions)} questions)")
+                        print(f"  📊 Generic Questions: {generic_score:.1f}% ({generic_question_count}/{len(questions)} questions)")
+                        print(f"  📊 Topic Field Accuracy: {topic_accuracy:.1f}% ({topic_field_correct}/{len(questions)} questions)")
+                        
+                        # Test passes if:
+                        # 1. At least 66% of questions are unit-relevant
+                        # 2. Less than 33% are generic
+                        # 3. At least 50% have correct topic field
+                        if relevancy_score >= 66.0 and generic_score <= 33.0 and topic_accuracy >= 50.0:
                             successful_tests += 1
-                            print(f"✅ {scenario['name']}: Generated relevant questions")
+                            print(f"  ✅ {scenario['name']}: PASSED relevancy test")
                         else:
-                            print(f"⚠️ {scenario['name']}: Questions generated but may lack subject-specific content")
+                            print(f"  ❌ {scenario['name']}: FAILED relevancy test")
+                        
+                        detailed_results.append({
+                            "scenario": scenario["name"],
+                            "relevancy_score": relevancy_score,
+                            "generic_score": generic_score,
+                            "topic_accuracy": topic_accuracy,
+                            "questions_count": len(questions)
+                        })
                     else:
-                        print(f"❌ {scenario['name']}: No questions generated")
+                        print(f"  ❌ {scenario['name']}: No questions generated")
                 else:
-                    print(f"❌ {scenario['name']}: API call failed with status {response.status_code}")
+                    print(f"  ❌ {scenario['name']}: API call failed with status {response.status_code}")
                     
             except Exception as e:
-                print(f"❌ {scenario['name']}: Exception occurred - {str(e)}")
+                print(f"  ❌ {scenario['name']}: Exception occurred - {str(e)}")
         
-        # Verify overall success rate
+        # Overall success rate
         success_rate = (successful_tests / total_tests) * 100
-        print(f"\n📊 NCERT Integration Success Rate: {success_rate:.1f}% ({successful_tests}/{total_tests})")
+        print(f"\n📊 NCERT Units Relevancy Success Rate: {success_rate:.1f}% ({successful_tests}/{total_tests})")
         
-        # Consider test passed if at least 66% of scenarios work
-        self.assertGreaterEqual(success_rate, 66.0, f"NCERT integration success rate too low: {success_rate:.1f}%")
-        print("✅ Comprehensive NCERT Units Integration test passed")
+        # Print detailed summary
+        print(f"\n📋 DETAILED RELEVANCY ANALYSIS:")
+        for result in detailed_results:
+            print(f"  {result['scenario']}: {result['relevancy_score']:.1f}% relevant, {result['generic_score']:.1f}% generic")
+        
+        # Test passes if at least 60% of scenarios meet relevancy criteria
+        self.assertGreaterEqual(success_rate, 60.0, f"NCERT Units Relevancy improvement insufficient: {success_rate:.1f}%")
+        print("✅ NCERT Units Relevancy Improvements test passed")
         
         return {
             "success_rate": success_rate,
             "successful_tests": successful_tests,
-            "total_tests": total_tests
+            "total_tests": total_tests,
+            "detailed_results": detailed_results
+        }
+
+    def test_11g_cross_unit_testing_and_fallback_system(self):
+        """Test Cross-Unit Testing and Fallback System for NCERT Units"""
+        print("\n🔍 Testing Cross-Unit Testing and Fallback System...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/generate"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test multiple units to ensure each question is tagged to correct unit
+        cross_unit_scenarios = [
+            {
+                "name": "Multiple Math Units - Cross Tagging",
+                "subject": Subject.MATH.value,
+                "topics": ["Real Numbers", "Quadratic Equations", "Polynomials"],
+                "expected_units": ["real numbers", "quadratic equations", "polynomials"]
+            },
+            {
+                "name": "Multiple Biology Units - Cross Tagging",
+                "subject": Subject.BIOLOGY.value,
+                "topics": ["The Fundamental Unit of Life", "Tissues", "Nutrition in Plants"],
+                "expected_units": ["fundamental unit of life", "tissues", "nutrition in plants"]
+            },
+            {
+                "name": "Multiple Physics Units - Cross Tagging",
+                "subject": Subject.PHYSICS.value,
+                "topics": ["Motion", "Force and Laws of Motion", "Work and Energy"],
+                "expected_units": ["motion", "force and laws of motion", "work and energy"]
+            }
+        ]
+        
+        successful_cross_tests = 0
+        total_cross_tests = len(cross_unit_scenarios)
+        
+        for scenario in cross_unit_scenarios:
+            try:
+                payload = {
+                    "subject": scenario["subject"],
+                    "topics": scenario["topics"],
+                    "difficulty": DifficultyLevel.MEDIUM.value,
+                    "question_count": 6  # 2 questions per unit
+                }
+                
+                response = requests.post(url, json=payload, headers=headers)
+                print(f"\nTesting {scenario['name']}: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    questions = data.get("questions", [])
+                    
+                    if len(questions) > 0:
+                        unit_distribution = {}
+                        correctly_tagged = 0
+                        
+                        for i, question in enumerate(questions):
+                            question_text = question.get("question_text", "").lower()
+                            explanation = question.get("explanation", "").lower()
+                            topic_field = question.get("topic", "").lower()
+                            combined_text = question_text + " " + explanation
+                            
+                            print(f"  Question {i+1}: {question_text[:60]}...")
+                            print(f"    Topic field: '{topic_field}'")
+                            
+                            # Check which unit this question belongs to
+                            matched_unit = None
+                            for expected_unit in scenario["expected_units"]:
+                                if expected_unit in topic_field or expected_unit in combined_text:
+                                    matched_unit = expected_unit
+                                    break
+                            
+                            if matched_unit:
+                                unit_distribution[matched_unit] = unit_distribution.get(matched_unit, 0) + 1
+                                correctly_tagged += 1
+                                print(f"    ✅ Correctly tagged to: {matched_unit}")
+                            else:
+                                print(f"    ❌ Could not determine unit tagging")
+                        
+                        # Check distribution across units
+                        print(f"  📊 Unit Distribution: {unit_distribution}")
+                        
+                        # Test passes if:
+                        # 1. At least 70% of questions are correctly tagged
+                        # 2. At least 2 different units are represented
+                        tagging_accuracy = (correctly_tagged / len(questions)) * 100
+                        units_represented = len(unit_distribution)
+                        
+                        print(f"  📊 Tagging Accuracy: {tagging_accuracy:.1f}% ({correctly_tagged}/{len(questions)})")
+                        print(f"  📊 Units Represented: {units_represented}/{len(scenario['expected_units'])}")
+                        
+                        if tagging_accuracy >= 70.0 and units_represented >= 2:
+                            successful_cross_tests += 1
+                            print(f"  ✅ {scenario['name']}: PASSED cross-unit test")
+                        else:
+                            print(f"  ❌ {scenario['name']}: FAILED cross-unit test")
+                    else:
+                        print(f"  ❌ {scenario['name']}: No questions generated")
+                else:
+                    print(f"  ❌ {scenario['name']}: API call failed with status {response.status_code}")
+                    
+            except Exception as e:
+                print(f"  ❌ {scenario['name']}: Exception occurred - {str(e)}")
+        
+        # Overall cross-unit success rate
+        cross_success_rate = (successful_cross_tests / total_cross_tests) * 100
+        print(f"\n📊 Cross-Unit Testing Success Rate: {cross_success_rate:.1f}% ({successful_cross_tests}/{total_cross_tests})")
+        
+        # Test passes if at least 66% of cross-unit scenarios work correctly
+        self.assertGreaterEqual(cross_success_rate, 66.0, f"Cross-unit testing insufficient: {cross_success_rate:.1f}%")
+        print("✅ Cross-Unit Testing and Fallback System test passed")
+        
+        return {
+            "cross_success_rate": cross_success_rate,
+            "successful_cross_tests": successful_cross_tests,
+            "total_cross_tests": total_cross_tests
         }
 
     def test_12_practice_test_submission(self):
