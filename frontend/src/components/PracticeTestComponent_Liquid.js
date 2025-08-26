@@ -142,7 +142,7 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
     setUserAnswers({});
     setShowResults(false);
     setSelectedSubject('');
-    setSelectedTopics([]);
+    setSelectedUnits([]);
     setSelectedQuestionTypes([]);
   };
 
