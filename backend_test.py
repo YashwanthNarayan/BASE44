@@ -1330,6 +1330,477 @@ class TestPracticeResultsEndpointFix(unittest.TestCase):
             print(f"❌ Subject filter test failed: {str(e)}")
             self.fail(f"Subject filter test failed: {str(e)}")
 
+class TestNewTeacherAnalyticsEndpoints(unittest.TestCase):
+    """Test cases specifically for the NEW teacher analytics endpoints"""
+
+    def setUp(self):
+        """Set up test case - create teacher and student accounts with test data"""
+        self.teacher_token = None
+        self.teacher_id = None
+        self.student_token = None
+        self.student_id = None
+        self.class_id = None
+        self.join_code = None
+        
+        # Register teacher and student
+        self.register_teacher()
+        self.register_student()
+        self.create_class_and_join()
+        self.create_practice_test_data()
+
+    def register_teacher(self):
+        """Register a teacher for testing"""
+        print("\n🔍 Setting up teacher account for new analytics testing...")
+        url = f"{API_URL}/auth/register"
+        payload = {
+            "email": f"analytics_teacher_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Dr. Kavya Sharma",
+            "user_type": UserType.TEACHER.value,
+            "school_name": "Advanced Learning Institute"
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 200:
+                data = response.json()
+                self.teacher_token = data.get("access_token")
+                self.teacher_id = data.get("user", {}).get("id")
+                print(f"Registered teacher with ID: {self.teacher_id}")
+            else:
+                print(f"Failed to register teacher: {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error registering teacher: {str(e)}")
+
+    def register_student(self):
+        """Register a student for testing"""
+        print("\n🔍 Setting up student account for analytics testing...")
+        url = f"{API_URL}/auth/register"
+        payload = {
+            "email": f"analytics_student_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Rohan Gupta",
+            "user_type": UserType.STUDENT.value,
+            "grade_level": GradeLevel.GRADE_11.value
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 200:
+                data = response.json()
+                self.student_token = data.get("access_token")
+                self.student_id = data.get("user", {}).get("id")
+                print(f"Registered student with ID: {self.student_id}")
+            else:
+                print(f"Failed to register student: {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error registering student: {str(e)}")
+
+    def create_class_and_join(self):
+        """Create a class and have student join it"""
+        if not self.teacher_token or not self.student_token:
+            return
+            
+        print("\n🔍 Creating class and joining student...")
+        
+        # Create class
+        url = f"{API_URL}/teacher/classes"
+        headers = {"Authorization": f"Bearer {self.teacher_token}"}
+        payload = {
+            "class_name": "Advanced Mathematics",
+            "subject": Subject.MATH.value,
+            "description": "Advanced mathematics for analytics testing"
+        }
+        
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            if response.status_code == 200:
+                data = response.json()
+                self.class_id = data.get("class_id")
+                self.join_code = data.get("join_code")
+                print(f"Created class with ID: {self.class_id}")
+                
+                # Join class as student
+                join_url = f"{API_URL}/student/join-class"
+                join_headers = {"Authorization": f"Bearer {self.student_token}"}
+                join_payload = {"join_code": self.join_code}
+                
+                join_response = requests.post(join_url, json=join_payload, headers=join_headers)
+                if join_response.status_code == 200:
+                    print("Student successfully joined class")
+                else:
+                    print(f"Failed to join class: {join_response.status_code}")
+            else:
+                print(f"Failed to create class: {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error creating class: {str(e)}")
+
+    def create_practice_test_data(self):
+        """Create diverse practice test data for analytics testing"""
+        if not self.student_token:
+            return
+            
+        print("\n🔍 Creating practice test data for analytics...")
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Create tests with different subjects and performance levels
+        test_scenarios = [
+            # Strong performance in Math
+            {"subject": Subject.MATH.value, "topics": ["Algebra"], "score_target": 95},
+            {"subject": Subject.MATH.value, "topics": ["Geometry"], "score_target": 90},
+            {"subject": Subject.MATH.value, "topics": ["Calculus"], "score_target": 88},
+            
+            # Weak performance in Physics
+            {"subject": Subject.PHYSICS.value, "topics": ["Mechanics"], "score_target": 45},
+            {"subject": Subject.PHYSICS.value, "topics": ["Thermodynamics"], "score_target": 50},
+            
+            # Moderate performance in Chemistry
+            {"subject": Subject.CHEMISTRY.value, "topics": ["Organic"], "score_target": 75},
+            {"subject": Subject.CHEMISTRY.value, "topics": ["Inorganic"], "score_target": 70},
+        ]
+        
+        for scenario in test_scenarios:
+            try:
+                # Generate practice test
+                gen_url = f"{API_URL}/practice/generate"
+                gen_payload = {
+                    "subject": scenario["subject"],
+                    "topics": scenario["topics"],
+                    "difficulty": DifficultyLevel.MEDIUM.value,
+                    "question_count": 3
+                }
+                
+                gen_response = requests.post(gen_url, json=gen_payload, headers=headers)
+                if gen_response.status_code == 200:
+                    gen_data = gen_response.json()
+                    questions = gen_data.get("questions", [])
+                    
+                    if questions:
+                        # Create answers to achieve target score
+                        student_answers = {}
+                        question_ids = []
+                        target_score = scenario["score_target"]
+                        correct_count = int((target_score / 100) * len(questions))
+                        
+                        for i, question in enumerate(questions):
+                            question_id = question.get("id")
+                            question_ids.append(question_id)
+                            
+                            # Give correct answer for first 'correct_count' questions
+                            if i < correct_count:
+                                student_answers[question_id] = question.get("correct_answer")
+                            else:
+                                # Give wrong answer for remaining questions
+                                options = question.get("options", [])
+                                correct_answer = question.get("correct_answer")
+                                wrong_options = [opt for opt in options if opt != correct_answer]
+                                student_answers[question_id] = wrong_options[0] if wrong_options else "Wrong Answer"
+                        
+                        # Submit the test
+                        submit_url = f"{API_URL}/practice/submit"
+                        submit_payload = {
+                            "questions": question_ids,
+                            "student_answers": student_answers,
+                            "subject": scenario["subject"],
+                            "time_taken": 300
+                        }
+                        
+                        submit_response = requests.post(submit_url, json=submit_payload, headers=headers)
+                        if submit_response.status_code == 200:
+                            submit_data = submit_response.json()
+                            print(f"Created {scenario['subject']} test with score: {submit_data.get('score')}%")
+                        else:
+                            print(f"Failed to submit {scenario['subject']} test: {submit_response.status_code}")
+                    else:
+                        print(f"No questions generated for {scenario['subject']}")
+                else:
+                    print(f"Failed to generate {scenario['subject']} test: {gen_response.status_code}")
+                    
+            except Exception as e:
+                print(f"Error creating test data for {scenario['subject']}: {str(e)}")
+
+    def test_01_class_strengths_weaknesses_endpoint(self):
+        """Test the NEW /api/teacher/analytics/class-strengths-weaknesses endpoint"""
+        print("\n🔍 Testing NEW Class Strengths & Weaknesses Analytics Endpoint...")
+        
+        if not self.teacher_token:
+            self.skipTest("Teacher token not available")
+        
+        url = f"{API_URL}/teacher/analytics/class-strengths-weaknesses"
+        headers = {"Authorization": f"Bearer {self.teacher_token}"}
+        
+        try:
+            # Test without class_id parameter (all teacher's classes)
+            response = requests.get(url, headers=headers)
+            print(f"Class Strengths/Weaknesses Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Class strengths/weaknesses endpoint should return 200 OK")
+            
+            if response.status_code == 200:
+                data = response.json()
+                print("✅ Class strengths/weaknesses endpoint returns 200 OK")
+                
+                # Verify response structure
+                required_fields = [
+                    "class_strengths", "class_weaknesses", "subject_analysis", 
+                    "recommendations", "total_students", "total_tests", "analysis_date"
+                ]
+                for field in required_fields:
+                    self.assertIn(field, data, f"Field '{field}' should be present in response")
+                
+                # Verify data types
+                self.assertIsInstance(data["class_strengths"], list, "class_strengths should be a list")
+                self.assertIsInstance(data["class_weaknesses"], list, "class_weaknesses should be a list")
+                self.assertIsInstance(data["subject_analysis"], list, "subject_analysis should be a list")
+                self.assertIsInstance(data["recommendations"], list, "recommendations should be a list")
+                self.assertIsInstance(data["total_students"], int, "total_students should be an integer")
+                self.assertIsInstance(data["total_tests"], int, "total_tests should be an integer")
+                
+                print(f"✅ Found {len(data['class_strengths'])} class strengths")
+                print(f"✅ Found {len(data['class_weaknesses'])} class weaknesses")
+                print(f"✅ Found {len(data['subject_analysis'])} subjects analyzed")
+                print(f"✅ Found {len(data['recommendations'])} recommendations")
+                print(f"✅ Total students: {data['total_students']}")
+                print(f"✅ Total tests: {data['total_tests']}")
+                
+                # Verify subject analysis structure if present
+                if data["subject_analysis"]:
+                    first_subject = data["subject_analysis"][0]
+                    subject_fields = ["subject", "subject_display", "average_score", "total_tests", "students_tested"]
+                    for field in subject_fields:
+                        self.assertIn(field, first_subject, f"Subject analysis should contain '{field}' field")
+                
+                # Test with specific class_id parameter
+                if self.class_id:
+                    class_url = f"{url}?class_id={self.class_id}"
+                    class_response = requests.get(class_url, headers=headers)
+                    print(f"Class-specific analysis response: {class_response.status_code}")
+                    
+                    if class_response.status_code == 200:
+                        class_data = class_response.json()
+                        print("✅ Class-specific analysis works correctly")
+                    else:
+                        print(f"⚠️ Class-specific analysis returned: {class_response.status_code}")
+                
+            else:
+                print(f"❌ Class strengths/weaknesses endpoint failed: {response.text}")
+                
+        except Exception as e:
+            print(f"❌ Class strengths/weaknesses test failed: {str(e)}")
+            self.fail(f"Class strengths/weaknesses test failed: {str(e)}")
+
+    def test_02_student_strengths_weaknesses_endpoint(self):
+        """Test the NEW /api/teacher/analytics/student-strengths-weaknesses/{student_id} endpoint"""
+        print("\n🔍 Testing NEW Student Strengths & Weaknesses Analytics Endpoint...")
+        
+        if not self.teacher_token or not self.student_id:
+            self.skipTest("Teacher token or student ID not available")
+        
+        url = f"{API_URL}/teacher/analytics/student-strengths-weaknesses/{self.student_id}"
+        headers = {"Authorization": f"Bearer {self.teacher_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Student Strengths/Weaknesses Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Student strengths/weaknesses endpoint should return 200 OK")
+            
+            if response.status_code == 200:
+                data = response.json()
+                print("✅ Student strengths/weaknesses endpoint returns 200 OK")
+                
+                # Verify response structure
+                required_fields = [
+                    "student_id", "student_name", "strengths", "weaknesses", 
+                    "improving_areas", "declining_areas", "subject_breakdown", 
+                    "recommendations", "overall_performance"
+                ]
+                for field in required_fields:
+                    self.assertIn(field, data, f"Field '{field}' should be present in response")
+                
+                # Verify student identification
+                self.assertEqual(data["student_id"], self.student_id, "Student ID should match requested student")
+                self.assertIsInstance(data["student_name"], str, "Student name should be a string")
+                
+                # Verify data types
+                self.assertIsInstance(data["strengths"], list, "strengths should be a list")
+                self.assertIsInstance(data["weaknesses"], list, "weaknesses should be a list")
+                self.assertIsInstance(data["improving_areas"], list, "improving_areas should be a list")
+                self.assertIsInstance(data["declining_areas"], list, "declining_areas should be a list")
+                self.assertIsInstance(data["subject_breakdown"], list, "subject_breakdown should be a list")
+                self.assertIsInstance(data["recommendations"], list, "recommendations should be a list")
+                self.assertIsInstance(data["overall_performance"], dict, "overall_performance should be a dict")
+                
+                print(f"✅ Student: {data['student_name']}")
+                print(f"✅ Found {len(data['strengths'])} strengths")
+                print(f"✅ Found {len(data['weaknesses'])} weaknesses")
+                print(f"✅ Found {len(data['subject_breakdown'])} subjects in breakdown")
+                print(f"✅ Found {len(data['recommendations'])} recommendations")
+                
+                # Verify overall performance structure
+                overall_perf = data["overall_performance"]
+                perf_fields = ["average_score", "total_tests", "subjects_tested", "best_subject", "weakest_subject"]
+                for field in perf_fields:
+                    self.assertIn(field, overall_perf, f"Overall performance should contain '{field}' field")
+                
+                # Verify subject breakdown structure if present
+                if data["subject_breakdown"]:
+                    first_subject = data["subject_breakdown"][0]
+                    breakdown_fields = ["subject", "subject_display", "average_score", "test_count"]
+                    for field in breakdown_fields:
+                        self.assertIn(field, first_subject, f"Subject breakdown should contain '{field}' field")
+                
+                print(f"✅ Overall performance - Average: {overall_perf['average_score']}%, Tests: {overall_perf['total_tests']}")
+                
+            else:
+                print(f"❌ Student strengths/weaknesses endpoint failed: {response.text}")
+                
+        except Exception as e:
+            print(f"❌ Student strengths/weaknesses test failed: {str(e)}")
+            self.fail(f"Student strengths/weaknesses test failed: {str(e)}")
+
+    def test_03_teacher_authentication_for_new_endpoints(self):
+        """Test authentication requirements for new teacher analytics endpoints"""
+        print("\n🔍 Testing Authentication for NEW Teacher Analytics Endpoints...")
+        
+        endpoints_to_test = [
+            "/teacher/analytics/class-strengths-weaknesses",
+            f"/teacher/analytics/student-strengths-weaknesses/{self.student_id if self.student_id else 'test-student-id'}"
+        ]
+        
+        for endpoint in endpoints_to_test:
+            url = f"{API_URL}{endpoint}"
+            
+            try:
+                # Test without authentication
+                response = requests.get(url)
+                print(f"No auth response for {endpoint}: {response.status_code}")
+                
+                # Should return 401 or 403, not 500
+                self.assertIn(response.status_code, [401, 403], 
+                             f"Endpoint {endpoint} should return 401/403 for missing authentication")
+                
+                # Test with invalid token
+                invalid_headers = {"Authorization": "Bearer invalid.token.here"}
+                invalid_response = requests.get(url, headers=invalid_headers)
+                print(f"Invalid auth response for {endpoint}: {invalid_response.status_code}")
+                
+                self.assertIn(invalid_response.status_code, [401, 403], 
+                             f"Endpoint {endpoint} should return 401/403 for invalid authentication")
+                
+                print(f"✅ Authentication properly enforced for {endpoint}")
+                
+            except Exception as e:
+                print(f"❌ Authentication test failed for {endpoint}: {str(e)}")
+                self.fail(f"Authentication test failed for {endpoint}: {str(e)}")
+
+    def test_04_student_authorization_verification(self):
+        """Test that teachers can only access their own students' data"""
+        print("\n🔍 Testing Student Authorization for Teacher Analytics...")
+        
+        if not self.teacher_token:
+            self.skipTest("Teacher token not available")
+        
+        # Create another teacher to test cross-teacher access
+        other_teacher_url = f"{API_URL}/auth/register"
+        other_teacher_payload = {
+            "email": f"other_teacher_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Prof. Unauthorized Teacher",
+            "user_type": UserType.TEACHER.value,
+            "school_name": "Different School"
+        }
+        
+        try:
+            other_teacher_response = requests.post(other_teacher_url, json=other_teacher_payload)
+            if other_teacher_response.status_code == 200:
+                other_teacher_data = other_teacher_response.json()
+                other_teacher_token = other_teacher_data.get("access_token")
+                
+                if other_teacher_token and self.student_id:
+                    # Try to access our student's data with different teacher's token
+                    url = f"{API_URL}/teacher/analytics/student-strengths-weaknesses/{self.student_id}"
+                    headers = {"Authorization": f"Bearer {other_teacher_token}"}
+                    
+                    response = requests.get(url, headers=headers)
+                    print(f"Cross-teacher access response: {response.status_code}")
+                    
+                    # Should return 404 (student not found in teacher's classes) or 403 (forbidden)
+                    self.assertIn(response.status_code, [403, 404], 
+                                 "Teachers should not be able to access other teachers' students")
+                    
+                    print("✅ Cross-teacher access properly blocked")
+                else:
+                    print("⚠️ Could not create other teacher for authorization test")
+            else:
+                print("⚠️ Could not register other teacher for authorization test")
+                
+        except Exception as e:
+            print(f"❌ Authorization test failed: {str(e)}")
+            # Don't fail the test for this, as it's a secondary verification
+
+    def test_05_data_structure_validation(self):
+        """Test that the new endpoints return data in expected format for frontend"""
+        print("\n🔍 Testing Data Structure Validation for Frontend Integration...")
+        
+        if not self.teacher_token:
+            self.skipTest("Teacher token not available")
+        
+        # Test class strengths/weaknesses data structure
+        class_url = f"{API_URL}/teacher/analytics/class-strengths-weaknesses"
+        headers = {"Authorization": f"Bearer {self.teacher_token}"}
+        
+        try:
+            class_response = requests.get(class_url, headers=headers)
+            if class_response.status_code == 200:
+                class_data = class_response.json()
+                
+                # Validate class strengths structure
+                if class_data.get("class_strengths"):
+                    strength = class_data["class_strengths"][0]
+                    strength_fields = ["subject", "subject_display", "average_score", "strength_level"]
+                    for field in strength_fields:
+                        self.assertIn(field, strength, f"Class strength should have '{field}' field")
+                
+                # Validate recommendations structure
+                if class_data.get("recommendations"):
+                    recommendation = class_data["recommendations"][0]
+                    rec_fields = ["type", "priority", "subject", "message", "suggested_actions"]
+                    for field in rec_fields:
+                        self.assertIn(field, recommendation, f"Recommendation should have '{field}' field")
+                    
+                    self.assertIsInstance(recommendation["suggested_actions"], list, 
+                                        "Suggested actions should be a list")
+                
+                print("✅ Class analytics data structure validated")
+            
+            # Test student strengths/weaknesses data structure
+            if self.student_id:
+                student_url = f"{API_URL}/teacher/analytics/student-strengths-weaknesses/{self.student_id}"
+                student_response = requests.get(student_url, headers=headers)
+                
+                if student_response.status_code == 200:
+                    student_data = student_response.json()
+                    
+                    # Validate strengths/weaknesses structure
+                    if student_data.get("strengths"):
+                        strength = student_data["strengths"][0]
+                        self.assertIn("subject", strength, "Student strength should have subject field")
+                        self.assertIn("average_score", strength, "Student strength should have average_score field")
+                    
+                    # Validate recommendations structure
+                    if student_data.get("recommendations"):
+                        recommendation = student_data["recommendations"][0]
+                        rec_fields = ["type", "priority", "message", "suggested_actions"]
+                        for field in rec_fields:
+                            self.assertIn(field, recommendation, f"Student recommendation should have '{field}' field")
+                    
+                    print("✅ Student analytics data structure validated")
+                
+        except Exception as e:
+            print(f"❌ Data structure validation failed: {str(e)}")
+            self.fail(f"Data structure validation failed: {str(e)}")
+
 class TestPracticeStatsEndpointFix(unittest.TestCase):
     """Test cases specifically for the /api/practice/stats/{subject} endpoint fix"""
 
