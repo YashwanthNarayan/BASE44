@@ -48,29 +48,37 @@ class AIService:
         types_str = ", ".join(question_types) if question_types else "MCQ, Short Answer, Long Answer, Numerical"
         
         prompt = f"""
-        Generate {question_count} {difficulty} level practice questions for {subject} focusing on these topics: {', '.join(topics)}.
+        Generate {question_count} {difficulty} level practice questions for {subject} based SPECIFICALLY on these NCERT curriculum units: {', '.join(topics)}.
+        
+        IMPORTANT REQUIREMENTS:
+        - Each question MUST be directly related to the specific NCERT unit/chapter mentioned in the topics
+        - Use concepts, formulas, examples, and terminology from the exact NCERT units provided
+        - DO NOT generate generic questions - make them unit-specific
+        - If the unit is "Real Numbers", ask about rational/irrational numbers, number line, etc.
+        - If the unit is "Quadratic Equations", ask about solving quadratics, discriminant, roots, etc.
+        - If the unit is "Nutrition in Plants", ask about photosynthesis, chlorophyll, stomata, etc.
         
         Question types to include: {types_str}
         
         For each question, provide:
-        1. question_text: The actual question
+        1. question_text: The actual question (MUST be specific to the NCERT unit)
         2. question_type: Type of question (mcq, short_answer, long_answer, numerical)
         3. options: For MCQ questions, provide 4 options as a list
         4. correct_answer: The correct answer
-        5. explanation: Brief explanation of the answer
-        6. topic: Which topic this question covers
+        5. explanation: Brief explanation connecting to the specific NCERT unit concepts
+        6. topic: The exact NCERT unit name from the provided topics list
         
-        Return as JSON array format. Ensure questions are appropriate for the difficulty level and educational.
+        Return as JSON array format. Each question must demonstrate understanding of the specific NCERT unit content.
         
-        Example format:
+        Example for NCERT unit "Real Numbers":
         [
             {{
-                "question_text": "What is the derivative of x²?",
-                "question_type": "short_answer",
-                "options": null,
-                "correct_answer": "2x",
-                "explanation": "Using the power rule, d/dx(x²) = 2x¹ = 2x",
-                "topic": "Calculus"
+                "question_text": "Which of the following is an irrational number?",
+                "question_type": "mcq",
+                "options": ["0.25", "√2", "3/4", "0.333..."],
+                "correct_answer": "√2",
+                "explanation": "√2 is irrational because it cannot be expressed as a ratio of two integers. From NCERT Real Numbers unit.",
+                "topic": "Real Numbers"
             }}
         ]
         """
