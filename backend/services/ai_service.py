@@ -201,6 +201,42 @@ class AIService:
                         "options": ["Always terminating", "Always non-terminating", "Either terminating or non-terminating repeating", "Always infinite"],
                         "correct": "Either terminating or non-terminating repeating",
                         "explanation": "Rational numbers have decimal expansions that either terminate or repeat."
+                    },
+                    {
+                        "question": "Every rational number is a real number. This statement is:",
+                        "options": ["True", "False", "Sometimes true", "Cannot be determined"],
+                        "correct": "True",
+                        "explanation": "All rational numbers are part of the real number system."
+                    },
+                    {
+                        "question": "The number π (pi) is:",
+                        "options": ["Rational", "Irrational", "Integer", "Natural"],
+                        "correct": "Irrational",
+                        "explanation": "π is an irrational number as its decimal expansion is non-terminating and non-repeating."
+                    },
+                    {
+                        "question": "Between any two rational numbers, there are:",
+                        "options": ["No rational numbers", "Exactly one rational number", "Infinitely many rational numbers", "Only integers"],
+                        "correct": "Infinitely many rational numbers",
+                        "explanation": "The rational numbers are dense in the real numbers."
+                    },
+                    {
+                        "question": "The decimal representation of 7/8 is:",
+                        "options": ["0.875", "0.777...", "0.625", "0.888..."],
+                        "correct": "0.875",
+                        "explanation": "7 ÷ 8 = 0.875, which is a terminating decimal."
+                    },
+                    {
+                        "question": "Which of the following is a rational number?",
+                        "options": ["√3", "√5", "√16", "√7"],
+                        "correct": "√16",
+                        "explanation": "√16 = 4, which is a rational number (can be written as 4/1)."
+                    },
+                    {
+                        "question": "The sum of a rational and an irrational number is:",
+                        "options": ["Always rational", "Always irrational", "Sometimes rational", "Always an integer"],
+                        "correct": "Always irrational",
+                        "explanation": "The sum of a rational and irrational number is always irrational."
                     }
                 ],
                 "Quadratic Equations": [
@@ -215,6 +251,42 @@ class AIService:
                         "options": ["Real and distinct", "Real and equal", "Complex", "Imaginary"],
                         "correct": "Real and equal",
                         "explanation": "When discriminant = 0, the quadratic has two equal real roots."
+                    },
+                    {
+                        "question": "The roots of x² - 5x + 6 = 0 are:",
+                        "options": ["2, 3", "1, 6", "-2, -3", "5, 6"],
+                        "correct": "2, 3",
+                        "explanation": "Factoring: (x-2)(x-3) = 0, so x = 2 or x = 3"
+                    },
+                    {
+                        "question": "For the quadratic equation ax² + bx + c = 0, if a > 0 and discriminant > 0:",
+                        "options": ["No real roots", "One real root", "Two real and distinct roots", "Two equal roots"],
+                        "correct": "Two real and distinct roots",
+                        "explanation": "Positive discriminant means two real and distinct roots."
+                    },
+                    {
+                        "question": "The quadratic formula is used to find:",
+                        "options": ["The vertex of parabola", "The roots of quadratic equation", "The y-intercept", "The axis of symmetry"],
+                        "correct": "The roots of quadratic equation",
+                        "explanation": "x = (-b ± √(b²-4ac))/2a gives the roots of ax² + bx + c = 0"
+                    },
+                    {
+                        "question": "If one root of x² - 7x + k = 0 is 3, then k equals:",
+                        "options": ["12", "10", "9", "4"],
+                        "correct": "12",
+                        "explanation": "Substituting x = 3: 9 - 21 + k = 0, so k = 12"
+                    },
+                    {
+                        "question": "The sum of roots of 2x² - 7x + 3 = 0 is:",
+                        "options": ["7/2", "-7/2", "3/2", "-3/2"],
+                        "correct": "7/2",
+                        "explanation": "Sum of roots = -b/a = -(-7)/2 = 7/2"
+                    },
+                    {
+                        "question": "A quadratic equation has roots 2 and -3. The equation is:",
+                        "options": ["x² + x - 6 = 0", "x² - x - 6 = 0", "x² + x + 6 = 0", "x² - x + 6 = 0"],
+                        "correct": "x² + x - 6 = 0",
+                        "explanation": "(x-2)(x+3) = x² + x - 6 = 0"
                     }
                 ],
                 "Polynomials": [
