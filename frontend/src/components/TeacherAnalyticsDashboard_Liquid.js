@@ -438,6 +438,354 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
             </LiquidButton>
           </LiquidCard>
         )}
+        </>
+        )}
+
+        {/* Class Analysis Tab */}
+        {activeTab === 'class-analysis' && (
+          <div className="space-y-8">
+            {classAnalytics ? (
+              <>
+                {/* Class Overview Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <LiquidCard className="text-center p-6">
+                    <div className="text-3xl font-bold text-accent-blue mb-2">
+                      {classAnalytics.total_students}
+                    </div>
+                    <p className="text-secondary">Total Students</p>
+                  </LiquidCard>
+                  
+                  <LiquidCard className="text-center p-6">
+                    <div className="text-3xl font-bold text-accent-green mb-2">
+                      {classAnalytics.total_tests}
+                    </div>
+                    <p className="text-secondary">Total Tests</p>
+                  </LiquidCard>
+                  
+                  <LiquidCard className="text-center p-6">
+                    <div className="text-3xl font-bold text-accent-purple mb-2">
+                      {classAnalytics.class_strengths.length}
+                    </div>
+                    <p className="text-secondary">Class Strengths</p>
+                  </LiquidCard>
+                  
+                  <LiquidCard className="text-center p-6">
+                    <div className="text-3xl font-bold text-accent-yellow mb-2">
+                      {classAnalytics.class_weaknesses.length}
+                    </div>
+                    <p className="text-secondary">Areas for Focus</p>
+                  </LiquidCard>
+                </div>
+
+                {/* Class Strengths and Weaknesses */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {/* Strengths */}
+                  <LiquidCard className="p-6">
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                        <span className="text-xl">💪</span>
+                      </div>
+                      <h2 className="text-2xl font-bold text-green-400">Class Strengths</h2>
+                    </div>
+                    
+                    {classAnalytics.class_strengths.length > 0 ? (
+                      <div className="space-y-4">
+                        {classAnalytics.class_strengths.map((strength, index) => (
+                          <div key={index} className="p-4 bg-green-500/10 border border-green-400/30 rounded-xl">
+                            <div className="flex justify-between items-center mb-2">
+                              <h3 className="font-semibold text-green-400">{strength.subject_display}</h3>
+                              <span className="text-green-400 font-bold">{strength.average_score}%</span>
+                            </div>
+                            <p className="text-sm text-secondary">
+                              {strength.students_tested} students tested • {strength.total_tests} tests
+                            </p>
+                            <div className="flex items-center space-x-4 text-xs text-secondary mt-2">
+                              <span>Accuracy: {strength.accuracy_rate}%</span>
+                              <span>Grade: {strength.grade}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <div className="text-4xl mb-4">🌱</div>
+                        <p className="text-secondary">No significant class strengths identified yet.</p>
+                      </div>
+                    )}
+                  </LiquidCard>
+
+                  {/* Weaknesses */}
+                  <LiquidCard className="p-6">
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+                        <span className="text-xl">🎯</span>
+                      </div>
+                      <h2 className="text-2xl font-bold text-red-400">Areas for Focus</h2>
+                    </div>
+                    
+                    {classAnalytics.class_weaknesses.length > 0 ? (
+                      <div className="space-y-4">
+                        {classAnalytics.class_weaknesses.map((weakness, index) => (
+                          <div key={index} className="p-4 bg-red-500/10 border border-red-400/30 rounded-xl">
+                            <div className="flex justify-between items-center mb-2">
+                              <h3 className="font-semibold text-red-400">{weakness.subject_display}</h3>
+                              <span className="text-red-400 font-bold">{weakness.average_score}%</span>
+                            </div>
+                            <p className="text-sm text-secondary">
+                              {weakness.students_tested} students need help • {weakness.total_tests} tests
+                            </p>
+                            <div className="flex items-center space-x-4 text-xs text-secondary mt-2">
+                              <span>Priority: {weakness.weakness_level}</span>
+                              <span>Grade: {weakness.grade}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <div className="text-4xl mb-4">🎉</div>
+                        <p className="text-secondary">No significant class weaknesses identified!</p>
+                      </div>
+                    )}
+                  </LiquidCard>
+                </div>
+
+                {/* Recommendations */}
+                {classAnalytics.recommendations && classAnalytics.recommendations.length > 0 && (
+                  <LiquidCard className="p-6">
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-10 h-10 rounded-full bg-accent-blue/20 flex items-center justify-center">
+                        <span className="text-xl">💡</span>
+                      </div>
+                      <h2 className="text-2xl font-bold text-accent-blue">Teaching Recommendations</h2>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {classAnalytics.recommendations.map((rec, index) => (
+                        <div key={index} className={`p-4 border rounded-xl ${
+                          rec.priority === 'critical' ? 'border-red-400 bg-red-500/10 text-red-400' :
+                          rec.priority === 'high' ? 'border-orange-400 bg-orange-500/10 text-orange-400' :
+                          'border-blue-400 bg-blue-500/10 text-blue-400'
+                        }`}>
+                          <div className="flex items-center justify-between mb-3">
+                            <h3 className="font-semibold capitalize">{rec.type.replace('_', ' ')}</h3>
+                            <span className="text-xs px-2 py-1 rounded-full bg-current/20 font-medium">
+                              {rec.priority}
+                            </span>
+                          </div>
+                          <p className="text-sm mb-3" dangerouslySetInnerHTML={{ __html: rec.message }} />
+                          <div className="space-y-1">
+                            {rec.suggested_actions.slice(0, 2).map((action, i) => (
+                              <div key={i} className="text-xs opacity-80">• {action}</div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </LiquidCard>
+                )}
+
+                {/* Subject Analysis */}
+                <LiquidCard className="p-6">
+                  <div className="flex items-center space-x-3 mb-6">
+                    <div className="w-10 h-10 rounded-full bg-accent-purple/20 flex items-center justify-center">
+                      <span className="text-xl">📚</span>
+                    </div>
+                    <h2 className="text-2xl font-bold text-accent-purple">Subject Performance</h2>
+                  </div>
+                  
+                  {classAnalytics.subject_analysis.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {classAnalytics.subject_analysis.map((subject, index) => (
+                        <div key={index} className="p-4 bg-glass/30 rounded-xl">
+                          <div className="flex items-center justify-between mb-2">
+                            <h3 className="font-bold text-primary">{subject.subject_display}</h3>
+                            <div className={`px-2 py-1 rounded text-xs font-bold ${
+                              subject.grade === 'A' ? 'bg-green-500/20 text-green-400' :
+                              subject.grade === 'B' ? 'bg-blue-500/20 text-blue-400' :
+                              subject.grade === 'C' ? 'bg-yellow-500/20 text-yellow-400' :
+                              subject.grade === 'D' ? 'bg-orange-500/20 text-orange-400' :
+                              'bg-red-500/20 text-red-400'
+                            }`}>
+                              {subject.grade}
+                            </div>
+                          </div>
+                          <div className="space-y-1 text-sm text-secondary">
+                            <div>Average: <span className="text-primary font-medium">{subject.average_score}%</span></div>
+                            <div>Students: <span className="text-primary font-medium">{subject.students_tested}</span></div>
+                            <div>Tests: <span className="text-primary font-medium">{subject.total_tests}</span></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div className="text-4xl mb-4">📚</div>
+                      <p className="text-secondary">No subject data available yet.</p>
+                    </div>
+                  )}
+                </LiquidCard>
+              </>
+            ) : (
+              <LiquidCard className="text-center p-12">
+                <div className="text-6xl mb-6">📊</div>
+                <h2 className="text-2xl font-bold text-primary mb-4">Loading Class Analysis...</h2>
+                <p className="text-secondary">
+                  Analyzing class-wide performance patterns and generating insights.
+                </p>
+              </LiquidCard>
+            )}
+          </div>
+        )}
+
+        {/* Individual Student Tab */}
+        {activeTab === 'individual' && (
+          <div className="space-y-8">
+            <LiquidCard className="p-6">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 rounded-full bg-accent-purple/20 flex items-center justify-center">
+                  <span className="text-xl">👤</span>
+                </div>
+                <h2 className="text-2xl font-bold text-accent-purple">Select Student</h2>
+              </div>
+              
+              {availableStudents.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {availableStudents.map((student) => (
+                    <button
+                      key={student.student_id}
+                      onClick={() => {
+                        setSelectedStudent(student.student_id);
+                        loadStudentAnalytics(student.student_id);
+                      }}
+                      className={`p-4 rounded-xl border-2 transition-all duration-200 text-left ${
+                        selectedStudent === student.student_id
+                          ? 'border-accent-blue bg-accent-blue/10'
+                          : 'border-primary/20 bg-glass/30 hover:border-accent-blue/50'
+                      }`}
+                    >
+                      <div className="font-semibold text-primary">{student.student_name}</div>
+                      <div className="text-sm text-secondary">
+                        ID: {student.student_id.slice(0, 8)}...
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-4xl mb-4">👥</div>
+                  <p className="text-secondary">No students with test data found.</p>
+                </div>
+              )}
+            </LiquidCard>
+
+            {/* Student Analytics Display */}
+            {studentAnalytics && selectedStudent && (
+              <>
+                {/* Student Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <LiquidCard className="text-center p-6">
+                    <div className="text-3xl font-bold text-accent-blue mb-2">
+                      {studentAnalytics.overall_performance.average_score}%
+                    </div>
+                    <p className="text-secondary">Average Score</p>
+                  </LiquidCard>
+                  
+                  <LiquidCard className="text-center p-6">
+                    <div className="text-3xl font-bold text-accent-green mb-2">
+                      {studentAnalytics.overall_performance.total_tests}
+                    </div>
+                    <p className="text-secondary">Tests Taken</p>
+                  </LiquidCard>
+                  
+                  <LiquidCard className="text-center p-6">
+                    <div className="text-3xl font-bold text-accent-purple mb-2">
+                      {studentAnalytics.strengths.length}
+                    </div>
+                    <p className="text-secondary">Strengths</p>
+                  </LiquidCard>
+                  
+                  <LiquidCard className="text-center p-6">
+                    <div className="text-3xl font-bold text-accent-yellow mb-2">
+                      {studentAnalytics.weaknesses.length}
+                    </div>
+                    <p className="text-secondary">Focus Areas</p>
+                  </LiquidCard>
+                </div>
+
+                {/* Student Strengths and Weaknesses */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <LiquidCard className="p-6">
+                    <h3 className="text-xl font-bold text-green-400 mb-4">
+                      💪 {studentAnalytics.student_name}'s Strengths
+                    </h3>
+                    {studentAnalytics.strengths.length > 0 ? (
+                      <div className="space-y-3">
+                        {studentAnalytics.strengths.map((strength, index) => (
+                          <div key={index} className="p-3 bg-green-500/10 border border-green-400/30 rounded-lg">
+                            <div className="flex justify-between">
+                              <span className="font-medium text-green-400">{strength.subject_display}</span>
+                              <span className="text-green-400 font-bold">{strength.average_score}%</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-secondary">No significant strengths identified yet.</p>
+                    )}
+                  </LiquidCard>
+
+                  <LiquidCard className="p-6">
+                    <h3 className="text-xl font-bold text-red-400 mb-4">
+                      🎯 Areas for Improvement
+                    </h3>
+                    {studentAnalytics.weaknesses.length > 0 ? (
+                      <div className="space-y-3">
+                        {studentAnalytics.weaknesses.map((weakness, index) => (
+                          <div key={index} className="p-3 bg-red-500/10 border border-red-400/30 rounded-lg">
+                            <div className="flex justify-between">
+                              <span className="font-medium text-red-400">{weakness.subject_display}</span>
+                              <span className="text-red-400 font-bold">{weakness.average_score}%</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-secondary">No significant weaknesses identified!</p>
+                    )}
+                  </LiquidCard>
+                </div>
+
+                {/* Teacher Recommendations for Student */}
+                {studentAnalytics.recommendations && studentAnalytics.recommendations.length > 0 && (
+                  <LiquidCard className="p-6">
+                    <h3 className="text-xl font-bold text-accent-blue mb-4">
+                      💡 Teaching Recommendations for {studentAnalytics.student_name}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {studentAnalytics.recommendations.slice(0, 4).map((rec, index) => (
+                        <div key={index} className={`p-4 border rounded-xl ${
+                          rec.priority === 'high' ? 'border-red-400 bg-red-500/10' :
+                          'border-blue-400 bg-blue-500/10'
+                        }`}>
+                          <h4 className="font-semibold mb-2 capitalize">
+                            {rec.type.replace('_', ' ')}
+                          </h4>
+                          <p className="text-sm mb-2" dangerouslySetInnerHTML={{ __html: rec.message }} />
+                          <div className="space-y-1">
+                            {rec.suggested_actions.slice(0, 2).map((action, i) => (
+                              <div key={i} className="text-xs opacity-80">• {action}</div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </LiquidCard>
+                )}
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
