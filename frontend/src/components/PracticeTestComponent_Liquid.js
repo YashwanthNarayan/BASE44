@@ -38,8 +38,8 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
   };
 
   const generatePracticeTest = async () => {
-    if (!selectedSubject || selectedTopics.length === 0) {
-      alert('Please select a subject and at least one topic.');
+    if (!selectedSubject || selectedUnits.length === 0) {
+      alert('Please select a subject and at least one unit.');
       return;
     }
 
@@ -58,7 +58,7 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
 
       const response = await practiceAPI.generate({
         subject: selectedSubject,
-        topics: selectedTopics,
+        topics: selectedUnits, // Send selected units as topics for backend compatibility
         difficulty,
         question_count: numQuestions,
         question_types: selectedQuestionTypes.length > 0 ? selectedQuestionTypes : undefined
