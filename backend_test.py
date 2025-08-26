@@ -1639,7 +1639,7 @@ class TestNewTeacherAnalyticsEndpoints(unittest.TestCase):
                 
                 # Verify overall performance structure
                 overall_perf = data["overall_performance"]
-                perf_fields = ["average_score", "total_tests", "subjects_tested", "best_subject", "weakest_subject"]
+                perf_fields = ["average_score", "total_tests", "subjects_tested", "highest_score", "lowest_score"]
                 for field in perf_fields:
                     self.assertIn(field, overall_perf, f"Overall performance should contain '{field}' field")
                 
