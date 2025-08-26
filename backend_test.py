@@ -1331,7 +1331,7 @@ class TestPracticeResultsEndpointFix(unittest.TestCase):
             self.fail(f"Subject filter test failed: {str(e)}")
 
 class TestNewTeacherAnalyticsEndpoints(unittest.TestCase):
-    """Test cases specifically for the NEW teacher analytics endpoints"""
+    """Test cases specifically for the NEW teacher analytics endpoints - Class & Student Strengths/Weaknesses"""
 
     def setUp(self):
         """Set up test case - create teacher and student accounts with test data"""
