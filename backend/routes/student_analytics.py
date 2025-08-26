@@ -62,7 +62,9 @@ async def get_performance_trends(
         print(f"🔍 TRENDS DEBUG: Final days value = {days}, type = {type(days)}")
         
         # Get practice attempts within the time period
+        print(f"🔍 TRENDS DEBUG: About to create timedelta with days={days}")
         cutoff_date = datetime.utcnow() - timedelta(days=days)
+        print(f"🔍 TRENDS DEBUG: Successfully created cutoff_date = {cutoff_date}")
         
         practice_attempts_cursor = db[Collections.PRACTICE_ATTEMPTS].find({
             "student_id": student_id,
