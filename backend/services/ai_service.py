@@ -348,6 +348,142 @@ class AIService:
             formatted_questions.append(formatted_question)
         
         return formatted_questions
+    def _get_generic_subject_questions(self, subject: str) -> List[Dict[str, str]]:
+        """Generate generic subject questions as fallback"""
+        question_banks = {
+            "math": {
+                "algebra": [
+                    {
+                        "question": "Solve for x: 2x + 5 = 17",
+                        "options": ["x = 6", "x = 12", "x = 11", "x = 7"],
+                        "correct": "x = 6",
+                        "explanation": "Subtract 5 from both sides: 2x = 12, then divide by 2: x = 6"
+                    },
+                    {
+                        "question": "What is the slope of the line y = 3x - 4?",
+                        "options": ["3", "-4", "4", "1/3"],
+                        "correct": "3",
+                        "explanation": "In y = mx + b form, m is the slope. Here m = 3."
+                    },
+                    {
+                        "question": "Factor: x² - 9",
+                        "options": ["(x + 3)(x - 3)", "(x + 9)(x - 1)", "(x - 3)²", "Cannot be factored"],
+                        "correct": "(x + 3)(x - 3)",
+                        "explanation": "This is a difference of squares: a² - b² = (a + b)(a - b)"
+                    }
+                ],
+                "geometry": [
+                    {
+                        "question": "What is the area of a circle with radius 4?",
+                        "options": ["16π", "8π", "4π", "32π"],
+                        "correct": "16π",
+                        "explanation": "Area = πr². With r = 4, Area = π(4)² = 16π"
+                    },
+                    {
+                        "question": "In a right triangle, if one angle is 30°, what is the third angle?",
+                        "options": ["60°", "90°", "45°", "120°"],
+                        "correct": "60°",
+                        "explanation": "Sum of angles in triangle = 180°. 90° + 30° + ? = 180°, so ? = 60°"
+                    }
+                ]
+            },
+            "physics": {
+                "mechanics": [
+                    {
+                        "question": "What is Newton's first law of motion?",
+                        "options": ["F = ma", "Objects in motion stay in motion unless acted upon by a force", "For every action there's an equal and opposite reaction", "E = mc²"],
+                        "correct": "Objects in motion stay in motion unless acted upon by a force",
+                        "explanation": "Newton's first law states that objects at rest stay at rest and objects in motion stay in motion unless acted upon by an unbalanced force."
+                    },
+                    {
+                        "question": "If a car accelerates at 2 m/s² for 5 seconds, what is its change in velocity?",
+                        "options": ["10 m/s", "2.5 m/s", "7 m/s", "0.4 m/s"],
+                        "correct": "10 m/s",
+                        "explanation": "Change in velocity = acceleration × time = 2 m/s² × 5 s = 10 m/s"
+                    }
+                ],
+                "thermodynamics": [
+                    {
+                        "question": "What happens to the kinetic energy of gas molecules when temperature increases?",
+                        "options": ["Increases", "Decreases", "Stays the same", "Becomes zero"],
+                        "correct": "Increases",
+                        "explanation": "Temperature is a measure of average kinetic energy of molecules. Higher temperature means higher kinetic energy."
+                    }
+                ]
+            },
+            "chemistry": {
+                "organic": [
+                    {
+                        "question": "What is the molecular formula for methane?",
+                        "options": ["CH₄", "C₂H₆", "CH₃OH", "CO₂"],
+                        "correct": "CH₄",
+                        "explanation": "Methane is the simplest hydrocarbon with one carbon atom bonded to four hydrogen atoms."
+                    }
+                ],
+                "inorganic": [
+                    {
+                        "question": "What is the chemical symbol for gold?",
+                        "options": ["Go", "Gd", "Au", "Ag"],
+                        "correct": "Au",
+                        "explanation": "Gold's symbol Au comes from its Latin name 'aurum'."
+                    }
+                ]
+            },
+            "biology": {
+                "cell": [
+                    {
+                        "question": "What is the powerhouse of the cell?",
+                        "options": ["Nucleus", "Mitochondria", "Ribosome", "Endoplasmic reticulum"],
+                        "correct": "Mitochondria",
+                        "explanation": "Mitochondria produce ATP (energy) for cellular processes, earning the nickname 'powerhouse of the cell'."
+                    }
+                ],
+                "genetics": [
+                    {
+                        "question": "What does DNA stand for?",
+                        "options": ["Deoxyribonucleic acid", "Deoxyribose nucleic acid", "Dinitrogen nucleic acid", "Dynamic nucleic acid"],
+                        "correct": "Deoxyribonucleic acid",
+                        "explanation": "DNA stands for Deoxyribonucleic acid, the molecule that carries genetic information."
+                    }
+                ]
+            },
+            "english": {
+                "grammar": [
+                    {
+                        "question": "Which sentence is grammatically correct?",
+                        "options": ["She don't like pizza", "She doesn't like pizza", "She didn't liked pizza", "She don't likes pizza"],
+                        "correct": "She doesn't like pizza",
+                        "explanation": "With singular third person subjects like 'she', use 'doesn't' not 'don't'."
+                    }
+                ],
+                "literature": [
+                    {
+                        "question": "Who wrote 'Romeo and Juliet'?",
+                        "options": ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+                        "correct": "William Shakespeare",
+                        "explanation": "Romeo and Juliet is one of Shakespeare's most famous tragedies, written in the early part of his career."
+                    }
+                ]
+            }
+        }
+        
+        import uuid
+        import random
+        
+        fallback_questions = []
+        subject_lower = subject.lower()
+        
+        # Get subject-specific questions
+        subject_bank = question_banks.get(subject_lower, {})
+        
+        # Use all questions from subject
+        relevant_questions = []
+        if subject_bank:
+            for questions in subject_bank.values():
+                relevant_questions.extend(questions)
+        
+        # Return the relevant questions
+        return relevant_questions if relevant_questions else []
     
     async def generate_tutor_response(
         self,
