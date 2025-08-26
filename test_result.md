@@ -305,7 +305,7 @@ backend:
     implemented: true
     working: false
     file: "backend/routes/practice.py, backend/services/ai_service.py"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
