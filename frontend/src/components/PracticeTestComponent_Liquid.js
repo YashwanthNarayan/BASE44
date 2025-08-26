@@ -597,33 +597,33 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
             {selectedSubject && (
               <div className="mb-8">
                 <h3 className="text-xl font-semibold text-white mb-4">
-                  Select Topics ({selectedTopics.length} selected)
+                  Select Topics ({selectedUnits.length} selected)
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {subjects[selectedSubject].topics.map((topic) => (
                     <button
                       key={topic}
-                      onClick={() => handleTopicToggle(topic)}
+                      onClick={() => handleUnitToggle(topic)}
                       className={`
                         p-4 rounded-xl transition-all duration-300 text-sm relative
-                        ${selectedTopics.includes(topic)
+                        ${selectedUnits.includes(topic)
                           ? 'glass-strong border-2 border-blue-400 text-white bg-blue-400/10'
                           : 'glass border-white/20 text-white/70 hover:text-white hover:glass-strong hover:border-white/40'
                         }
                       `}
                     >
-                      {selectedTopics.includes(topic) && (
+                      {selectedUnits.includes(topic) && (
                         <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-400 rounded-full flex items-center justify-center">
                           <span className="text-black text-xs font-bold">✓</span>
                         </div>
                       )}
-                      <div className={`flex items-center gap-2 ${selectedTopics.includes(topic) ? 'font-semibold' : ''}`}>
+                      <div className={`flex items-center gap-2 ${selectedUnits.includes(topic) ? 'font-semibold' : ''}`}>
                         <div className={`w-3 h-3 rounded border-2 flex items-center justify-center ${
-                          selectedTopics.includes(topic) 
+                          selectedUnits.includes(topic) 
                             ? 'border-blue-400 bg-blue-400' 
                             : 'border-white/40'
                         }`}>
-                          {selectedTopics.includes(topic) && (
+                          {selectedUnits.includes(topic) && (
                             <span className="text-black text-xs">✓</span>
                           )}
                         </div>
