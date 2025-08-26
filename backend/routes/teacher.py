@@ -240,7 +240,7 @@ async def get_class_strengths_weaknesses(
             # Get all teacher's classes
             teacher_classes_cursor = db[Collections.CLASSROOMS].find({"teacher_id": teacher_id})
             teacher_classes = await teacher_classes_cursor.to_list(100)
-            all_class_ids = [cls["id"] for cls in teacher_classes]
+            all_class_ids = [cls["class_id"] for cls in teacher_classes]
         
         if not all_class_ids:
             return {
