@@ -391,6 +391,48 @@ class AIService:
                         "options": ["6", "7", "8", "14"],
                         "correct": "7",
                         "explanation": "Pure water has a pH of 7, which is neutral."
+                    },
+                    {
+                        "question": "A solution with pH less than 7 is:",
+                        "options": ["Basic", "Acidic", "Neutral", "Alkaline"],
+                        "correct": "Acidic",
+                        "explanation": "Solutions with pH < 7 are acidic in nature."
+                    },
+                    {
+                        "question": "Which indicator turns red in acidic solution?",
+                        "options": ["Blue litmus", "Red litmus", "Phenolphthalein", "Methyl orange"],
+                        "correct": "Blue litmus",
+                        "explanation": "Blue litmus paper turns red in acidic solutions."
+                    },
+                    {
+                        "question": "The process of neutralization produces:",
+                        "options": ["Acid only", "Base only", "Salt and water", "Gas only"],
+                        "correct": "Salt and water",
+                        "explanation": "Acid + Base → Salt + Water is the neutralization reaction."
+                    },
+                    {
+                        "question": "Hydrochloric acid is secreted by:",
+                        "options": ["Liver", "Stomach", "Pancreas", "Kidney"],
+                        "correct": "Stomach",
+                        "explanation": "HCl is produced by gastric glands in the stomach for digestion."
+                    },
+                    {
+                        "question": "What happens when acid reacts with metal carbonate?",
+                        "options": ["Hydrogen gas is evolved", "Oxygen gas is evolved", "Carbon dioxide gas is evolved", "No reaction occurs"],
+                        "correct": "Carbon dioxide gas is evolved",
+                        "explanation": "Acid + Metal carbonate → Salt + Water + CO₂"
+                    },
+                    {
+                        "question": "Baking soda is chemically known as:",
+                        "options": ["Sodium carbonate", "Sodium bicarbonate", "Sodium chloride", "Sodium hydroxide"],
+                        "correct": "Sodium bicarbonate",
+                        "explanation": "Baking soda is sodium bicarbonate (NaHCO₃)."
+                    },
+                    {
+                        "question": "Which acid is present in vinegar?",
+                        "options": ["Citric acid", "Tartaric acid", "Acetic acid", "Lactic acid"],
+                        "correct": "Acetic acid",
+                        "explanation": "Vinegar contains acetic acid (CH₃COOH)."
                     }
                 ],
                 "Metals and Non-metals": [
