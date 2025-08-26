@@ -425,7 +425,7 @@ async def get_student_strengths_weaknesses(
         # Verify student is in teacher's class
         teacher_classes_cursor = db[Collections.CLASSROOMS].find({"teacher_id": teacher_id})
         teacher_classes = await teacher_classes_cursor.to_list(100)
-        all_class_ids = [cls["id"] for cls in teacher_classes]
+        all_class_ids = [cls["class_id"] for cls in teacher_classes]
         
         student_profile = await db[Collections.STUDENT_PROFILES].find_one({
             "user_id": student_id,
