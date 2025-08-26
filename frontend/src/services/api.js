@@ -101,19 +101,41 @@ export const teacherAPI = {
     const response = await axios.get(`${API_BASE}/api/teacher/analytics/overview`);
     return response.data;
   },
-  
+
   getTestResults: async (classId, studentId, subject) => {
+    let url = `${API_BASE}/api/teacher/analytics/test-results`;
     const params = new URLSearchParams();
+    
     if (classId) params.append('class_id', classId);
     if (studentId) params.append('student_id', studentId);
     if (subject) params.append('subject', subject);
     
-    const response = await axios.get(`${API_BASE}/api/teacher/analytics/test-results?${params}`);
+    if (params.toString()) {
+      url += '?' + params.toString();
+    }
+    
+    const response = await axios.get(url);
     return response.data;
   },
-  
+
   getClassPerformance: async (classId) => {
     const response = await axios.get(`${API_BASE}/api/teacher/analytics/class-performance/${classId}`);
+    return response.data;
+  },
+
+  // NEW: Class-wide strengths and weaknesses analysis
+  getClassStrengthsWeaknesses: async (classId = null) => {
+    let url = `${API_BASE}/api/teacher/analytics/class-strengths-weaknesses`;
+    if (classId) {
+      url += `?class_id=${classId}`;
+    }
+    const response = await axios.get(url);
+    return response.data;
+  },
+
+  // NEW: Individual student strengths and weaknesses analysis
+  getStudentStrengthsWeaknesses: async (studentId) => {
+    const response = await axios.get(`${API_BASE}/api/teacher/analytics/student-strengths-weaknesses/${studentId}`);
     return response.data;
   },
   
