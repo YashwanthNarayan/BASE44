@@ -462,21 +462,21 @@ async def get_subject_stats(
         
         # Calculate statistics
         total_tests = len(attempts)
-        scores = [attempt["score"] for attempt in attempts]
+        scores = [attempt.get("score", 0) for attempt in attempts]
         average_score = sum(scores) / len(scores) if scores else 0
         best_score = max(scores) if scores else 0
-        total_questions = sum(attempt["total_questions"] for attempt in attempts)
+        total_questions = sum(attempt.get("total_questions", len(attempt.get("questions", []))) for attempt in attempts)
         
         # Recent tests (last 5)
-        recent_tests = sorted(attempts, key=lambda x: x["completed_at"], reverse=True)[:5]
+        recent_tests = sorted(attempts, key=lambda x: x.get("completed_at"), reverse=True)[:5]
         recent_formatted = []
         for test in recent_tests:
             recent_formatted.append({
-                "id": test["id"],  # Add ID field for frontend clicking
-                "score": test["score"],
-                "total_questions": test["total_questions"],
-                "difficulty": test["difficulty"],
-                "completed_at": test["completed_at"]
+                "id": test.get("id"),  # Add ID field for frontend clicking
+                "score": test.get("score", 0),
+                "total_questions": test.get("total_questions", len(test.get("questions", []))),
+                "difficulty": test.get("difficulty", "medium"),
+                "completed_at": test.get("completed_at")
             })
         
         return {
