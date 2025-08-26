@@ -303,9 +303,9 @@ IMPLEMENTATION DETAILS:
 backend:
   - task: "NCERT Units Relevancy Issue - AI Prompt Improvements and Fallback System"
     implemented: true
-    working: true
+    working: false
     file: "backend/routes/practice.py, backend/services/ai_service.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
