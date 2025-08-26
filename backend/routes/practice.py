@@ -460,21 +460,52 @@ async def get_subject_stats(
                 "recent_tests": []
             }
         
-        # Calculate statistics
+        # Calculate statistics with defensive programming
         total_tests = len(attempts)
-        scores = [attempt.get("score", 0) for attempt in attempts]
+        scores = []
+        for attempt in attempts:
+            score = attempt.get("score", 0)
+            if isinstance(score, (int, float)):
+                scores.append(score)
+        
         average_score = sum(scores) / len(scores) if scores else 0
         best_score = max(scores) if scores else 0
-        total_questions = sum(attempt.get("total_questions", len(attempt.get("questions", []))) for attempt in attempts)
         
-        # Recent tests (last 5)
-        recent_tests = sorted(attempts, key=lambda x: x.get("completed_at"), reverse=True)[:5]
+        # Calculate total questions with safe fallbacks
+        total_questions = 0
+        for attempt in attempts:
+            questions_count = attempt.get("total_questions")
+            if questions_count is not None:
+                total_questions += questions_count
+            else:
+                # Fallback to counting questions array
+                questions = attempt.get("questions", [])
+                total_questions += len(questions)
+        
+        # Recent tests (last 5) with safe sorting
+        valid_recent_tests = []
+        for test in attempts:
+            completed_at = test.get("completed_at")
+            if completed_at is not None:
+                valid_recent_tests.append(test)
+        
+        # Sort by completed_at descending (most recent first)
+        recent_tests = sorted(valid_recent_tests, 
+                            key=lambda x: x.get("completed_at", ""), 
+                            reverse=True)[:5]
+        
         recent_formatted = []
         for test in recent_tests:
+            # Safe field extraction
+            total_questions_for_test = test.get("total_questions")
+            if total_questions_for_test is None:
+                questions = test.get("questions", [])
+                total_questions_for_test = len(questions)
+            
             recent_formatted.append({
-                "id": test.get("id"),  # Add ID field for frontend clicking
+                "id": test.get("id", ""),
                 "score": test.get("score", 0),
-                "total_questions": test.get("total_questions", len(test.get("questions", []))),
+                "total_questions": total_questions_for_test,
                 "difficulty": test.get("difficulty", "medium"),
                 "completed_at": test.get("completed_at")
             })
@@ -483,15 +514,19 @@ async def get_subject_stats(
             "subject": subject,
             "total_tests": total_tests,
             "average_score": round(average_score, 1),
-            "best_score": best_score,
+            "best_score": round(best_score, 1),
             "total_questions_answered": total_questions,
             "recent_tests": recent_formatted
         }
     
     except Exception as e:
+        print(f"❌ ERROR in get_subject_stats for {subject}: {str(e)}")
+        print(f"❌ ERROR TYPE: {type(e)}")
+        import traceback
+        print(f"❌ ERROR TRACEBACK: {traceback.format_exc()}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get subject stats: {str(e)}"
+            detail=f"Failed to get stats for {subject}: {str(e)}"
         )
 
 async def update_student_stats(student_id: str, score: float, subject: str):
