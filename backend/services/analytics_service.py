@@ -98,12 +98,21 @@ class StudentAnalyticsService:
         if not attempts:
             return {}
         
-        # Sort attempts by date
-        attempts.sort(key=lambda x: x['date'] or datetime.min)
+        # Sort attempts by date with safe access
+        attempts.sort(key=lambda x: x.get('date') or datetime.min)
         
-        scores = [attempt['score'] for attempt in attempts]
+        # Extract scores safely
+        scores = []
+        for attempt in attempts:
+            score = attempt.get('score', 0)
+            if isinstance(score, (int, float)):
+                scores.append(score)
+        
+        if not scores:
+            return {}
+        
         avg_score = statistics.mean(scores)
-        attempt_count = len(attempts)
+        attempt_count = len(scores)
         
         # Determine classification
         classification = 'neutral'
@@ -129,16 +138,26 @@ class StudentAnalyticsService:
             elif improvement <= -10:
                 trend = 'declining'
         
-        # Calculate consistency
+        # Calculate consistency with error handling
         consistency = 'stable'
         if len(scores) >= 3:
-            std_dev = statistics.stdev(scores)
-            if std_dev <= 5:
-                consistency = 'very_consistent'
-            elif std_dev <= 15:
-                consistency = 'consistent'
-            else:
-                consistency = 'inconsistent'
+            try:
+                std_dev = statistics.stdev(scores)
+                if std_dev <= 5:
+                    consistency = 'very_consistent'
+                elif std_dev <= 15:
+                    consistency = 'consistent'
+                else:
+                    consistency = 'inconsistent'
+            except statistics.StatisticsError:
+                consistency = 'stable'
+        
+        # Calculate time-related statistics safely
+        total_time = 0
+        for attempt in attempts:
+            time_taken = attempt.get('time_taken', 0)
+            if isinstance(time_taken, (int, float)):
+                total_time += time_taken
         
         return {
             "subject": subject,
@@ -148,11 +167,11 @@ class StudentAnalyticsService:
             "classification": classification,
             "trend": trend,
             "consistency": consistency,
-            "highest_score": max(scores),
-            "lowest_score": min(scores),
-            "recent_scores": scores[-3:],  # Last 3 scores
-            "total_time": sum(attempt.get('time_taken', 0) for attempt in attempts),
-            "avg_time_per_test": round(sum(attempt.get('time_taken', 0) for attempt in attempts) / len(attempts), 1) if attempts else 0
+            "highest_score": max(scores) if scores else 0,
+            "lowest_score": min(scores) if scores else 0,
+            "recent_scores": scores[-3:] if len(scores) >= 3 else scores,  # Last 3 scores
+            "total_time": total_time,
+            "avg_time_per_test": round(total_time / attempt_count, 1) if attempt_count > 0 and total_time > 0 else 0
         }
     
     @staticmethod
