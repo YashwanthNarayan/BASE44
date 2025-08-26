@@ -55,7 +55,21 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
   const getGradeDistribution = () => {
     if (!analyticsData?.testResults) return [];
     
-    const scores = analyticsData.testResults.map(test => test.score);
+    // Group test results by student to avoid counting the same student multiple times
+    const studentScores = {};
+    analyticsData.testResults.forEach(test => {
+      const studentId = test.student_id;
+      const score = test.score;
+      
+      // Keep track of each student's highest score to avoid inflating counts
+      if (!studentScores[studentId] || studentScores[studentId] < score) {
+        studentScores[studentId] = score;
+      }
+    });
+    
+    // Get unique student scores (highest score per student)
+    const uniqueStudentScores = Object.values(studentScores);
+    
     const ranges = [
       { label: '90-100%', min: 90, max: 100, color: 'from-neon-green/20 to-emerald-500/20' },
       { label: '80-89%', min: 80, max: 89, color: 'from-green-500/20 to-teal-500/20' },
@@ -64,11 +78,14 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
       { label: 'Below 60%', min: 0, max: 59, color: 'from-red-500/20 to-pink-500/20' }
     ];
 
-    return ranges.map(range => ({
-      ...range,
-      count: scores.filter(score => score >= range.min && score <= range.max).length,
-      percentage: scores.length > 0 ? ((scores.filter(score => score >= range.min && score <= range.max).length / scores.length) * 100).toFixed(1) : 0
-    }));
+    return ranges.map(range => {
+      const studentsInRange = uniqueStudentScores.filter(score => score >= range.min && score <= range.max).length;
+      return {
+        ...range,
+        count: studentsInRange,
+        percentage: uniqueStudentScores.length > 0 ? ((studentsInRange / uniqueStudentScores.length) * 100).toFixed(1) : 0
+      };
+    });
   };
 
   if (loading) {
