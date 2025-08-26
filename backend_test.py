@@ -1330,6 +1330,329 @@ class TestPracticeResultsEndpointFix(unittest.TestCase):
             print(f"❌ Subject filter test failed: {str(e)}")
             self.fail(f"Subject filter test failed: {str(e)}")
 
+class TestPracticeStatsEndpointFix(unittest.TestCase):
+    """Test cases specifically for the /api/practice/stats/{subject} endpoint fix"""
+
+    def setUp(self):
+        """Set up test case - create student account and practice test data"""
+        self.student_token = None
+        self.student_id = None
+        
+        # Register student
+        self.register_student()
+        self.create_practice_test_data()
+
+    def register_student(self):
+        """Register a student for testing"""
+        print("\n🔍 Setting up student account for practice stats testing...")
+        url = f"{API_URL}/auth/register"
+        payload = {
+            "email": f"stats_test_{uuid.uuid4()}@example.com",
+            "password": "SecurePass123!",
+            "name": "Ananya Patel",
+            "user_type": UserType.STUDENT.value,
+            "grade_level": GradeLevel.GRADE_10.value
+        }
+        
+        try:
+            response = requests.post(url, json=payload)
+            if response.status_code == 200:
+                data = response.json()
+                self.student_token = data.get("access_token")
+                self.student_id = data.get("user", {}).get("id")
+                print(f"Registered student with ID: {self.student_id}")
+            else:
+                print(f"Failed to register student: {response.status_code} - {response.text}")
+        except Exception as e:
+            print(f"Error registering student: {str(e)}")
+
+    def create_practice_test_data(self):
+        """Create some practice test data for testing stats"""
+        if not self.student_token:
+            return
+            
+        print("\n🔍 Creating practice test data for stats testing...")
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Create tests for different subjects
+        subjects_to_test = [Subject.MATH.value, Subject.PHYSICS.value, Subject.CHEMISTRY.value]
+        
+        for subject in subjects_to_test:
+            try:
+                # Generate a practice test
+                gen_url = f"{API_URL}/practice/generate"
+                gen_payload = {
+                    "subject": subject,
+                    "topics": ["Algebra"] if subject == "math" else ["Basic Concepts"],
+                    "difficulty": DifficultyLevel.MEDIUM.value,
+                    "question_count": 3
+                }
+                
+                gen_response = requests.post(gen_url, json=gen_payload, headers=headers)
+                if gen_response.status_code == 200:
+                    gen_data = gen_response.json()
+                    questions = gen_data.get("questions", [])
+                    
+                    if questions:
+                        # Submit the test with some answers
+                        student_answers = {}
+                        question_ids = []
+                        for i, question in enumerate(questions):
+                            question_id = question.get("id")
+                            question_ids.append(question_id)
+                            # Give correct answers for first 2 questions, wrong for last
+                            if i < 2:
+                                student_answers[question_id] = question.get("correct_answer")
+                            else:
+                                student_answers[question_id] = "Wrong Answer"
+                        
+                        submit_url = f"{API_URL}/practice/submit"
+                        submit_payload = {
+                            "questions": question_ids,
+                            "student_answers": student_answers,
+                            "subject": subject,
+                            "time_taken": 300
+                        }
+                        
+                        submit_response = requests.post(submit_url, json=submit_payload, headers=headers)
+                        if submit_response.status_code == 200:
+                            print(f"✅ Created practice test data for {subject}")
+                        else:
+                            print(f"❌ Failed to submit test for {subject}: {submit_response.status_code}")
+                else:
+                    print(f"❌ Failed to generate test for {subject}: {gen_response.status_code}")
+            except Exception as e:
+                print(f"❌ Error creating test data for {subject}: {str(e)}")
+
+    def test_01_practice_stats_math_endpoint_fix(self):
+        """Test the specific fix for /api/practice/stats/math endpoint returning 500 error"""
+        print("\n🔍 Testing Practice Stats Math Endpoint Fix (CRITICAL BUG FIX #2)...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/stats/math"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Practice Stats Math Response: {response.status_code}")
+            
+            # This should return 200 OK, not 500 Internal Server Error
+            self.assertEqual(response.status_code, 200, 
+                           "Practice stats math endpoint should return 200 OK instead of 500 error")
+            
+            if response.status_code == 200:
+                data = response.json()
+                print("✅ Practice stats math endpoint returns 200 OK - BUG FIX SUCCESSFUL!")
+                
+                # Verify response structure has all expected fields
+                required_fields = ["subject", "total_tests", "average_score", "best_score", 
+                                 "total_questions_answered", "recent_tests"]
+                for field in required_fields:
+                    self.assertIn(field, data, f"Field '{field}' should be present in stats response")
+                
+                # Verify subject is correct
+                self.assertEqual(data.get("subject"), "math", "Subject should be 'math'")
+                
+                # Verify data types
+                self.assertIsInstance(data.get("total_tests"), int, "total_tests should be an integer")
+                self.assertIsInstance(data.get("average_score"), (int, float), "average_score should be numeric")
+                self.assertIsInstance(data.get("best_score"), (int, float), "best_score should be numeric")
+                self.assertIsInstance(data.get("total_questions_answered"), int, "total_questions_answered should be integer")
+                self.assertIsInstance(data.get("recent_tests"), list, "recent_tests should be a list")
+                
+                # Verify recent_tests structure if there are any
+                recent_tests = data.get("recent_tests", [])
+                if recent_tests:
+                    first_test = recent_tests[0]
+                    test_fields = ["id", "score", "total_questions", "difficulty", "completed_at"]
+                    for field in test_fields:
+                        self.assertIn(field, first_test, f"Field '{field}' should be present in recent test")
+                    
+                    # Verify total_questions field is not None (this was the root cause of 500 error)
+                    total_questions = first_test.get("total_questions")
+                    self.assertIsNotNone(total_questions, "total_questions should not be None")
+                    self.assertIsInstance(total_questions, int, "total_questions should be an integer")
+                    self.assertGreaterEqual(total_questions, 0, "total_questions should be >= 0")
+                    
+                    print(f"✅ Data structure verified - total_questions: {total_questions}")
+                
+                print(f"✅ Math stats: {data.get('total_tests')} tests, avg: {data.get('average_score')}%")
+            else:
+                print(f"❌ Practice stats math endpoint failed: {response.status_code} - {response.text}")
+                
+        except Exception as e:
+            print(f"❌ Practice stats math endpoint test failed: {str(e)}")
+            self.fail(f"Practice stats math endpoint test failed: {str(e)}")
+
+    def test_02_practice_stats_different_subjects(self):
+        """Test practice stats endpoint with different subjects"""
+        print("\n🔍 Testing Practice Stats for Different Subjects...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        subjects_to_test = ["math", "physics", "chemistry", "biology", "english"]
+        
+        for subject in subjects_to_test:
+            try:
+                url = f"{API_URL}/practice/stats/{subject}"
+                response = requests.get(url, headers=headers)
+                print(f"Practice Stats {subject.title()} Response: {response.status_code}")
+                
+                # Should return 200 OK for all subjects
+                self.assertEqual(response.status_code, 200, 
+                               f"Practice stats {subject} endpoint should return 200 OK")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    
+                    # Verify basic structure
+                    self.assertIn("subject", data, f"Subject field should be present for {subject}")
+                    self.assertEqual(data.get("subject"), subject, f"Subject should be '{subject}'")
+                    
+                    # Verify all required fields are present
+                    required_fields = ["total_tests", "average_score", "best_score", 
+                                     "total_questions_answered", "recent_tests"]
+                    for field in required_fields:
+                        self.assertIn(field, data, f"Field '{field}' should be present for {subject}")
+                    
+                    # Verify recent_tests structure
+                    recent_tests = data.get("recent_tests", [])
+                    for test in recent_tests:
+                        # Check that total_questions field exists and is not None
+                        self.assertIn("total_questions", test, 
+                                    f"total_questions field should be present in {subject} recent tests")
+                        self.assertIsNotNone(test.get("total_questions"), 
+                                           f"total_questions should not be None for {subject}")
+                    
+                    print(f"✅ {subject.title()} stats working: {data.get('total_tests')} tests")
+                else:
+                    print(f"❌ {subject.title()} stats failed: {response.text}")
+                    
+            except Exception as e:
+                print(f"❌ Error testing {subject} stats: {str(e)}")
+                self.fail(f"Error testing {subject} stats: {str(e)}")
+
+    def test_03_practice_stats_with_valid_jwt_token(self):
+        """Test practice stats endpoint with valid JWT authentication"""
+        print("\n🔍 Testing Practice Stats with Valid JWT Token...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/stats/math"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Authenticated Stats Response: {response.status_code}")
+            
+            # Should work with valid authentication
+            self.assertEqual(response.status_code, 200, "Valid JWT token should be accepted")
+            
+            if response.status_code == 200:
+                data = response.json()
+                print("✅ JWT authentication working correctly")
+                
+                # Verify we get student-specific data
+                self.assertIn("subject", data, "Response should contain subject")
+                self.assertIn("total_tests", data, "Response should contain total_tests")
+                
+            # Test with invalid token
+            invalid_headers = {"Authorization": "Bearer invalid.token.here"}
+            invalid_response = requests.get(url, headers=invalid_headers)
+            print(f"Invalid Token Response: {invalid_response.status_code}")
+            
+            # Should reject invalid token
+            self.assertIn(invalid_response.status_code, [401, 403], 
+                         "Invalid token should be rejected with 401/403")
+            
+            # Test with missing token
+            missing_response = requests.get(url)
+            print(f"Missing Token Response: {missing_response.status_code}")
+            
+            # Should reject missing token
+            self.assertIn(missing_response.status_code, [401, 403], 
+                         "Missing token should be rejected with 401/403")
+            
+            print("✅ JWT token validation working correctly")
+            
+        except Exception as e:
+            print(f"❌ JWT authentication test failed: {str(e)}")
+            self.fail(f"JWT authentication test failed: {str(e)}")
+
+    def test_04_practice_stats_data_structure_verification(self):
+        """Verify the practice stats endpoint returns all expected fields with correct data types"""
+        print("\n🔍 Testing Practice Stats Data Structure Verification...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        url = f"{API_URL}/practice/stats/math"
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        try:
+            response = requests.get(url, headers=headers)
+            print(f"Data Structure Verification Response: {response.status_code}")
+            
+            self.assertEqual(response.status_code, 200, "Stats endpoint should return 200 OK")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Verify all expected fields are present
+                expected_structure = {
+                    "subject": str,
+                    "total_tests": int,
+                    "average_score": (int, float),
+                    "best_score": (int, float),
+                    "total_questions_answered": int,
+                    "recent_tests": list
+                }
+                
+                for field, expected_type in expected_structure.items():
+                    self.assertIn(field, data, f"Field '{field}' should be present")
+                    actual_value = data.get(field)
+                    self.assertIsInstance(actual_value, expected_type, 
+                                        f"Field '{field}' should be of type {expected_type}")
+                
+                # Verify recent_tests structure
+                recent_tests = data.get("recent_tests", [])
+                if recent_tests:
+                    expected_test_structure = {
+                        "id": str,
+                        "score": (int, float),
+                        "total_questions": int,
+                        "difficulty": str,
+                        "completed_at": str  # ISO datetime string
+                    }
+                    
+                    for test in recent_tests:
+                        for field, expected_type in expected_test_structure.items():
+                            self.assertIn(field, test, f"Test field '{field}' should be present")
+                            actual_value = test.get(field)
+                            self.assertIsInstance(actual_value, expected_type, 
+                                                f"Test field '{field}' should be of type {expected_type}")
+                            
+                            # Special check for total_questions (this was the bug)
+                            if field == "total_questions":
+                                self.assertIsNotNone(actual_value, "total_questions should not be None")
+                                self.assertGreaterEqual(actual_value, 0, "total_questions should be >= 0")
+                
+                print("✅ All data structure requirements verified")
+                print(f"✅ Response structure: {list(data.keys())}")
+                if recent_tests:
+                    print(f"✅ Recent test structure: {list(recent_tests[0].keys())}")
+            else:
+                print(f"❌ Data structure verification failed: {response.text}")
+                
+        except Exception as e:
+            print(f"❌ Data structure verification test failed: {str(e)}")
+            self.fail(f"Data structure verification test failed: {str(e)}")
+
 class TestTeacherAnalyticsEndpoints(unittest.TestCase):
     """Test cases specifically for teacher analytics endpoints to verify practice test data"""
 
