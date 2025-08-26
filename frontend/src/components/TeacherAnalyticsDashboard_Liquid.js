@@ -166,6 +166,34 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
           </div>
         </div>
 
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-8">
+          <div className="glass rounded-2xl p-2">
+            {[
+              { id: 'overview', label: '📊 Overview', icon: '📊' },
+              { id: 'class-analysis', label: '🏫 Class Analysis', icon: '🏫' },
+              { id: 'individual', label: '👤 Individual Students', icon: '👤' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => {
+                  setActiveTab(tab.id);
+                  if (tab.id === 'class-analysis') {
+                    loadClassAnalytics();
+                  }
+                }}
+                className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-primary text-white shadow-lg'
+                    : 'text-secondary hover:text-primary hover:bg-glass/50'
+                }`}
+              >
+                {tab.icon} {tab.label.split(' ')[1]}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Filter Controls */}
         <LiquidCard className="mb-8" holographic>
           <div className="p-6">
