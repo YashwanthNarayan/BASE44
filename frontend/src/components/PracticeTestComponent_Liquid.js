@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { practiceAPI, setupAxiosAuth } from '../services/api';
-import { subjects, questionTypes, difficultyLevels } from '../utils/constants';
+import { subjects, questionTypes, difficultyLevels, gradeLevels } from '../utils/constants';
 import { LiquidCard, LiquidButton, LiquidSelect, LiquidProgress, LiquidNavItem } from './ui/LiquidComponents';
 import '../styles/liquid-glass.css';
 
