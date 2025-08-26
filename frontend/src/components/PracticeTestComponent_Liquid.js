@@ -797,7 +797,7 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
             <div className="text-center">
               <LiquidButton
                 onClick={generatePracticeTest}
-                disabled={!selectedSubject || selectedUnits.length === 0 || isGenerating}
+                disabled={!selectedSubject || !selectedGrade || selectedUnits.length === 0 || isGenerating}
                 variant="primary"
                 size="lg"
                 className="px-12 py-4"
