@@ -5,6 +5,8 @@ from backend.utils.security import get_current_teacher
 from backend.utils.database import get_database, Collections
 import uuid
 from datetime import datetime
+from collections import defaultdict
+import statistics
 
 router = APIRouter(prefix="/api/teacher", tags=["Teacher"])
 
