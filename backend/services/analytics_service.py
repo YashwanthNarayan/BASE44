@@ -291,10 +291,12 @@ class StudentAnalyticsService:
             completed_at = attempt.get('completed_at')
             if completed_at:
                 try:
+                    print(f"🔍 ANALYTICS DEBUG: Processing completed_at={completed_at}, type={type(completed_at)}")
                     date = datetime.fromisoformat(completed_at.replace('Z', '+00:00'))
                     if date >= cutoff_date:
                         recent_attempts.append(attempt)
-                except (ValueError, AttributeError):
+                except (ValueError, AttributeError) as e:
+                    print(f"🔍 ANALYTICS DEBUG: Error in first date parsing: {e}")
                     # Skip attempts with invalid date formats
                     continue
         
