@@ -417,14 +417,14 @@ async def get_practice_results(
         for attempt in attempts:
             results.append({
                 "id": attempt["id"],
-                "subject": attempt["subject"],
-                "score": attempt["score"],
+                "subject": attempt.get("subject", "general"),
+                "score": attempt.get("score", 0),
                 "correct_count": attempt.get("correct_count", 0),
-                "total_questions": attempt["total_questions"],
-                "difficulty": attempt["difficulty"],
-                "completed_at": attempt["completed_at"],
+                "total_questions": attempt.get("total_questions", len(attempt.get("questions", []))),  # Fallback to question count
+                "difficulty": attempt.get("difficulty", "medium"),
+                "completed_at": attempt.get("completed_at"),
                 "time_taken": attempt.get("time_taken", 0),
-                "grade": ScoreUtils.get_grade_from_percentage(attempt["score"])
+                "grade": ScoreUtils.get_grade_from_percentage(attempt.get("score", 0))
             })
         
         return convert_objectid_to_str(results)
