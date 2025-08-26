@@ -561,8 +561,8 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <div className="text-6xl mb-6">📝</div>
-            <h1 className="text-4xl font-bold text-gradient mb-4">Practice Tests</h1>
-            <p className="text-xl text-white/70">Create personalized tests to improve your understanding</p>
+            <h1 className="text-4xl font-bold text-gradient mb-4">NCERT Practice Tests</h1>
+            <p className="text-xl text-white/70">Create tests based on NCERT curriculum units</p>
           </div>
 
           <LiquidCard className="p-8">
