@@ -254,37 +254,54 @@ class StudentAnalyticsService:
         """Get performance trends over specified time period"""
         cutoff_date = datetime.utcnow() - timedelta(days=days)
         
-        # Filter recent attempts
-        recent_attempts = [
-            attempt for attempt in practice_attempts
-            if attempt.get('completed_at') and 
-            datetime.fromisoformat(attempt['completed_at'].replace('Z', '+00:00')) >= cutoff_date
-        ]
+        # Filter recent attempts with defensive programming
+        recent_attempts = []
+        for attempt in practice_attempts:
+            completed_at = attempt.get('completed_at')
+            if completed_at:
+                try:
+                    date = datetime.fromisoformat(completed_at.replace('Z', '+00:00'))
+                    if date >= cutoff_date:
+                        recent_attempts.append(attempt)
+                except (ValueError, AttributeError):
+                    # Skip attempts with invalid date formats
+                    continue
         
         if not recent_attempts:
             return {"trend_data": [], "summary": "No recent test data available"}
         
-        # Group by week
+        # Group by week with safe field access
         weekly_performance = defaultdict(list)
         for attempt in recent_attempts:
-            date = datetime.fromisoformat(attempt['completed_at'].replace('Z', '+00:00'))
-            week_start = date - timedelta(days=date.weekday())
-            week_key = week_start.strftime('%Y-%m-%d')
+            completed_at = attempt.get('completed_at')
+            score = attempt.get('score')
             
-            weekly_performance[week_key].append(attempt['score'])
+            if completed_at is not None and score is not None:
+                try:
+                    date = datetime.fromisoformat(completed_at.replace('Z', '+00:00'))
+                    week_start = date - timedelta(days=date.weekday())
+                    week_key = week_start.strftime('%Y-%m-%d')
+                    
+                    # Only add numeric scores
+                    if isinstance(score, (int, float)):
+                        weekly_performance[week_key].append(score)
+                except (ValueError, AttributeError):
+                    # Skip attempts with invalid dates or scores
+                    continue
         
-        # Calculate weekly averages
+        # Calculate weekly averages with error handling
         trend_data = []
         for week, scores in sorted(weekly_performance.items()):
-            trend_data.append({
-                "week": week,
-                "average_score": round(statistics.mean(scores), 1),
-                "test_count": len(scores),
-                "highest_score": max(scores),
-                "lowest_score": min(scores)
-            })
+            if scores:  # Only add weeks with valid scores
+                trend_data.append({
+                    "week": week,
+                    "average_score": round(statistics.mean(scores), 1),
+                    "test_count": len(scores),
+                    "highest_score": max(scores),
+                    "lowest_score": min(scores)
+                })
         
-        # Calculate overall trend
+        # Calculate overall trend with safe access
         if len(trend_data) >= 2:
             recent_avg = statistics.mean([data['average_score'] for data in trend_data[-2:]])
             earlier_avg = statistics.mean([data['average_score'] for data in trend_data[:2]])
