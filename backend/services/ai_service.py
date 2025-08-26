@@ -106,29 +106,74 @@ class AIService:
         """
         
         try:
-            response = self.model.generate_content(prompt)
-            content = response.text
+            # Check if AI model is available
+            if not self.model or not self.current_model:
+                print("⚠️ AI model not available, using fallback questions")
+                return self._generate_fallback_questions(subject, topics, question_count)
             
-            # Clean up the response to extract JSON
-            if "```json" in content:
-                content = content.split("```json")[1].split("```")[0]
-            elif "```" in content:
-                content = content.split("```")[1].split("```")[0]
+            # Try AI generation with retry logic
+            for attempt in range(2):  # Try twice with different models if needed
+                try:
+                    response = self.model.generate_content(prompt)
+                    content = response.text
+                    
+                    # Clean up the response to extract JSON
+                    if "```json" in content:
+                        content = content.split("```json")[1].split("```")[0]
+                    elif "```" in content:
+                        content = content.split("```")[1].split("```")[0]
+                    
+                    # Parse and validate JSON
+                    import json
+                    questions = json.loads(content.strip())
+                    
+                    # Add IDs and metadata
+                    for i, question in enumerate(questions):
+                        question["id"] = f"q_{hash(str(question))}_{i}"
+                        question["subject"] = subject
+                        question["difficulty"] = difficulty
+                    
+                    # Cache the response only if successful
+                    CacheUtils.cache_response(cache_key, json.dumps(questions))
+                    print(f"✅ Generated {len(questions)} AI questions for {subject} - {', '.join(topics)}")
+                    return questions
+                
+                except Exception as api_error:
+                    error_message = str(api_error).lower()
+                    
+                    # Handle specific API errors
+                    if "quota" in error_message or "429" in error_message:
+                        print(f"⚠️ API quota exceeded for {self.current_model}, trying next model or fallback")
+                        # Try next model if available
+                        if attempt == 0 and len(self.models) > 1:
+                            next_model = self.models[1] if self.current_model == self.models[0] else self.models[0]
+                            try:
+                                self.model = genai.GenerativeModel(next_model)
+                                self.current_model = next_model
+                                print(f"🔄 Switched to model: {next_model}")
+                                continue  # Retry with new model
+                            except:
+                                pass
+                        break  # Exit retry loop, use fallback
+                    
+                    elif "safety" in error_message or "block" in error_message:
+                        print(f"⚠️ Content safety filter triggered for {', '.join(topics)}, adjusting prompt")
+                        # Could implement prompt adjustment here
+                        break
+                    
+                    elif "network" in error_message or "connection" in error_message:
+                        print(f"⚠️ Network error, attempt {attempt + 1}/2")
+                        if attempt == 0:
+                            import time
+                            time.sleep(1)  # Brief delay before retry
+                            continue
+                    
+                    print(f"❌ AI generation error (attempt {attempt + 1}): {api_error}")
+                    if attempt == 1:  # Last attempt
+                        break
             
-            # Parse and validate JSON
-            import json
-            questions = json.loads(content.strip())
-            
-            # Add IDs and metadata
-            for i, question in enumerate(questions):
-                question["id"] = f"q_{hash(str(question))}_{i}"
-                question["subject"] = subject
-                question["difficulty"] = difficulty
-            
-            # Cache the response
-            CacheUtils.cache_response(cache_key, json.dumps(questions))
-            
-            return questions
+            print(f"🔄 AI generation failed, using NCERT-specific fallback questions for {', '.join(topics)}")
+            return self._generate_fallback_questions(subject, topics, question_count)
         
         except Exception as e:
             print(f"AI generation failed: {e}")
