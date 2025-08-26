@@ -20,30 +20,69 @@ const ProgressComponent = ({ student, onNavigate }) => {
   const loadProgressData = async () => {
     setLoading(true);
     try {
-      // Debug: Log the current authentication state
+      // Debug: Check authentication state
       const token = localStorage.getItem('access_token');
-      console.log('🔍 Progress: Loading data with token:', token ? 'Present' : 'Missing');
+      const userType = localStorage.getItem('user_type');
+      const user = localStorage.getItem('user');
       
-      // Ensure authentication is set up before making API calls
+      console.log('🔍 Progress: Authentication Check:', {
+        hasToken: !!token,
+        tokenLength: token ? token.length : 0,
+        userType: userType,
+        hasUser: !!user
+      });
+      
+      // Ensure authentication is set up properly
       if (token) {
         setupAxiosAuth(token);
+        console.log('🔍 Progress: Authentication configured for API calls');
+      } else {
+        console.error('❌ Progress: No authentication token found');
+        setProgressData(null);
+        return;
       }
+      
+      console.log('🔍 Progress: Making API call for subject:', selectedSubject);
       
       const endpoint = selectedSubject === 'all' 
         ? practiceAPI.getResults()
         : practiceAPI.getStats(selectedSubject);
         
       const response = await endpoint;
-      console.log('🔍 Progress: API response received:', response);
+      console.log('🔍 Progress: API response received:', {
+        hasData: !!response,
+        dataType: typeof response,
+        isArray: Array.isArray(response),
+        dataLength: response ? (response.length || Object.keys(response).length) : 0
+      });
+      
       setProgressData(response);
+      
+      // Additional debug for empty data
+      if (!response || (Array.isArray(response) && response.length === 0)) {
+        console.log('⚠️ Progress: No data received - user may not have taken any practice tests yet');
+      } else {
+        console.log('✅ Progress: Data loaded successfully');
+      }
+      
     } catch (error) {
       console.error('❌ Progress: Error loading progress data:', error);
       console.error('❌ Progress: Error details:', {
         status: error.response?.status,
         statusText: error.response?.statusText,
         data: error.response?.data,
-        url: error.config?.url
+        url: error.config?.url,
+        message: error.message
       });
+      
+      // Check for specific authentication errors
+      if (error.response?.status === 401) {
+        console.error('🚨 Progress: Authentication expired - user needs to log in again');
+        alert('Your session has expired. Please log in again.');
+      } else if (error.response?.status === 403) {
+        console.error('🚨 Progress: Access forbidden - check user permissions');
+      }
+      
       setProgressData(null);
     } finally {
       setLoading(false);
