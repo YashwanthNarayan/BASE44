@@ -229,7 +229,7 @@ async def get_class_strengths_weaknesses(
         if class_id:
             # Verify teacher owns this class
             class_doc = await db[Collections.CLASSROOMS].find_one({
-                "id": class_id,
+                "class_id": class_id,
                 "teacher_id": teacher_id
             })
             if not class_doc:
