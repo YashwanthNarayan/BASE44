@@ -38,8 +38,8 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
   };
 
   const generatePracticeTest = async () => {
-    if (!selectedSubject || selectedUnits.length === 0) {
-      alert('Please select a subject and at least one unit.');
+    if (!selectedSubject || !selectedGrade || selectedUnits.length === 0) {
+      alert('Please select a subject, grade, and at least one NCERT unit.');
       return;
     }
 
