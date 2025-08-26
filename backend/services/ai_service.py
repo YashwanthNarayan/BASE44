@@ -17,7 +17,29 @@ class AIService:
     """Service for AI-powered educational content generation"""
     
     def __init__(self):
-        self.model = genai.GenerativeModel('gemini-2.5-flash')  # Updated to current model
+        # Try different models based on availability and quotas
+        self.models = [
+            'gemini-1.5-flash',  # Try the non-deprecated model first 
+            'gemini-2.5-flash',  # Fallback to newer model
+        ]
+        self.current_model = None
+        self._initialize_model()
+    
+    def _initialize_model(self):
+        """Initialize the best available model"""
+        for model_name in self.models:
+            try:
+                self.model = genai.GenerativeModel(model_name)
+                self.current_model = model_name
+                print(f"✅ Initialized AI model: {model_name}")
+                break
+            except Exception as e:
+                print(f"❌ Failed to initialize {model_name}: {e}")
+                continue
+        
+        if not self.current_model:
+            print("⚠️ No AI model available, will use fallback questions only")
+            self.model = None
     
     async def generate_practice_questions(
         self,
