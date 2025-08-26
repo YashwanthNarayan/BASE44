@@ -762,9 +762,9 @@ class TestProjectKV3Backend(unittest.TestCase):
         except Exception as e:
             print(f"❌ NCERT English 10th grade test failed: {str(e)}")
 
-    def test_11f_ncert_comprehensive_integration_test(self):
-        """Test comprehensive NCERT Units Integration across multiple subjects and grades"""
-        print("\n🔍 Testing Comprehensive NCERT Units Integration...")
+    def test_11f_ncert_extended_grades_6th_7th_8th_integration(self):
+        """Test NCERT Units Integration for Extended Grades 6th, 7th, and 8th"""
+        print("\n🔍 Testing NCERT Extended Grades Integration (6th, 7th, 8th)...")
         
         if not self.student_token:
             self.skipTest("Student token not available")
@@ -772,25 +772,49 @@ class TestProjectKV3Backend(unittest.TestCase):
         url = f"{API_URL}/practice/generate"
         headers = {"Authorization": f"Bearer {self.student_token}"}
         
-        # Test scenarios with different subjects and grades
+        # Test scenarios for NEW grade levels (6th, 7th, 8th) as requested in review
         test_scenarios = [
             {
-                "name": "Math 9th Grade",
+                "name": "Math 6th Grade - Basic Concepts",
                 "subject": Subject.MATH.value,
-                "topics": ["Polynomials", "Linear Equations in Two Variables"],
-                "expected_terms": ["polynomial", "equation", "variable", "coefficient", "degree"]
+                "topics": ["Knowing Our Numbers", "Whole Numbers", "Fractions"],
+                "expected_terms": ["number", "whole", "fraction", "numerator", "denominator", "basic"],
+                "grade": "6th"
             },
             {
-                "name": "Physics 12th Grade",
+                "name": "Math 7th Grade - Intermediate Concepts", 
+                "subject": Subject.MATH.value,
+                "topics": ["Integers", "Simple Equations", "Rational Numbers"],
+                "expected_terms": ["integer", "equation", "rational", "positive", "negative", "solve"],
+                "grade": "7th"
+            },
+            {
+                "name": "Math 8th Grade - Advanced Concepts",
+                "subject": Subject.MATH.value,
+                "topics": ["Rational Numbers", "Linear Equations in One Variable", "Algebraic Expressions and Identities"],
+                "expected_terms": ["rational", "linear", "algebraic", "expression", "identity", "variable"],
+                "grade": "8th"
+            },
+            {
+                "name": "Biology 7th Grade - Life Processes",
+                "subject": Subject.BIOLOGY.value,
+                "topics": ["Nutrition in Plants", "Respiration in Organisms", "Transportation in Animals and Plants"],
+                "expected_terms": ["nutrition", "plant", "respiration", "organism", "transportation", "photosynthesis"],
+                "grade": "7th"
+            },
+            {
+                "name": "Physics 8th Grade - Forces and Motion",
                 "subject": Subject.PHYSICS.value,
-                "topics": ["Electric Charges and Fields", "Current Electricity"],
-                "expected_terms": ["electric", "charge", "current", "voltage", "resistance", "field"]
+                "topics": ["Force and Pressure", "Friction", "Sound"],
+                "expected_terms": ["force", "pressure", "friction", "sound", "motion", "energy"],
+                "grade": "8th"
             },
             {
-                "name": "Chemistry 11th Grade",
+                "name": "Chemistry 8th Grade - Materials",
                 "subject": Subject.CHEMISTRY.value,
-                "topics": ["Chemical Bonding and Molecular Structure", "States of Matter"],
-                "expected_terms": ["bond", "molecule", "atom", "structure", "matter", "state"]
+                "topics": ["Materials: Metals and Non-Metals", "Combustion and Flame", "Chemical Effects of Electric Current"],
+                "expected_terms": ["metal", "non-metal", "combustion", "flame", "chemical", "reaction"],
+                "grade": "8th"
             }
         ]
         
