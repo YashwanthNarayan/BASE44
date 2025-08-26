@@ -311,6 +311,37 @@ export const subjects = {
     name: 'Biology', 
     icon: '🧬',
     units: {
+      '6th': [
+        'Food: Where Does it Come From?',
+        'Components of Food',
+        'Getting to Know Plants',
+        'Body Movements',
+        'The Living Organisms and Their Surroundings',
+        'Water',
+        'Air Around Us',
+        'Garbage In, Garbage Out'
+      ],
+      '7th': [
+        'Nutrition in Plants',
+        'Nutrition in Animals',
+        'Weather, Climate and Adaptations of Animals to Climate',
+        'Soil',
+        'Respiration in Organisms',
+        'Transportation in Animals and Plants',
+        'Reproduction in Plants',
+        'Water: A Precious Resource',
+        'Forests: Our Lifeline',
+        'Wastewater Story'
+      ],
+      '8th': [
+        'Crop Production and Management',
+        'Microorganisms: Friend and Foe',
+        'Conservation of Plants and Animals',
+        'Cell — Structure and Functions',
+        'Reproduction in Animals',
+        'Reaching the Age of Adolescence',
+        'Pollution of Air and Water'
+      ],
       '9th': [
         'The Fundamental Unit of Life',
         'Tissues',
