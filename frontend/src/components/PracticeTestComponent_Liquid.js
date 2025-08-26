@@ -142,6 +142,7 @@ const PracticeTestComponent = ({ student, onNavigate }) => {
     setUserAnswers({});
     setShowResults(false);
     setSelectedSubject('');
+    setSelectedGrade('10th'); // Reset to default grade
     setSelectedUnits([]);
     setSelectedQuestionTypes([]);
   };
