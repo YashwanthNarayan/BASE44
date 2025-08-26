@@ -436,6 +436,48 @@ class AIService:
                         "options": ["Nucleus", "Mitochondria", "Chloroplast", "Vacuole"],
                         "correct": "Chloroplast",
                         "explanation": "Chloroplasts contain chlorophyll, the green pigment essential for photosynthesis."
+                    },
+                    {
+                        "question": "What is the process by which plants make their own food?",
+                        "options": ["Respiration", "Photosynthesis", "Transpiration", "Digestion"],
+                        "correct": "Photosynthesis",
+                        "explanation": "Photosynthesis is the process where plants convert sunlight, CO₂ and water into glucose."
+                    },
+                    {
+                        "question": "Which gas do plants absorb from the atmosphere during photosynthesis?",
+                        "options": ["Oxygen", "Nitrogen", "Carbon dioxide", "Hydrogen"],
+                        "correct": "Carbon dioxide",
+                        "explanation": "Plants absorb CO₂ from atmosphere and convert it into glucose during photosynthesis."
+                    },
+                    {
+                        "question": "The tiny pores on leaves through which gas exchange occurs are called:",
+                        "options": ["Stomata", "Chloroplasts", "Cells", "Tissues"],
+                        "correct": "Stomata",
+                        "explanation": "Stomata are tiny pores on leaves that allow gas exchange during photosynthesis."
+                    },
+                    {
+                        "question": "Plants that make their own food are called:",
+                        "options": ["Heterotrophs", "Autotrophs", "Parasites", "Saprophytes"],
+                        "correct": "Autotrophs",
+                        "explanation": "Autotrophs are organisms that can produce their own food through photosynthesis."
+                    },
+                    {
+                        "question": "What do plants release as a by-product of photosynthesis?",
+                        "options": ["Carbon dioxide", "Nitrogen", "Oxygen", "Water vapor"],
+                        "correct": "Oxygen",
+                        "explanation": "Oxygen is released as a by-product when plants convert CO₂ and water into glucose."
+                    },
+                    {
+                        "question": "Which mineral is essential for the formation of chlorophyll?",
+                        "options": ["Iron", "Magnesium", "Calcium", "Sodium"],
+                        "correct": "Magnesium",
+                        "explanation": "Magnesium is the central atom in the chlorophyll molecule."
+                    },
+                    {
+                        "question": "The equation for photosynthesis is:",
+                        "options": ["6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂", "C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O", "CO₂ + H₂O → CH₄ + O₂", "None of these"],
+                        "correct": "6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂",
+                        "explanation": "This is the balanced equation for photosynthesis showing reactants and products."
                     }
                 ]
             },
