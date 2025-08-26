@@ -271,13 +271,19 @@ class StudentAnalyticsService:
     @staticmethod
     def get_performance_trends(practice_attempts: List[Dict], days: int = 30) -> Dict[str, Any]:
         """Get performance trends over specified time period"""
+        print(f"🔍 ANALYTICS DEBUG: get_performance_trends called with days={days}, type={type(days)}")
+        
         # Ensure days is an integer (defensive programming)
         if isinstance(days, str):
+            print(f"🔍 ANALYTICS DEBUG: Converting string '{days}' to int")
             days = int(days)
         if days is None:
             days = 30
             
+        print(f"🔍 ANALYTICS DEBUG: Final days value = {days}, type = {type(days)}")
+        print(f"🔍 ANALYTICS DEBUG: About to create timedelta with days={days}")
         cutoff_date = datetime.utcnow() - timedelta(days=days)
+        print(f"🔍 ANALYTICS DEBUG: Successfully created cutoff_date = {cutoff_date}")
         
         # Filter recent attempts with defensive programming
         recent_attempts = []
