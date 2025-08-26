@@ -285,18 +285,20 @@
 
 
 
-user_problem_statement: "i want to make a smart calendar bot that designs a study session and stuff so that the student doesn't have to worry" - User wants a smart calendar bot that creates AI-powered study sessions using the Pomodoro technique, analyzes student needs through chat, and generates optimized study schedules automatically.
+user_problem_statement: "i want to replace practice test topics with actual NCERT book units and add grade selector" - User wants to convert generic practice test topics to real NCERT curriculum units organized by grade levels (9th, 10th, 11th, 12th) with a grade selection interface.
 
-## CRITICAL BUG FIX - SCHEDULED TEST SUBMISSION:
-User reported: "clicking the Complete Review button after a scheduled practice test results in 'Failed to submit test. Please try again.' error with 422 Unprocessable Entity"
+## CURRENT IMPLEMENTATION STATUS:
+COMPLETED: Updated `/app/frontend/src/utils/constants.js` with comprehensive NCERT units organized by subject and grade
+IN PROGRESS: Updating `/app/frontend/src/components/PracticeTestComponent_Liquid.js` to integrate grade selector and NCERT units
 
-ROOT CAUSE IDENTIFIED AND FIXED:
-- Frontend was sending `questions: testQuestions` (full question objects) in TestSubmissionRequest
-- Backend TestSubmissionRequest model expects `questions: List[str]` (question ID strings only)
-- Fixed frontend to send `questions: testQuestions.map(q => q.id)` to match backend expectations
-- The `question_data` field was already correctly sending full question objects for processing
-
-NEXT: Need to test backend endpoint `/api/practice/submit-scheduled` to ensure fix resolves the 422 validation error.
+CHANGES MADE TO PracticeTestComponent_Liquid.js:
+- Added grade selector with 7 grade levels (6th-12th)
+- Updated subject selection to reset units when subject changes  
+- Added NCERT units selection based on selected subject and grade
+- Updated validation to require subject, grade, and at least one unit
+- Modified button text to reflect NCERT integration
+- Added gradeLevels import from constants
+- Enhanced UI with better unit display and grade selection interface
 
 backend:
   - task: "NEW Teacher Analytics Endpoints - Class & Student Strengths/Weaknesses"
