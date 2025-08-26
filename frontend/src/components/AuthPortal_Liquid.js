@@ -46,16 +46,47 @@ const AuthPortal = ({ onAuthSuccess }) => {
     setError('');
     setIsLoading(true);
 
-    // Validation
+    // Enhanced validation for debugging
+    console.log('🔍 Auth: Form submission data:', formData);
+    
+    // Validation with detailed logging
     if (!isValidEmail(formData.email)) {
-      setError('Please enter a valid email address');
+      const errorMsg = 'Please enter a valid email address';
+      console.error('❌ Auth: Email validation failed:', formData.email);
+      setError(errorMsg);
       setIsLoading(false);
       return;
     }
 
     if (!isLogin) {
+      // Check required fields for registration
+      if (!formData.name || formData.name.trim().length === 0) {
+        const errorMsg = 'Please enter your full name';
+        console.error('❌ Auth: Name validation failed:', formData.name);
+        setError(errorMsg);
+        setIsLoading(false);
+        return;
+      }
+      
+      if (userType === 'student' && (!formData.grade_level || formData.grade_level === '')) {
+        const errorMsg = 'Please select your grade level';
+        console.error('❌ Auth: Grade level validation failed:', formData.grade_level);
+        setError(errorMsg);
+        setIsLoading(false);
+        return;
+      }
+      
+      if (userType === 'teacher' && (!formData.school_name || formData.school_name.trim().length === 0)) {
+        const errorMsg = 'Please enter your school name';
+        console.error('❌ Auth: School name validation failed:', formData.school_name);
+        setError(errorMsg);
+        setIsLoading(false);
+        return;
+      }
+      
       const passwordErrors = validatePassword(formData.password);
       if (passwordErrors.length > 0) {
+        console.error('❌ Auth: Password validation failed:', passwordErrors);
         setError(passwordErrors[0]);
         setIsLoading(false);
         return;
@@ -63,17 +94,26 @@ const AuthPortal = ({ onAuthSuccess }) => {
     }
 
     try {
+      console.log('🔍 Auth: Preparing API payload...');
       const payload = {
-        email: formData.email,
+        email: formData.email.trim(),
         password: formData.password,
         ...(isLogin ? {} : {
-          name: formData.name,
+          name: formData.name.trim(),
           user_type: userType,
-          ...(userType === 'student' ? { grade_level: formData.grade_level } : { school_name: formData.school_name })
+          ...(userType === 'student' ? { grade_level: formData.grade_level } : { school_name: formData.school_name.trim() })
         })
       };
+      
+      console.log('🔍 Auth: Sending API request:', { ...payload, password: '[REDACTED]' });
 
       const response = isLogin ? await authAPI.login(payload) : await authAPI.register(payload);
+      
+      console.log('✅ Auth: API response received:', { 
+        hasToken: !!response.access_token, 
+        tokenLength: response.access_token ? response.access_token.length : 0,
+        userType: response.user_type 
+      });
       
       // Store authentication data - store token directly to avoid JSON.stringify quotes
       localStorage.setItem('access_token', response.access_token);
