@@ -194,15 +194,18 @@ const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
           </div>
         </div>
 
-        {/* Filter Controls */}
-        <LiquidCard className="mb-8" holographic>
-          <div className="p-6">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center">
-                <span className="text-sm font-bold">🎯</span>
-              </div>
-              <h2 className="text-xl font-semibold text-primary">Filter Options</h2>
-            </div>
+        {/* Tab Content */}
+        {activeTab === 'overview' && (
+          <>
+            {/* Filter Controls */}
+            <LiquidCard className="mb-8" holographic>
+              <div className="p-6">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-8 h-8 rounded-full bg-gradient-secondary flex items-center justify-center">
+                    <span className="text-sm font-bold">🎯</span>
+                  </div>
+                  <h2 className="text-xl font-semibold text-primary">Filter Options</h2>
+                </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
