@@ -293,6 +293,17 @@ CHANGES MADE TO PracticeTestComponent_Liquid.js:
 - Enhanced UI with better unit display and grade selection interface
 
 backend:
+  - task: "NCERT Units Integration - Backend Compatibility"
+    implemented: true
+    working: "NA"
+    file: "backend/routes/practice.py, backend/services/ai_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "NCERT UNITS INTEGRATION: Updated frontend PracticeTestComponent_Liquid.js to work with new NCERT units structure. The backend practice test generation should be compatible as it accepts topics as strings, but needs testing to ensure: 1) AI generates appropriate questions for NCERT units, 2) Grade-level content is properly handled, 3) Unit names from constants are processed correctly by AI service. Backend routes and AI service should handle the new unit names without modification, but verification needed."
   - task: "NEW Teacher Analytics Endpoints - Class & Student Strengths/Weaknesses"
     implemented: true
     working: true
