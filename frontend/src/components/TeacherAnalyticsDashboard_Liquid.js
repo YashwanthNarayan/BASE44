@@ -5,8 +5,13 @@ import '../styles/liquid-glass.css';
 
 const TeacherAnalyticsDashboard = ({ teacher, onNavigate }) => {
   const [analyticsData, setAnalyticsData] = useState(null);
+  const [classAnalytics, setClassAnalytics] = useState(null);
+  const [studentAnalytics, setStudentAnalytics] = useState(null);
   const [selectedClass, setSelectedClass] = useState('all');
   const [selectedSubject, setSelectedSubject] = useState('all');
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [availableStudents, setAvailableStudents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
