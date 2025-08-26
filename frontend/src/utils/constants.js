@@ -1,39 +1,331 @@
-// Subject definitions
+// Subject definitions with NCERT Units
 export const subjects = {
   math: { 
     name: 'Mathematics', 
     icon: '🔢',
-    topics: ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics', 'Probability', 'Number Theory', 'Linear Equations', 'Quadratic Equations'] 
+    units: {
+      '9th': [
+        'Number Systems',
+        'Polynomials', 
+        'Coordinate Geometry',
+        'Linear Equations in Two Variables',
+        'Introduction to Euclid\'s Geometry',
+        'Lines and Angles',
+        'Triangles',
+        'Quadrilaterals',
+        'Areas of Parallelograms and Triangles',
+        'Circles',
+        'Constructions',
+        'Heron\'s Formula',
+        'Surface Areas and Volumes',
+        'Statistics',
+        'Probability'
+      ],
+      '10th': [
+        'Real Numbers',
+        'Polynomials',
+        'Pair of Linear Equations in Two Variables',
+        'Quadratic Equations',
+        'Arithmetic Progressions',
+        'Triangles',
+        'Coordinate Geometry',
+        'Introduction to Trigonometry',
+        'Some Applications of Trigonometry',
+        'Circles',
+        'Constructions',
+        'Areas Related to Circles',
+        'Surface Areas and Volumes',
+        'Statistics',
+        'Probability'
+      ],
+      '11th': [
+        'Sets',
+        'Relations and Functions',
+        'Trigonometric Functions',
+        'Principle of Mathematical Induction',
+        'Complex Numbers and Quadratic Equations',
+        'Linear Inequalities',
+        'Permutations and Combinations',
+        'Binomial Theorem',
+        'Sequences and Series',
+        'Straight Lines',
+        'Conic Sections',
+        'Introduction to Three Dimensional Geometry',
+        'Limits and Derivatives',
+        'Mathematical Reasoning',
+        'Statistics',
+        'Probability'
+      ],
+      '12th': [
+        'Relations and Functions',
+        'Inverse Trigonometric Functions',
+        'Matrices',
+        'Determinants',
+        'Continuity and Differentiability',
+        'Applications of Derivatives',
+        'Integrals',
+        'Applications of Integrals',
+        'Differential Equations',
+        'Vector Algebra',
+        'Three Dimensional Geometry',
+        'Linear Programming',
+        'Probability'
+      ]
+    }
   },
   physics: { 
     name: 'Physics', 
     icon: '⚛️',
-    topics: ['Mechanics', 'Thermodynamics', 'Waves', 'Optics', 'Electricity', 'Magnetism', 'Modern Physics', 'Kinematics', 'Dynamics'] 
+    units: {
+      '9th': [
+        'Motion',
+        'Force and Laws of Motion',
+        'Gravitation',
+        'Work and Energy',
+        'Sound'
+      ],
+      '10th': [
+        'Light - Reflection and Refraction',
+        'Human Eye and Colourful World',
+        'Electricity',
+        'Magnetic Effects of Electric Current',
+        'Sources of Energy'
+      ],
+      '11th': [
+        'Physical World',
+        'Units and Measurement',
+        'Motion in a Straight Line',
+        'Motion in a Plane',
+        'Laws of Motion',
+        'Work, Energy and Power',
+        'System of Particles and Rotational Motion',
+        'Gravitation',
+        'Mechanical Properties of Solids',
+        'Mechanical Properties of Fluids',
+        'Thermal Properties of Matter',
+        'Thermodynamics',
+        'Kinetic Theory',
+        'Oscillations',
+        'Waves'
+      ],
+      '12th': [
+        'Electric Charges and Fields',
+        'Electrostatic Potential and Capacitance',
+        'Current Electricity',
+        'Moving Charges and Magnetism',
+        'Magnetism and Matter',
+        'Electromagnetic Induction',
+        'Alternating Current',
+        'Electromagnetic Waves',
+        'Ray Optics and Optical Instruments',
+        'Wave Optics',
+        'Dual Nature of Radiation and Matter',
+        'Atoms',
+        'Nuclei',
+        'Semiconductor Electronics'
+      ]
+    }
   },
   chemistry: { 
     name: 'Chemistry', 
     icon: '🧪',
-    topics: ['Atomic Structure', 'Organic Chemistry', 'Acids & Bases', 'Chemical Bonding', 'Periodic Table', 'Thermochemistry', 'Electrochemistry'] 
+    units: {
+      '9th': [
+        'Matter in Our Surroundings',
+        'Is Matter Around Us Pure',
+        'Atoms and Molecules',
+        'Structure of the Atom'
+      ],
+      '10th': [
+        'Acids, Bases and Salts',
+        'Metals and Non-metals',
+        'Carbon and its Compounds',
+        'Periodic Classification of Elements',
+        'Life Processes'
+      ],
+      '11th': [
+        'Some Basic Concepts of Chemistry',
+        'Structure of Atom',
+        'Classification of Elements and Periodicity',
+        'Chemical Bonding and Molecular Structure',
+        'States of Matter',
+        'Thermodynamics',
+        'Equilibrium',
+        'Redox Reactions',
+        'Hydrogen',
+        'The s-Block Elements',
+        'The p-Block Elements',
+        'Organic Chemistry - Some Basic Principles',
+        'Hydrocarbons',
+        'Environmental Chemistry'
+      ],
+      '12th': [
+        'The Solid State',
+        'Solutions',
+        'Electrochemistry',
+        'Chemical Kinetics',
+        'Surface Chemistry',
+        'General Principles of Metallurgy',
+        'The p-Block Elements',
+        'The d and f Block Elements',
+        'Coordination Compounds',
+        'Haloalkanes and Haloarenes',
+        'Alcohols, Phenols and Ethers',
+        'Aldehydes, Ketones and Carboxylic Acids',
+        'Amines',
+        'Biomolecules',
+        'Polymers',
+        'Chemistry in Everyday Life'
+      ]
+    }
   },
   biology: { 
     name: 'Biology', 
     icon: '🧬',
-    topics: ['Cell Biology', 'Genetics', 'Ecology', 'Human Physiology', 'Plant Biology', 'Evolution', 'Molecular Biology', 'Anatomy'] 
+    units: {
+      '9th': [
+        'The Fundamental Unit of Life',
+        'Tissues',
+        'Diversity in Living Organisms',
+        'Why Do We Fall Ill',
+        'Natural Resources'
+      ],
+      '10th': [
+        'Life Processes',
+        'Control and Coordination',
+        'How do Organisms Reproduce',
+        'Heredity and Evolution',
+        'Our Environment',
+        'Management of Natural Resources'
+      ],
+      '11th': [
+        'The Living World',
+        'Biological Classification',
+        'Plant Kingdom',
+        'Animal Kingdom',
+        'Morphology of Flowering Plants',
+        'Anatomy of Flowering Plants',
+        'Structural Organisation in Animals',
+        'Cell: The Unit of Life',
+        'Biomolecules',
+        'Cell Cycle and Cell Division',
+        'Transport in Plants',
+        'Mineral Nutrition',
+        'Photosynthesis in Higher Plants',
+        'Respiration in Plants',
+        'Plant Growth and Development',
+        'Digestion and Absorption',
+        'Breathing and Exchange of Gases',
+        'Body Fluids and Circulation',
+        'Excretory Products and their Elimination',
+        'Locomotion and Movement',
+        'Neural Control and Coordination',
+        'Chemical Coordination and Integration'
+      ],
+      '12th': [
+        'Reproduction in Organisms',
+        'Sexual Reproduction in Flowering Plants',
+        'Human Reproduction',
+        'Reproductive Health',
+        'Principles of Inheritance and Variation',
+        'Molecular Basis of Inheritance',
+        'Evolution',
+        'Human Health and Disease',
+        'Strategies for Enhancement in Food Production',
+        'Microbes in Human Welfare',
+        'Biotechnology: Principles and Processes',
+        'Biotechnology and its Applications',
+        'Organisms and Populations',
+        'Ecosystem',
+        'Biodiversity and Conservation',
+        'Environmental Issues'
+      ]
+    }
   },
   english: {
     name: 'English',
     icon: '📚',
-    topics: ['Grammar', 'Literature', 'Poetry', 'Essay Writing', 'Reading Comprehension', 'Creative Writing', 'Vocabulary', 'Sentence Structure']
-  },
-  history: {
-    name: 'History',
-    icon: '🏛️',
-    topics: ['Ancient History', 'Medieval History', 'Modern History', 'World Wars', 'Indian Independence', 'Civilizations', 'Cultural History']
-  },
-  geography: {
-    name: 'Geography',
-    icon: '🌍',
-    topics: ['Physical Geography', 'Human Geography', 'Climate', 'Natural Resources', 'Population', 'Economic Geography', 'Environmental Geography']
+    units: {
+      '9th': [
+        'The Fun They Had',
+        'The Sound of Music',
+        'The Little Girl',
+        'A Truly Beautiful Mind',
+        'The Snake and the Mirror',
+        'My Childhood',
+        'Reach for the Top',
+        'Kathmandu',
+        'If I Were You',
+        'The Road Not Taken',
+        'Wind',
+        'Rain on the Roof',
+        'The Lake Isle of Innisfree',
+        'A Legend of the Northland',
+        'No Men are Foreign',
+        'The Duck and the Kangaroo',
+        'On Killing a Tree',
+        'The Snake Trying',
+        'A Slumber Did My Spirit Seal'
+      ],
+      '10th': [
+        'A Letter to God',
+        'Nelson Mandela: Long Walk to Freedom',
+        'Two Stories about Flying',
+        'From the Diary of Anne Frank',
+        'The Hundred Dresses – I',
+        'The Hundred Dresses – II',
+        'Glimpses of India',
+        'Mijbil the Otter',
+        'Madam Rides the Bus',
+        'The Sermon at Benares',
+        'The Proposal',
+        'Dust of Snow',
+        'Fire and Ice',
+        'A Tiger in the Zoo',
+        'How to Tell Wild Animals',
+        'The Ball Poem',
+        'Amanda!',
+        'Animals',
+        'The Trees',
+        'Fog',
+        'The Tale of Custard the Dragon',
+        'For Anne Gregory'
+      ],
+      '11th': [
+        'The Portrait of a Lady',
+        'We\'re Not Afraid to Die... if We Can All Be Together',
+        'Discovering Tut: the Saga Continues',
+        'Landscape of the Soul',
+        'The Ailing Planet: the Green Movement\'s Role',
+        'The Browning Version',
+        'The Adventure',
+        'Silk Road',
+        'Father to Son',
+        'The Laburnum Top',
+        'The Voice of the Rain',
+        'Childhood',
+        'The Photograph',
+        'A Photograph'
+      ],
+      '12th': [
+        'The Last Lesson',
+        'Lost Spring',
+        'Deep Water',
+        'The Rattrap',
+        'Indigo',
+        'Poets and Pancakes',
+        'The Interview',
+        'Going Places',
+        'My Mother at Sixty-six',
+        'Keeping Quiet',
+        'A Thing of Beauty',
+        'A Roadside Stand',
+        'Aunt Jennifer\'s Tigers',
+        'On the Face of It',
+        'Evans Tries an O-level',
+        'Memories of Childhood'
+      ]
+    }
   }
 };
 
