@@ -49,22 +49,14 @@ async def get_performance_trends(
         db = get_database()
         student_id = current_user['sub']
         
-        # Debug logging
-        print(f"🔍 TRENDS DEBUG: days parameter = {days}, type = {type(days)}")
-        
         # Ensure days is an integer (defensive programming)
         if isinstance(days, str):
-            print(f"🔍 TRENDS DEBUG: Converting string '{days}' to int")
             days = int(days)
         if days is None:
             days = 30
         
-        print(f"🔍 TRENDS DEBUG: Final days value = {days}, type = {type(days)}")
-        
         # Get practice attempts within the time period
-        print(f"🔍 TRENDS DEBUG: About to create timedelta with days={days}")
         cutoff_date = datetime.utcnow() - timedelta(days=days)
-        print(f"🔍 TRENDS DEBUG: Successfully created cutoff_date = {cutoff_date}")
         
         practice_attempts_cursor = db[Collections.PRACTICE_ATTEMPTS].find({
             "student_id": student_id,
