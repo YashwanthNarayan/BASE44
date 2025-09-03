@@ -608,7 +608,7 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
             {/* Grade Selection */}
             {selectedSubject && (
               <div className="mb-8">
-                <ModernHeading level={4} className="mb-4">Select Grade</ModernHeading>
+                <ModernHeading level={4} className="mb-6 text-gray-800 font-semibold">Select Grade</ModernHeading>
                 <ModernGrid cols={7}>
                   {gradeLevels.map((grade) => (
                     <button
@@ -617,13 +617,17 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
                         setSelectedGrade(grade);
                         setSelectedUnits([]);
                       }}
-                      className={`p-4 rounded-lg border-2 transition-all duration-300 text-center ${
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 text-sm group hover:shadow-md ${
                         selectedGrade === grade
-                          ? 'border-purple-500 bg-purple-50 text-purple-900'
+                          ? 'border-purple-500 bg-purple-50 shadow-md'
                           : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                       }`}
                     >
-                      <div className="font-medium">{grade}</div>
+                      <div className={`text-center font-semibold transition-colors duration-300 ${
+                        selectedGrade === grade ? 'text-purple-900' : 'text-gray-600 group-hover:text-gray-800'
+                      }`}>
+                        {grade}
+                      </div>
                     </button>
                   ))}
                 </ModernGrid>
