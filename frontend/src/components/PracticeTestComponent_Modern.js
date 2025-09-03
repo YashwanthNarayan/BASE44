@@ -573,7 +573,7 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
             {/* Subject Selection */}
             <div className="mb-8">
               <ModernHeading level={4} className="mb-4">Select Subject</ModernHeading>
-              <ModernGrid cols={4}>
+              <ModernGrid cols={5}>
                 {Object.entries(subjects).map(([key, subject]) => (
                   <button
                     key={key}
@@ -587,8 +587,15 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
                         : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                     }`}
                   >
-                    <div className="text-3xl mb-2">{subject.icon}</div>
-                    <div className="font-medium">{subject.name}</div>
+                    <div className="mb-3 flex justify-center">
+                      <SubjectIcon 
+                        iconType={subject.icon} 
+                        className={`w-8 h-8 ${
+                          selectedSubject === key ? 'text-indigo-600' : 'text-gray-400'
+                        }`}
+                      />
+                    </div>
+                    <div className="font-medium text-sm">{subject.name}</div>
                   </button>
                 ))}
               </ModernGrid>
