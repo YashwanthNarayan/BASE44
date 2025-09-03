@@ -91,7 +91,9 @@ const StudentDashboard_Modern = ({ user, onNavigate, onLogout }) => {
             <ModernCardBody>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl text-white">📚</span>
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
                 </div>
                 <ModernHeading level={3} className="mb-2">
                   NCERT Practice Tests
@@ -114,7 +116,10 @@ const StudentDashboard_Modern = ({ user, onNavigate, onLogout }) => {
             <ModernCardBody>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl text-white">📈</span>
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/>
+                    <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"/>
+                  </svg>
                 </div>
                 <ModernHeading level={3} className="mb-2">
                   Learning Analytics
@@ -137,7 +142,9 @@ const StudentDashboard_Modern = ({ user, onNavigate, onLogout }) => {
             <ModernCardBody>
               <div className="text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-2xl text-white">🤖</span>
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd"/>
+                  </svg>
                 </div>
                 <ModernHeading level={3} className="mb-2">
                   AI Tutor
