@@ -132,7 +132,7 @@ const AuthPortal_Modern = ({ onLogin, onRegister }) => {
       <ModernContainer maxWidth="400px" className="relative z-10">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl text-white font-bold">📚</span>
+            <div className="w-8 h-8 bg-white rounded-lg opacity-90"></div>
           </div>
           <ModernHeading level={1} className="mb-2">
             NCERT Study Hub
