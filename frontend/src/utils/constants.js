@@ -125,7 +125,7 @@ export const subjects = {
   },
   physics: { 
     name: 'Physics', 
-    icon: '⚛️',
+    icon: 'physics',
     units: {
       '6th': [
         'Food: Where Does it Come From?',
