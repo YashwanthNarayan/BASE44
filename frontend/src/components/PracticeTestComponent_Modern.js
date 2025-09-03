@@ -19,6 +19,40 @@ import {
 } from './ui/ModernComponents';
 import '../styles/modern-ui.css';
 
+// Subject Icon Component
+const SubjectIcon = ({ iconType, className = "w-8 h-8" }) => {
+  const iconPaths = {
+    math: (
+      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 12H9.5v-2H11v2zm0-4H9.5V9H11v2zm4 4h-1.5v-2H15v2zm0-4h-1.5V9H15v2z"/>
+      </svg>
+    ),
+    physics: (
+      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+    ),
+    chemistry: (
+      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+        <path d="M9 2v6l-2 2v2h10v-2l-2-2V2H9zm2 2h2v5.5l1.5 1.5H9.5L11 9.5V4z"/>
+        <path d="M6 14h12l-1 7H7l-1-7z"/>
+      </svg>
+    ),
+    biology: (
+      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+        <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66.95-2.84c.48.17.98.26 1.34.26C14 19.42 21 14 21 8c0-1.54-.87-2.93-2.16-3.53-.51-.24-1.07-.47-1.66-.47-.59 0-1.15.23-1.66.47C14.87 5.07 14 6.46 14 8s.87 2.93 2.18 3.53c.51.24 1.07.47 1.66.47s1.15-.23 1.66-.47C20.13 10.93 21 9.54 21 8z"/>
+      </svg>
+    ),
+    english: (
+      <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+        <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"/>
+      </svg>
+    )
+  };
+
+  return iconPaths[iconType] || iconPaths.math;
+};
+
 const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedGrade, setSelectedGrade] = useState('10th');
