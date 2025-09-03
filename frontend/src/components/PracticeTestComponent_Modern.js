@@ -554,16 +554,16 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
       />
 
       <ModernContainer className="py-8 max-w-4xl">
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <div className="text-center mb-10">
+          <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
             <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
           </div>
-          <ModernHeading level={1} className="mb-4">
+          <ModernHeading level={1} className="mb-4 text-gray-900 font-bold">
             NCERT Practice Tests
           </ModernHeading>
-          <ModernText variant="body-large" className="text-gray-600">
+          <ModernText variant="body-large" className="text-gray-600 font-medium">
             Create tests based on NCERT curriculum units
           </ModernText>
         </div>
