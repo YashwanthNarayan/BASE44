@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { practiceAPI, setupAxiosAuth } from '../services/api';
 import { subjects, questionTypes, difficultyLevels, gradeLevels } from '../utils/constants';
+import NavigationBar_Modern from './NavigationBar_Modern';
 import { 
   ModernCard, 
   ModernCardHeader, 
