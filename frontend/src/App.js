@@ -13,7 +13,7 @@ import PracticeTestComponent from './components/PracticeTestComponent_Modern';
 import StudyTimer from './components/StudyTimer';
 
 // Import lazy-loaded components (now with liquid versions)
-const MindfulnessComponent = React.lazy(() => import('./components/MindfulnessComponent_Liquid'));
+const MindfulnessComponent = React.lazy(() => import('./components/MindfulnessComponent_Modern'));
 const CalendarComponent = React.lazy(() => import('./components/CalendarComponent_Liquid'));
 const ProgressComponent = React.lazy(() => import('./components/ProgressComponent_Liquid'));
 const TutorComponent = React.lazy(() => import('./components/TutorComponent_Liquid'));
