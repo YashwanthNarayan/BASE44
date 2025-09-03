@@ -729,17 +729,17 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
             <div className="text-center">
               <ModernButton
                 variant="primary"
-                className="px-12 py-4 text-lg"
+                className="px-12 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 onClick={generatePracticeTest}
                 disabled={!selectedSubject || !selectedGrade || selectedUnits.length === 0 || isGenerating}
               >
                 {isGenerating ? (
                   <div className="flex items-center gap-3">
                     <ModernSpinner size="sm" />
-                    <span>Generating Test...</span>
+                    <span className="text-white font-medium">Generating Test...</span>
                   </div>
                 ) : (
-                  'Start Practice Test'
+                  <span className="text-white font-medium">Start Practice Test</span>
                 )}
               </ModernButton>
             </div>
