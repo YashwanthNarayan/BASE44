@@ -719,7 +719,7 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
                     <span>Generating Test...</span>
                   </div>
                 ) : (
-                  '🚀 Start Practice Test'
+                  'Start Practice Test'
                 )}
               </ModernButton>
             </div>
