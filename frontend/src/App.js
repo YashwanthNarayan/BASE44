@@ -4,7 +4,7 @@ import './App.css';
 import './styles/liquid-glass.css';
 
 // Import components
-import AuthPortal from './components/AuthPortal_Liquid';
+import AuthPortal from './components/AuthPortal_Modern';
 import StudentDashboard from './components/StudentDashboard_Liquid';
 import TeacherDashboard from './components/TeacherDashboard_Liquid';
 import NotesComponent from './components/NotesComponent_Liquid';
