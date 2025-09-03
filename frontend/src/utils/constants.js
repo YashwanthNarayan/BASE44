@@ -236,7 +236,7 @@ export const subjects = {
   },
   chemistry: { 
     name: 'Chemistry', 
-    icon: '🧪',
+    icon: 'chemistry',
     units: {
       '6th': [
         'Components of Food',
