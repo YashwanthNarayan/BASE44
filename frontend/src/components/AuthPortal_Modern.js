@@ -87,7 +87,7 @@ const AuthPortal_Modern = ({ onLogin, onRegister }) => {
           localStorage.setItem('access_token', response.access_token);
           localStorage.setItem('user', JSON.stringify(response.user));
           setSuccess('Login successful! Redirecting...');
-          setTimeout(() => onLogin(response.user), 1000);
+          setTimeout(() => onLogin(response.user.user_type, response.user), 1000);
         }
       } else {
         const response = await authAPI.register({
