@@ -572,7 +572,7 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
           <ModernCardBody>
             {/* Subject Selection */}
             <div className="mb-8">
-              <ModernHeading level={4} className="mb-4">Select Subject</ModernHeading>
+              <ModernHeading level={4} className="mb-6 text-gray-800 font-semibold">Select Subject</ModernHeading>
               <ModernGrid cols={5}>
                 {Object.entries(subjects).map(([key, subject]) => (
                   <button
@@ -581,21 +581,25 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
                       setSelectedSubject(key);
                       setSelectedUnits([]);
                     }}
-                    className={`p-6 rounded-xl border-2 transition-all duration-300 text-center ${
+                    className={`p-6 rounded-2xl border-2 transition-all duration-300 text-center group hover:shadow-lg ${
                       selectedSubject === key
-                        ? 'border-indigo-500 bg-indigo-50 text-indigo-900'
+                        ? 'border-indigo-500 bg-indigo-50 shadow-md'
                         : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                     }`}
                   >
-                    <div className="mb-3 flex justify-center">
+                    <div className="mb-4 flex justify-center">
                       <SubjectIcon 
                         iconType={subject.icon} 
-                        className={`w-8 h-8 ${
-                          selectedSubject === key ? 'text-indigo-600' : 'text-gray-400'
+                        className={`w-8 h-8 transition-colors duration-300 ${
+                          selectedSubject === key ? 'text-indigo-600' : 'text-gray-500 group-hover:text-gray-700'
                         }`}
                       />
                     </div>
-                    <div className="font-medium text-sm">{subject.name}</div>
+                    <div className={`font-medium text-sm transition-colors duration-300 ${
+                      selectedSubject === key ? 'text-indigo-900' : 'text-gray-700 group-hover:text-gray-900'
+                    }`}>
+                      {subject.name}
+                    </div>
                   </button>
                 ))}
               </ModernGrid>
