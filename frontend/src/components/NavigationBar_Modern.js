@@ -34,7 +34,7 @@ const NavigationBar_Modern = ({ user, currentPage, onNavigate, onLogout }) => {
       <ModernNavBrand onClick={() => onNavigate('student-dashboard')}>
         <div className="flex items-center gap-2 cursor-pointer">
           <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">📚</span>
+            <div className="w-4 h-4 bg-white rounded opacity-90"></div>
           </div>
           <span className="font-bold text-xl text-gray-900">NCERT Study Hub</span>
         </div>
