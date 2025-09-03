@@ -637,10 +637,10 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
             {/* NCERT Units Selection */}
             {selectedSubject && selectedGrade && subjects[selectedSubject].units[selectedGrade] && (
               <div className="mb-8">
-                <ModernHeading level={4} className="mb-4">
+                <ModernHeading level={4} className="mb-4 text-gray-800 font-semibold">
                   Select NCERT Units ({selectedUnits.length} selected)
                 </ModernHeading>
-                <ModernText variant="body-small" className="text-gray-600 mb-4">
+                <ModernText variant="body-small" className="text-gray-600 mb-6 font-medium">
                   Choose units from {subjects[selectedSubject].name} - Class {selectedGrade}
                 </ModernText>
                 <ModernGrid cols={2}>
@@ -648,23 +648,27 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
                     <button
                       key={unit}
                       onClick={() => handleUnitToggle(unit)}
-                      className={`p-4 rounded-lg border-2 transition-all duration-300 text-left ${
+                      className={`p-5 rounded-xl border-2 transition-all duration-300 text-left group hover:shadow-md ${
                         selectedUnits.includes(unit)
-                          ? 'border-blue-500 bg-blue-50 text-blue-900'
+                          ? 'border-blue-500 bg-blue-50 shadow-md'
                           : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 flex-shrink-0 ${
+                        <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 flex-shrink-0 transition-colors duration-300 ${
                           selectedUnits.includes(unit) 
                             ? 'border-blue-500 bg-blue-500' 
-                            : 'border-gray-300'
+                            : 'border-gray-300 group-hover:border-gray-400'
                         }`}>
                           {selectedUnits.includes(unit) && (
                             <span className="text-white text-xs font-bold">✓</span>
                           )}
                         </div>
-                        <span className="leading-5 font-medium">{unit}</span>
+                        <span className={`leading-5 font-medium transition-colors duration-300 ${
+                          selectedUnits.includes(unit) ? 'text-blue-900' : 'text-gray-700 group-hover:text-gray-900'
+                        }`}>
+                          {unit}
+                        </span>
                       </div>
                     </button>
                   ))}
