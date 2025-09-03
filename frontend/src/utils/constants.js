@@ -2,7 +2,7 @@
 export const subjects = {
   math: { 
     name: 'Mathematics', 
-    icon: '🔢',
+    icon: 'math',
     units: {
       '6th': [
         'Knowing Our Numbers',
