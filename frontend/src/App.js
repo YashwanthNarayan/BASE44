@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './styles/modern-ui.css';
 import './App.css';
 import './styles/liquid-glass.css';
 
