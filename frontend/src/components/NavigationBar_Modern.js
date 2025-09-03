@@ -10,20 +10,20 @@ import {
 
 const NavigationBar_Modern = ({ user, currentPage, onNavigate, onLogout }) => {
   const navigationItems = [
-    { id: 'student-dashboard', label: 'Dashboard', icon: '🏠' },
-    { id: 'practice-tests', label: 'Practice Tests', icon: '📚' },
-    { id: 'strengths-weaknesses', label: 'Analytics', icon: '📈' },
-    { id: 'tutor', label: 'AI Tutor', icon: '🤖' },
-    { id: 'scheduled-tests', label: 'Schedule', icon: '📅' },
-    { id: 'progress', label: 'Progress', icon: '📊' },
-    { id: 'notes', label: 'Notes', icon: '📝' }
+    { id: 'student-dashboard', label: 'Dashboard', icon: '●' },
+    { id: 'practice-tests', label: 'Practice Tests', icon: '◆' },
+    { id: 'strengths-weaknesses', label: 'Analytics', icon: '◇' },
+    { id: 'tutor', label: 'AI Tutor', icon: '◎' },
+    { id: 'scheduled-tests', label: 'Schedule', icon: '◯' },
+    { id: 'progress', label: 'Progress', icon: '◐' },
+    { id: 'notes', label: 'Notes', icon: '◑' }
   ];
 
   const teacherItems = [
-    { id: 'teacher-dashboard', label: 'Dashboard', icon: '🏠' },
-    { id: 'classes', label: 'Classes', icon: '👥' },
-    { id: 'assignments', label: 'Assignments', icon: '📋' },
-    { id: 'teacher-analytics', label: 'Analytics', icon: '📊' }
+    { id: 'teacher-dashboard', label: 'Dashboard', icon: '●' },
+    { id: 'classes', label: 'Classes', icon: '◆' },
+    { id: 'assignments', label: 'Assignments', icon: '◇' },
+    { id: 'teacher-analytics', label: 'Analytics', icon: '◎' }
   ];
 
   const items = user?.user_type === 'teacher' ? teacherItems : navigationItems;
