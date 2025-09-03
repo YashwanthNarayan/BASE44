@@ -102,7 +102,7 @@ const AuthPortal_Modern = ({ onLogin, onRegister }) => {
           localStorage.setItem('access_token', response.access_token);
           localStorage.setItem('user', JSON.stringify(response.user));
           setSuccess('Registration successful! Welcome to NCERT Study Hub!');
-          setTimeout(() => onRegister(response.user), 1000);
+          setTimeout(() => onRegister(response.user.user_type, response.user), 1000);
         }
       }
     } catch (error) {
