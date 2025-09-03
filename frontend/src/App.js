@@ -200,7 +200,7 @@ function App() {
           <NotesComponent student={user} onNavigate={navigate} />
         )}
 
-        {currentView === 'practice' && (
+        {currentView === 'practice-tests' && (
           <PracticeTestComponent student={user} onNavigate={navigate} />
         )}
 
