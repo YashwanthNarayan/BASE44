@@ -14,9 +14,10 @@ const NavigationBar_Modern = ({ user, currentPage, onNavigate, onLogout }) => {
     { id: 'practice-tests', label: 'Practice Tests', icon: '◆' },
     { id: 'strengths-weaknesses', label: 'Analytics', icon: '◇' },
     { id: 'tutor', label: 'AI Tutor', icon: '◎' },
+    { id: 'mindfulness', label: 'Mindfulness', icon: '◐' },
     { id: 'scheduled-tests', label: 'Schedule', icon: '◯' },
-    { id: 'progress', label: 'Progress', icon: '◐' },
-    { id: 'notes', label: 'Notes', icon: '◑' }
+    { id: 'progress', label: 'Progress', icon: '◑' },
+    { id: 'notes', label: 'Notes', icon: '◒' }
   ];
 
   const teacherItems = [
