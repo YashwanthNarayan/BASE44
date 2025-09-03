@@ -8,7 +8,7 @@ import AuthPortal from './components/AuthPortal_Modern';
 import StudentDashboard from './components/StudentDashboard_Modern';
 import TeacherDashboard from './components/TeacherDashboard_Liquid';
 import NotesComponent from './components/NotesComponent_Liquid';
-import PracticeTestComponent from './components/PracticeTestComponent_Liquid';
+import PracticeTestComponent from './components/PracticeTestComponent_Modern';
 import StudyTimer from './components/StudyTimer';
 
 // Import lazy-loaded components (now with liquid versions)
