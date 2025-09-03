@@ -273,7 +273,7 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
                   variant="outline"
                   onClick={() => setShowDetailedResults(true)}
                 >
-                  📊 View Detailed Results
+                  View Detailed Results
                 </ModernButton>
               </div>
 
