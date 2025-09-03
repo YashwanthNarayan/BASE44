@@ -309,7 +309,7 @@ export const subjects = {
   },
   biology: { 
     name: 'Biology', 
-    icon: '🧬',
+    icon: 'biology',
     units: {
       '6th': [
         'Food: Where Does it Come From?',
