@@ -15,7 +15,7 @@ import StudyTimer from './components/StudyTimer';
 // Import lazy-loaded components (now with liquid versions)
 const MindfulnessComponent = React.lazy(() => import('./components/MindfulnessComponent_Modern'));
 const CalendarComponent = React.lazy(() => import('./components/CalendarComponent_Liquid'));
-const ProgressComponent = React.lazy(() => import('./components/ProgressComponent_Liquid'));
+const ProgressComponent = React.lazy(() => import('./components/ProgressComponent_Modern'));
 const TutorComponent = React.lazy(() => import('./components/TutorComponent_Liquid'));
 const NotificationsComponent = React.lazy(() => import('./components/NotificationsComponent_Liquid'));
 const ClassesComponent = React.lazy(() => import('./components/ClassesComponent_Liquid'));
