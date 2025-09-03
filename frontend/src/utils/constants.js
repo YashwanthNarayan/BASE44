@@ -403,7 +403,7 @@ export const subjects = {
   },
   english: {
     name: 'English',
-    icon: '📚',
+    icon: 'english',
     units: {
       '6th': [
         'Who Did Patrick\'s Homework?',
