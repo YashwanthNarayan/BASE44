@@ -162,7 +162,7 @@ function App() {
   );
 
   if (!isAuthenticated) {
-    return <AuthPortal onAuthSuccess={handleAuthSuccess} />;
+    return <AuthPortal onLogin={handleAuthSuccess} onRegister={handleAuthSuccess} />;
   }
 
   return (
