@@ -78,93 +78,12 @@ const StudentDashboard_Modern = ({ user, onNavigate, onLogout }) => {
         {/* Welcome Section */}
         <div className="mb-8">
           <ModernHeading level={1} className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {user?.name || 'Student'}! 👋
+            Welcome back, {user?.name || 'Student'}! 
           </ModernHeading>
           <ModernText variant="body-large" className="text-gray-600">
             Ready to continue your learning journey?
           </ModernText>
         </div>
-
-        {/* Progress Overview */}
-        <ModernGrid cols={4} className="mb-8">
-          <ModernCard>
-            <ModernCardBody>
-              <div className="flex items-center justify-between">
-                <div>
-                  <ModernText variant="body-small" className="text-gray-500 uppercase tracking-wide">
-                    XP Points
-                  </ModernText>
-                  <ModernHeading level={2} className="text-2xl font-bold text-gray-900">
-                    {dashboardData?.xp_points || 0}
-                  </ModernHeading>
-                </div>
-                <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-                  <span className="text-indigo-600">⭐</span>
-                </div>
-              </div>
-              <ModernProgress 
-                value={xpProgress} 
-                max={100} 
-                className="mt-3"
-                label={`${100 - xpProgress} XP to next level`}
-              />
-            </ModernCardBody>
-          </ModernCard>
-
-          <ModernCard>
-            <ModernCardBody>
-              <div className="flex items-center justify-between">
-                <div>
-                  <ModernText variant="body-small" className="text-gray-500 uppercase tracking-wide">
-                    Tests Taken
-                  </ModernText>
-                  <ModernHeading level={2} className="text-2xl font-bold text-gray-900">
-                    {dashboardData?.total_tests || 0}
-                  </ModernHeading>
-                </div>
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <span className="text-green-600">📝</span>
-                </div>
-              </div>
-            </ModernCardBody>
-          </ModernCard>
-
-          <ModernCard>
-            <ModernCardBody>
-              <div className="flex items-center justify-between">
-                <div>
-                  <ModernText variant="body-small" className="text-gray-500 uppercase tracking-wide">
-                    Avg Score
-                  </ModernText>
-                  <ModernHeading level={2} className="text-2xl font-bold text-gray-900">
-                    {dashboardData?.average_score || 0}%
-                  </ModernHeading>
-                </div>
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <span className="text-blue-600">📊</span>
-                </div>
-              </div>
-            </ModernCardBody>
-          </ModernCard>
-
-          <ModernCard>
-            <ModernCardBody>
-              <div className="flex items-center justify-between">
-                <div>
-                  <ModernText variant="body-small" className="text-gray-500 uppercase tracking-wide">
-                    Study Streak
-                  </ModernText>
-                  <ModernHeading level={2} className="text-2xl font-bold text-gray-900">
-                    {dashboardData?.study_streak || 0}
-                  </ModernHeading>
-                </div>
-                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <span className="text-orange-600">🔥</span>
-                </div>
-              </div>
-            </ModernCardBody>
-          </ModernCard>
-        </ModernGrid>
 
         {/* Main Actions */}
         <ModernGrid cols={3} className="mb-8">
