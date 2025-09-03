@@ -177,28 +177,28 @@ const StudentDashboard_Modern = ({ user, onNavigate, onLogout }) => {
                   className="w-full justify-start"
                   onClick={() => onNavigate('scheduled-tests')}
                 >
-                  📅 Scheduled Tests
+                  <span className="text-gray-400 mr-3">●</span> Scheduled Tests
                 </ModernButton>
                 <ModernButton 
                   variant="ghost" 
                   className="w-full justify-start"
                   onClick={() => onNavigate('study-planner')}
                 >
-                  📋 Study Planner
+                  <span className="text-gray-400 mr-3">◆</span> Study Planner
                 </ModernButton>
                 <ModernButton 
                   variant="ghost" 
                   className="w-full justify-start"
                   onClick={() => onNavigate('notes')}
                 >
-                  📝 Notes
+                  <span className="text-gray-400 mr-3">◇</span> Notes
                 </ModernButton>
                 <ModernButton 
                   variant="ghost" 
                   className="w-full justify-start"
                   onClick={() => onNavigate('progress')}
                 >
-                  📊 Progress Tracker
+                  <span className="text-gray-400 mr-3">◎</span> Progress Tracker
                 </ModernButton>
               </div>
             </ModernCardBody>
