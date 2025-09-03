@@ -8,7 +8,7 @@ import './styles/liquid-glass.css';
 import AuthPortal from './components/AuthPortal_Modern';
 import StudentDashboard from './components/StudentDashboard_Modern';
 import TeacherDashboard from './components/TeacherDashboard_Liquid';
-import NotesComponent from './components/NotesComponent_Liquid';
+import NotesComponent from './components/NotesComponent_Modern';
 import PracticeTestComponent from './components/PracticeTestComponent_Modern';
 import StudyTimer from './components/StudyTimer';
 
