@@ -86,7 +86,7 @@ const StudentDashboard_Modern = ({ user, onNavigate, onLogout }) => {
         </div>
 
         {/* Main Actions */}
-        <ModernGrid cols={3} className="mb-8">
+        <ModernGrid cols={4} className="mb-8">
           <ModernCard hover={true} className="cursor-pointer border-2 border-transparent hover:border-indigo-200">
             <ModernCardBody>
               <div className="text-center">
@@ -158,6 +158,31 @@ const StudentDashboard_Modern = ({ user, onNavigate, onLogout }) => {
                   onClick={() => onNavigate('tutor')}
                 >
                   Ask Tutor
+                </ModernButton>
+              </div>
+            </ModernCardBody>
+          </ModernCard>
+
+          <ModernCard hover={true} className="cursor-pointer border-2 border-transparent hover:border-pink-200">
+            <ModernCardBody>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-rose-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"/>
+                  </svg>
+                </div>
+                <ModernHeading level={3} className="mb-2">
+                  Mindfulness
+                </ModernHeading>
+                <ModernText variant="body-small" className="text-gray-600 mb-4">
+                  Relax and improve focus with guided activities
+                </ModernText>
+                <ModernButton 
+                  variant="primary" 
+                  className="w-full"
+                  onClick={() => onNavigate('mindfulness')}
+                >
+                  Start Session
                 </ModernButton>
               </div>
             </ModernCardBody>
