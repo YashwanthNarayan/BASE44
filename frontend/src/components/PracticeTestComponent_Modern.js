@@ -679,38 +679,46 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
             {/* Test Configuration */}
             <ModernGrid cols={2} className="mb-8">
               <div>
-                <ModernHeading level={4} className="mb-4">Number of Questions</ModernHeading>
+                <ModernHeading level={4} className="mb-6 text-gray-800 font-semibold">Number of Questions</ModernHeading>
                 <ModernGrid cols={2}>
                   {[5, 10, 15, 20].map(num => (
                     <button
                       key={num}
                       onClick={() => setNumQuestions(num)}
-                      className={`p-4 rounded-lg border-2 transition-all duration-300 text-center ${
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 text-center group hover:shadow-md ${
                         numQuestions === num
-                          ? 'border-yellow-500 bg-yellow-50 text-yellow-900'
+                          ? 'border-yellow-500 bg-yellow-50 shadow-md'
                           : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                       }`}
                     >
-                      <div className="font-medium">{num} Questions</div>
+                      <div className={`font-semibold text-sm transition-colors duration-300 ${
+                        numQuestions === num ? 'text-yellow-900' : 'text-gray-600 group-hover:text-gray-800'
+                      }`}>
+                        {num} Questions
+                      </div>
                     </button>
                   ))}
                 </ModernGrid>
               </div>
               
               <div>
-                <ModernHeading level={4} className="mb-4">Difficulty Level</ModernHeading>
-                <ModernGrid cols={2}>
+                <ModernHeading level={4} className="mb-6 text-gray-800 font-semibold">Difficulty Level</ModernHeading>
+                <ModernGrid cols={1}>
                   {difficultyLevels.map(level => (
                     <button
                       key={level.value}
                       onClick={() => setDifficulty(level.value)}
-                      className={`p-4 rounded-lg border-2 transition-all duration-300 text-center ${
+                      className={`p-4 rounded-xl border-2 transition-all duration-300 text-center group hover:shadow-md ${
                         difficulty === level.value
-                          ? 'border-red-500 bg-red-50 text-red-900'
+                          ? 'border-red-500 bg-red-50 shadow-md'
                           : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                       }`}
                     >
-                      <div className="font-medium">{level.label}</div>
+                      <div className={`font-semibold text-sm transition-colors duration-300 ${
+                        difficulty === level.value ? 'text-red-900' : 'text-gray-600 group-hover:text-gray-800'
+                      }`}>
+                        {level.label}
+                      </div>
                     </button>
                   ))}
                 </ModernGrid>
