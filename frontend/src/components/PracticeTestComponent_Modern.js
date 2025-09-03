@@ -255,7 +255,7 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
                       variant="outline"
                       onClick={() => onNavigate('scheduled-tests')}
                     >
-                      📅 View Review Schedule
+                      View Review Schedule
                     </ModernButton>
                   </ModernCardBody>
                 </ModernCard>
