@@ -509,18 +509,13 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
   // Setup View
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <ModernContainer>
-          <div className="flex items-center justify-between py-4">
-            <ModernButton variant="ghost" onClick={() => onNavigate('student-dashboard')}>
-              ← Back to Dashboard
-            </ModernButton>
-            <ModernHeading level={4}>NCERT Practice Tests</ModernHeading>
-            <div></div>
-          </div>
-        </ModernContainer>
-      </header>
+      {/* Modern Navigation */}
+      <NavigationBar_Modern 
+        user={student}
+        currentPage="practice-tests"
+        onNavigate={onNavigate}
+        onLogout={() => onNavigate('auth')}
+      />
 
       <ModernContainer className="py-8 max-w-4xl">
         <div className="text-center mb-8">
