@@ -204,7 +204,7 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
                 <ModernCard>
                   <ModernCardHeader>
                     <ModernHeading level={4} className="text-indigo-600">
-                      🤖 Smart Review Scheduled
+                      Smart Review Scheduled
                     </ModernHeading>
                   </ModernCardHeader>
                   <ModernCardBody>
