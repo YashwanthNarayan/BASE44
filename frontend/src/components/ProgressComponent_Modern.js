@@ -20,6 +20,8 @@ import '../styles/modern-ui.css';
 const ProgressComponent_Modern = ({ student, onNavigate }) => {
   const [progressData, setProgressData] = useState(null);
   const [recentResults, setRecentResults] = useState([]);
+  const [allResults, setAllResults] = useState([]);
+  const [displayedCount, setDisplayedCount] = useState(5);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedTimeframe, setSelectedTimeframe] = useState('week');
