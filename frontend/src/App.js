@@ -250,7 +250,7 @@ function App() {
           )}
 
           {currentView === 'study-planner' && (
-            <StudyPlannerComponent 
+            <StudyPlannerComponent_Modern 
               student={user} 
               onNavigate={navigate}
               onStartStudySession={startStudySession}
