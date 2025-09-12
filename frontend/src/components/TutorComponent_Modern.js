@@ -205,6 +205,48 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
 
         {!sessionActive && (
           <>
+            {/* Subject Selection */}
+            <div className="mb-6">
+              <ModernHeading level={4} className="text-gray-800 font-semibold mb-4">
+                Choose Subject
+              </ModernHeading>
+              <div className="flex flex-wrap gap-2 mb-6">
+                {[
+                  { value: 'math', label: 'Mathematics', icon: 'M', color: 'blue' },
+                  { value: 'physics', label: 'Physics', icon: 'P', color: 'purple' },
+                  { value: 'chemistry', label: 'Chemistry', icon: 'C', color: 'green' },
+                  { value: 'biology', label: 'Biology', icon: 'B', color: 'emerald' },
+                  { value: 'english', label: 'English', icon: 'E', color: 'pink' },
+                  { value: 'history', label: 'History', icon: 'H', color: 'orange' },
+                  { value: 'geography', label: 'Geography', icon: 'G', color: 'teal' }
+                ].map((subject) => (
+                  <button
+                    key={subject.value}
+                    onClick={() => {
+                      setSelectedSubject(subject.value);
+                      setCurrentSessionId(null); // Reset session when subject changes
+                      setMessages([]); // Clear messages when subject changes
+                      setSessionActive(false);
+                    }}
+                    className={`px-4 py-2 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
+                      selectedSubject === subject.value
+                        ? `bg-${subject.color}-100 text-${subject.color}-800 border-2 border-${subject.color}-300`
+                        : 'bg-gray-100 text-gray-700 border-2 border-transparent hover:bg-gray-200'
+                    }`}
+                  >
+                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                      selectedSubject === subject.value 
+                        ? `bg-${subject.color}-500 text-white` 
+                        : 'bg-gray-300 text-gray-600'
+                    }`}>
+                      {subject.icon}
+                    </span>
+                    {subject.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Quick Questions */}
             <div className="mb-8">
               <ModernHeading level={4} className="mb-6 text-gray-800 font-semibold">Quick Questions</ModernHeading>
