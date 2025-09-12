@@ -81,7 +81,7 @@ def create_practice_test_data(token):
         }
         
         try:
-            gen_response = requests.get(gen_url, json=gen_payload, headers=headers, timeout=30)
+            gen_response = requests.post(gen_url, json=gen_payload, headers=headers, timeout=30)
             if gen_response.status_code != 200:
                 print(f"    ❌ Failed to generate: {gen_response.status_code}")
                 continue
