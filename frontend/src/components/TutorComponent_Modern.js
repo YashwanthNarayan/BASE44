@@ -128,7 +128,7 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
         setCurrentSessionId(sessionId);
       }
 
-      const response = await tutorAPI.chat({
+      const response = await tutorAPI.sendMessage({
         message: userMessage,
         subject: 'general',
         session_id: sessionId
