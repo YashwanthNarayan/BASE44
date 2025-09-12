@@ -769,19 +769,60 @@ FORBIDDEN:
 
 Remember: You're a teacher who wants students to LEARN and UNDERSTAND, not just get the right answer."""
         
+        # Try with primary model first
         try:
             response = self.model.generate_content(prompt)
-            content = response.text
+            content = response.text.strip()
             
-            # Only cache responses without context
-            if use_cache and not context:
-                CacheUtils.cache_response(cache_key, content)
-            
-            return content
-        
+            if content and len(content) > 20:  # Ensure we have substantial content
+                # Only cache responses without context
+                if use_cache and not context:
+                    CacheUtils.cache_response(cache_key, content)
+                print(f"✅ Generated AI tutor response with primary model")
+                return content
+            else:
+                print(f"⚠️ Primary model returned insufficient content, trying fallback")
+                raise Exception("Insufficient content from primary model")
+                
         except Exception as e:
-            print(f"Error generating tutor response: {e}")
-            return f"I'm having a technical issue right now. Let's try again - what {subject.value} concept would you like to explore together?"
+            print(f"❌ Primary model failed for tutor response: {e}")
+            
+            # Try with fallback model (gemini-1.5-flash)
+            try:
+                import google.generativeai as genai
+                fallback_model = genai.GenerativeModel('gemini-1.5-flash')
+                
+                response = fallback_model.generate_content(prompt)
+                content = response.text.strip()
+                
+                if content and len(content) > 20:
+                    print(f"✅ Generated AI tutor response with fallback model")
+                    return content
+                else:
+                    print(f"⚠️ Fallback model also returned insufficient content")
+                    raise Exception("Insufficient content from fallback model")
+                    
+            except Exception as fallback_error:
+                print(f"❌ Fallback model also failed: {fallback_error}")
+                
+                # Generate a subject-specific educational response as last resort
+                educational_responses = {
+                    Subject.MATH: "I'd be happy to help you with mathematics! Let's start with what specific topic you're working on - algebra, geometry, calculus, or something else? I can explain concepts step-by-step and work through examples with you.",
+                    Subject.PHYSICS: "Physics is fascinating! What area would you like to explore - mechanics, electricity, thermodynamics, or optics? I can help break down complex concepts into understandable pieces.",
+                    Subject.CHEMISTRY: "Chemistry connects so many everyday phenomena! Are you looking at atomic structure, chemical reactions, organic chemistry, or something else? Let's dive into the molecular world together.",
+                    Subject.BIOLOGY: "Biology is the study of life itself! What interests you - cellular biology, genetics, ecology, or human anatomy? I can help you understand living systems.",
+                    Subject.ENGLISH: "English opens up worlds of communication and literature! Are you working on grammar, writing, literature analysis, or reading comprehension? Let's improve your language skills.",
+                    Subject.HISTORY: "History helps us understand our world today! What period or topic are you studying? I can help you analyze events, causes, and their lasting impacts.",
+                    Subject.GEOGRAPHY: "Geography shows us how our world works! Are you studying physical geography, human geography, or specific regions? Let's explore our planet together."
+                }
+                
+                fallback_response = educational_responses.get(
+                    subject, 
+                    f"I'm here to help you learn {subject.value}! What specific topic or question do you have? I'll do my best to explain it clearly and help you understand."
+                )
+                
+                print(f"✅ Using educational fallback response for {subject.value}")
+                return fallback_response
 
     def _analyze_learning_pattern(self, context: Optional[Dict]) -> str:
         """Analyze student's learning pattern from conversation history"""
