@@ -161,6 +161,9 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
     setMessages([]);
     setSessionActive(false);
     setError('');
+    setCurrentSessionId(null);
+    // Initialize a new session
+    initializeSession();
   };
 
   const getColorClasses = (color) => {
