@@ -512,34 +512,72 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
                 </ModernCardHeader>
                 <ModernCardBody>
                   <div className="space-y-4">
-                    {progressData.subject_breakdown?.map((subject) => {
-                      const color = getSubjectColor(subject.subject);
-                      const performance = getPerformanceLabel(subject.average_score || 0);
+                    {(() => {
+                      // Calculate subject performance from test results
+                      const subjectStats = {};
                       
-                      return (
-                        <div key={subject.subject} className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className={`w-3 h-3 rounded-full bg-${color}-500`}></div>
-                            <div>
-                              <ModernText className="font-semibold text-gray-800 capitalize">
-                                {subject.subject}
-                              </ModernText>
-                              <ModernText variant="body-small" className="text-gray-600 font-medium">
-                                {subject.tests_taken || 0} tests completed
-                              </ModernText>
+                      allResults.forEach(result => {
+                        const subject = result.subject || 'general';
+                        if (!subjectStats[subject]) {
+                          subjectStats[subject] = {
+                            subject: subject,
+                            scores: [],
+                            testCount: 0
+                          };
+                        }
+                        subjectStats[subject].scores.push(result.score || 0);
+                        subjectStats[subject].testCount += 1;
+                      });
+
+                      const subjectPerformance = Object.values(subjectStats).map(stat => ({
+                        subject: stat.subject,
+                        average_score: stat.scores.reduce((sum, score) => sum + score, 0) / stat.scores.length,
+                        test_count: stat.testCount
+                      })).sort((a, b) => b.average_score - a.average_score);
+
+                      return subjectPerformance.length > 0 ? (
+                        subjectPerformance.map((subject) => {
+                          const color = getSubjectColor(subject.subject);
+                          const performance = getPerformanceLabel(subject.average_score || 0);
+                          
+                          return (
+                            <div key={subject.subject} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                              <div className="flex items-center gap-3">
+                                <div className={`w-4 h-4 rounded-full bg-${color}-500`}></div>
+                                <div>
+                                  <ModernText className="font-semibold text-gray-800 capitalize">
+                                    {subject.subject}
+                                  </ModernText>
+                                  <ModernText variant="body-small" className="text-gray-600 font-medium">
+                                    {subject.test_count || 0} tests completed
+                                  </ModernText>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <ModernHeading level={5} className="text-gray-900 font-bold">
+                                  {Math.round(subject.average_score || 0)}%
+                                </ModernHeading>
+                                <ModernBadge variant={performance.color} className="text-xs">
+                                  {performance.label}
+                                </ModernBadge>
+                              </div>
                             </div>
+                          );
+                        })
+                      ) : (
+                        <div className="text-center py-8">
+                          <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
                           </div>
-                          <div className="text-right">
-                            <ModernHeading level={5} className="text-gray-900 font-bold">
-                              {Math.round(subject.average_score || 0)}%
-                            </ModernHeading>
-                            <ModernBadge variant={performance.color} className="text-xs">
-                              {performance.label}
-                            </ModernBadge>
-                          </div>
+                          <ModernHeading level={6} className="text-gray-600 font-semibold mb-2">No Subject Data Yet</ModernHeading>
+                          <ModernText variant="body-small" className="text-gray-500 font-medium">
+                            Take tests in different subjects to see performance breakdown
+                          </ModernText>
                         </div>
                       );
-                    })}
+                    })()}
                   </div>
                 </ModernCardBody>
               </ModernCard>
