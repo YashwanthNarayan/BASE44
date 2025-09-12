@@ -23,7 +23,7 @@ from datetime import datetime
 from motor.motor_asyncio import AsyncIOMotorClient
 
 # Configuration
-BACKEND_URL = "https://ncert-study-hub.preview.emergentagent.com/api"
+BACKEND_URL = "https://learnlab-k.preview.emergentagent.com/api"
 MONGO_URL = "mongodb://localhost:27017"
 DB_NAME = "test_database"
 

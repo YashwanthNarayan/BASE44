@@ -7,7 +7,7 @@ import requests
 import json
 import uuid
 
-API_URL = "https://ncert-study-hub.preview.emergentagent.com/api"
+API_URL = "https://learnlab-k.preview.emergentagent.com/api"
 
 def register_test_student():
     """Register a test student"""
