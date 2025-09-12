@@ -1331,7 +1331,488 @@ class TestProjectKV3Backend(unittest.TestCase):
         except Exception as e:
             print(f"❌ Teacher analytics class test failed: {str(e)}")
 
-    def test_19_teacher_analytics_student(self):
+    def test_19_modern_ui_endpoints_testing(self):
+        """Test specific endpoints causing 'failed to load data' errors in modern UI components"""
+        print("\n🔍 Testing Modern UI Components API Endpoints...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        # Test results for specific endpoints mentioned in review request
+        test_results = {
+            "dashboard": {"tested": False, "working": False, "error": None},
+            "practice_results": {"tested": False, "working": False, "error": None},
+            "strengths_weaknesses": {"tested": False, "working": False, "error": None},
+            "performance_trends": {"tested": False, "working": False, "error": None},
+            "subject_breakdown": {"tested": False, "working": False, "error": None},
+            "learning_insights": {"tested": False, "working": False, "error": None},
+            "notes": {"tested": False, "working": False, "error": None}
+        }
+        
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # 1. Test Dashboard endpoint: GET /api/dashboard
+        print("\n  🔍 Testing Dashboard Endpoint...")
+        try:
+            url = f"{API_URL}/dashboard"
+            response = requests.get(url, headers=headers)
+            print(f"    Dashboard Response: {response.status_code}")
+            
+            test_results["dashboard"]["tested"] = True
+            if response.status_code == 200:
+                data = response.json()
+                # Verify expected fields
+                required_fields = ["profile", "total_messages", "total_tests", "xp_points", "level"]
+                missing_fields = [field for field in required_fields if field not in data]
+                
+                if not missing_fields:
+                    test_results["dashboard"]["working"] = True
+                    print(f"    ✅ Dashboard working - Profile: {data.get('profile', {}).get('name', 'N/A')}, XP: {data.get('xp_points', 0)}")
+                else:
+                    test_results["dashboard"]["error"] = f"Missing fields: {missing_fields}"
+                    print(f"    ❌ Dashboard missing fields: {missing_fields}")
+            else:
+                test_results["dashboard"]["error"] = f"HTTP {response.status_code}: {response.text[:100]}"
+                print(f"    ❌ Dashboard failed: {response.status_code}")
+        except Exception as e:
+            test_results["dashboard"]["error"] = str(e)
+            print(f"    ❌ Dashboard exception: {str(e)}")
+        
+        # 2. Test Practice Results endpoint: GET /api/practice/results
+        print("\n  🔍 Testing Practice Results Endpoint...")
+        try:
+            url = f"{API_URL}/practice/results"
+            response = requests.get(url, headers=headers)
+            print(f"    Practice Results Response: {response.status_code}")
+            
+            test_results["practice_results"]["tested"] = True
+            if response.status_code == 200:
+                data = response.json()
+                # Should return array of practice results
+                if isinstance(data, list):
+                    test_results["practice_results"]["working"] = True
+                    print(f"    ✅ Practice Results working - Found {len(data)} results")
+                    
+                    # If we have results, verify structure
+                    if data:
+                        first_result = data[0]
+                        expected_fields = ["id", "subject", "score", "completed_at"]
+                        missing_fields = [field for field in expected_fields if field not in first_result]
+                        if missing_fields:
+                            print(f"    ⚠️ Practice Results missing fields in items: {missing_fields}")
+                else:
+                    test_results["practice_results"]["error"] = "Response is not an array"
+                    print(f"    ❌ Practice Results not an array: {type(data)}")
+            else:
+                test_results["practice_results"]["error"] = f"HTTP {response.status_code}: {response.text[:100]}"
+                print(f"    ❌ Practice Results failed: {response.status_code}")
+        except Exception as e:
+            test_results["practice_results"]["error"] = str(e)
+            print(f"    ❌ Practice Results exception: {str(e)}")
+        
+        # 3. Test Student Analytics - Strengths & Weaknesses: GET /api/student/analytics/strengths-weaknesses
+        print("\n  🔍 Testing Strengths & Weaknesses Analytics...")
+        try:
+            url = f"{API_URL}/student/analytics/strengths-weaknesses"
+            response = requests.get(url, headers=headers)
+            print(f"    Strengths & Weaknesses Response: {response.status_code}")
+            
+            test_results["strengths_weaknesses"]["tested"] = True
+            if response.status_code == 200:
+                data = response.json()
+                # Verify expected structure
+                expected_fields = ["strengths", "weaknesses"]
+                if all(field in data for field in expected_fields):
+                    test_results["strengths_weaknesses"]["working"] = True
+                    print(f"    ✅ Strengths & Weaknesses working - Strengths: {len(data.get('strengths', []))}, Weaknesses: {len(data.get('weaknesses', []))}")
+                else:
+                    missing_fields = [field for field in expected_fields if field not in data]
+                    test_results["strengths_weaknesses"]["error"] = f"Missing fields: {missing_fields}"
+                    print(f"    ❌ Strengths & Weaknesses missing fields: {missing_fields}")
+            else:
+                test_results["strengths_weaknesses"]["error"] = f"HTTP {response.status_code}: {response.text[:100]}"
+                print(f"    ❌ Strengths & Weaknesses failed: {response.status_code}")
+        except Exception as e:
+            test_results["strengths_weaknesses"]["error"] = str(e)
+            print(f"    ❌ Strengths & Weaknesses exception: {str(e)}")
+        
+        # 4. Test Performance Trends: GET /api/student/analytics/performance-trends
+        print("\n  🔍 Testing Performance Trends Analytics...")
+        try:
+            url = f"{API_URL}/student/analytics/performance-trends"
+            response = requests.get(url, headers=headers)
+            print(f"    Performance Trends Response: {response.status_code}")
+            
+            test_results["performance_trends"]["tested"] = True
+            if response.status_code == 200:
+                data = response.json()
+                # Verify expected structure
+                if isinstance(data, dict):
+                    test_results["performance_trends"]["working"] = True
+                    print(f"    ✅ Performance Trends working - Data keys: {list(data.keys())}")
+                else:
+                    test_results["performance_trends"]["error"] = "Response is not a dictionary"
+                    print(f"    ❌ Performance Trends not a dict: {type(data)}")
+            else:
+                test_results["performance_trends"]["error"] = f"HTTP {response.status_code}: {response.text[:100]}"
+                print(f"    ❌ Performance Trends failed: {response.status_code}")
+        except Exception as e:
+            test_results["performance_trends"]["error"] = str(e)
+            print(f"    ❌ Performance Trends exception: {str(e)}")
+        
+        # 5. Test Subject Breakdown: GET /api/student/analytics/subject-breakdown
+        print("\n  🔍 Testing Subject Breakdown Analytics...")
+        try:
+            url = f"{API_URL}/student/analytics/subject-breakdown"
+            response = requests.get(url, headers=headers)
+            print(f"    Subject Breakdown Response: {response.status_code}")
+            
+            test_results["subject_breakdown"]["tested"] = True
+            if response.status_code == 200:
+                data = response.json()
+                # Verify expected structure
+                expected_fields = ["subject_breakdown", "total_subjects"]
+                if all(field in data for field in expected_fields):
+                    test_results["subject_breakdown"]["working"] = True
+                    print(f"    ✅ Subject Breakdown working - Total subjects: {data.get('total_subjects', 0)}")
+                else:
+                    missing_fields = [field for field in expected_fields if field not in data]
+                    test_results["subject_breakdown"]["error"] = f"Missing fields: {missing_fields}"
+                    print(f"    ❌ Subject Breakdown missing fields: {missing_fields}")
+            else:
+                test_results["subject_breakdown"]["error"] = f"HTTP {response.status_code}: {response.text[:100]}"
+                print(f"    ❌ Subject Breakdown failed: {response.status_code}")
+        except Exception as e:
+            test_results["subject_breakdown"]["error"] = str(e)
+            print(f"    ❌ Subject Breakdown exception: {str(e)}")
+        
+        # 6. Test Learning Insights: GET /api/student/analytics/learning-insights
+        print("\n  🔍 Testing Learning Insights Analytics...")
+        try:
+            url = f"{API_URL}/student/analytics/learning-insights"
+            response = requests.get(url, headers=headers)
+            print(f"    Learning Insights Response: {response.status_code}")
+            
+            test_results["learning_insights"]["tested"] = True
+            if response.status_code == 200:
+                data = response.json()
+                # Verify expected structure
+                expected_fields = ["insights", "study_tips"]
+                if all(field in data for field in expected_fields):
+                    test_results["learning_insights"]["working"] = True
+                    print(f"    ✅ Learning Insights working - Insights: {len(data.get('insights', []))}, Tips: {len(data.get('study_tips', []))}")
+                else:
+                    missing_fields = [field for field in expected_fields if field not in data]
+                    test_results["learning_insights"]["error"] = f"Missing fields: {missing_fields}"
+                    print(f"    ❌ Learning Insights missing fields: {missing_fields}")
+            else:
+                test_results["learning_insights"]["error"] = f"HTTP {response.status_code}: {response.text[:100]}"
+                print(f"    ❌ Learning Insights failed: {response.status_code}")
+        except Exception as e:
+            test_results["learning_insights"]["error"] = str(e)
+            print(f"    ❌ Learning Insights exception: {str(e)}")
+        
+        # 7. Test Notes endpoint: GET /api/notes/
+        print("\n  🔍 Testing Notes Endpoint...")
+        try:
+            url = f"{API_URL}/notes/"
+            response = requests.get(url, headers=headers)
+            print(f"    Notes Response: {response.status_code}")
+            
+            test_results["notes"]["tested"] = True
+            if response.status_code == 200:
+                data = response.json()
+                # Should return array of notes
+                if isinstance(data, list):
+                    test_results["notes"]["working"] = True
+                    print(f"    ✅ Notes working - Found {len(data)} notes")
+                    
+                    # If we have notes, verify structure
+                    if data:
+                        first_note = data[0]
+                        expected_fields = ["id", "subject", "topic", "content", "created_at"]
+                        missing_fields = [field for field in expected_fields if field not in first_note]
+                        if missing_fields:
+                            print(f"    ⚠️ Notes missing fields in items: {missing_fields}")
+                else:
+                    test_results["notes"]["error"] = "Response is not an array"
+                    print(f"    ❌ Notes not an array: {type(data)}")
+            else:
+                test_results["notes"]["error"] = f"HTTP {response.status_code}: {response.text[:100]}"
+                print(f"    ❌ Notes failed: {response.status_code}")
+        except Exception as e:
+            test_results["notes"]["error"] = str(e)
+            print(f"    ❌ Notes exception: {str(e)}")
+        
+        # Test authentication - verify endpoints return 401/403 without auth
+        print("\n  🔍 Testing Authentication Requirements...")
+        no_auth_results = {}
+        endpoints_to_test = [
+            ("dashboard", f"{API_URL}/dashboard"),
+            ("practice_results", f"{API_URL}/practice/results"),
+            ("strengths_weaknesses", f"{API_URL}/student/analytics/strengths-weaknesses"),
+            ("notes", f"{API_URL}/notes/")
+        ]
+        
+        for endpoint_name, endpoint_url in endpoints_to_test:
+            try:
+                response = requests.get(endpoint_url)  # No auth headers
+                no_auth_results[endpoint_name] = response.status_code
+                if response.status_code in [401, 403]:
+                    print(f"    ✅ {endpoint_name} properly requires authentication ({response.status_code})")
+                else:
+                    print(f"    ⚠️ {endpoint_name} doesn't require authentication ({response.status_code})")
+            except Exception as e:
+                print(f"    ❌ {endpoint_name} auth test failed: {str(e)}")
+        
+        # Summary
+        print(f"\n📊 MODERN UI ENDPOINTS TEST SUMMARY:")
+        working_count = sum(1 for result in test_results.values() if result["working"])
+        tested_count = sum(1 for result in test_results.values() if result["tested"])
+        
+        print(f"  Total Endpoints Tested: {tested_count}/7")
+        print(f"  Working Endpoints: {working_count}/7")
+        print(f"  Success Rate: {(working_count/tested_count)*100:.1f}%")
+        
+        for endpoint, result in test_results.items():
+            status = "✅ WORKING" if result["working"] else "❌ FAILED"
+            error_msg = f" - {result['error']}" if result["error"] else ""
+            print(f"    {endpoint}: {status}{error_msg}")
+        
+        # Store results for later use
+        self.modern_ui_test_results = test_results
+        
+        # Assert that at least 70% of endpoints are working
+        success_rate = (working_count / tested_count) * 100 if tested_count > 0 else 0
+        self.assertGreaterEqual(success_rate, 70.0, f"Modern UI endpoints success rate too low: {success_rate:.1f}%")
+        
+        print("✅ Modern UI Components API endpoints test completed")
+
+    def test_20_create_test_data_for_modern_ui(self):
+        """Create test data to ensure modern UI components have data to display"""
+        print("\n🔍 Creating Test Data for Modern UI Components...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # 1. Create practice test data
+        print("\n  📝 Creating Practice Test Data...")
+        try:
+            # Generate a practice test
+            gen_url = f"{API_URL}/practice/generate"
+            gen_payload = {
+                "subject": "math",
+                "topics": ["Algebra", "Real Numbers"],
+                "difficulty": "medium",
+                "question_count": 3
+            }
+            
+            gen_response = requests.post(gen_url, json=gen_payload, headers=headers)
+            print(f"    Practice Test Generation: {gen_response.status_code}")
+            
+            if gen_response.status_code == 200:
+                gen_data = gen_response.json()
+                questions = gen_data.get("questions", [])
+                
+                if questions:
+                    # Submit the test with some answers
+                    submit_url = f"{API_URL}/practice/submit"
+                    student_answers = {}
+                    question_ids = []
+                    
+                    for i, question in enumerate(questions):
+                        question_id = question.get("id")
+                        question_ids.append(question_id)
+                        # Alternate between correct and incorrect answers
+                        if i % 2 == 0:
+                            student_answers[question_id] = question.get("correct_answer", "A")
+                        else:
+                            # Give wrong answer
+                            options = question.get("options", ["A", "B", "C", "D"])
+                            correct = question.get("correct_answer", "A")
+                            wrong_options = [opt for opt in options if opt != correct]
+                            student_answers[question_id] = wrong_options[0] if wrong_options else "B"
+                    
+                    submit_payload = {
+                        "questions": question_ids,
+                        "student_answers": student_answers,
+                        "subject": "math",
+                        "time_taken": 180
+                    }
+                    
+                    submit_response = requests.post(submit_url, json=submit_payload, headers=headers)
+                    print(f"    Practice Test Submission: {submit_response.status_code}")
+                    
+                    if submit_response.status_code == 200:
+                        submit_data = submit_response.json()
+                        print(f"    ✅ Created practice test result - Score: {submit_data.get('score', 0)}%")
+                    else:
+                        print(f"    ❌ Failed to submit practice test: {submit_response.text[:100]}")
+                else:
+                    print(f"    ❌ No questions generated")
+            else:
+                print(f"    ❌ Failed to generate practice test: {gen_response.text[:100]}")
+        except Exception as e:
+            print(f"    ❌ Exception creating practice test data: {str(e)}")
+        
+        # 2. Create notes data
+        print("\n  📝 Creating Notes Data...")
+        try:
+            notes_url = f"{API_URL}/notes/generate"
+            notes_payload = {
+                "subject": "math",
+                "topic": "Quadratic Equations",
+                "grade_level": "10th"
+            }
+            
+            notes_response = requests.post(notes_url, json=notes_payload, headers=headers)
+            print(f"    Notes Generation: {notes_response.status_code}")
+            
+            if notes_response.status_code == 200:
+                notes_data = notes_response.json()
+                print(f"    ✅ Created study notes - ID: {notes_data.get('note_id', 'N/A')}")
+            else:
+                print(f"    ❌ Failed to generate notes: {notes_response.text[:100]}")
+        except Exception as e:
+            print(f"    ❌ Exception creating notes data: {str(e)}")
+        
+        # 3. Create additional practice tests for better analytics
+        print("\n  📝 Creating Additional Practice Tests for Analytics...")
+        subjects_to_test = ["physics", "chemistry", "biology"]
+        
+        for subject in subjects_to_test:
+            try:
+                gen_payload = {
+                    "subject": subject,
+                    "topics": ["General"],
+                    "difficulty": "easy",
+                    "question_count": 2
+                }
+                
+                gen_response = requests.post(gen_url, json=gen_payload, headers=headers)
+                
+                if gen_response.status_code == 200:
+                    gen_data = gen_response.json()
+                    questions = gen_data.get("questions", [])
+                    
+                    if questions:
+                        # Submit with random performance
+                        student_answers = {}
+                        question_ids = []
+                        
+                        for question in questions:
+                            question_id = question.get("id")
+                            question_ids.append(question_id)
+                            # Give correct answer for physics, wrong for chemistry, mixed for biology
+                            if subject == "physics":
+                                student_answers[question_id] = question.get("correct_answer", "A")
+                            elif subject == "chemistry":
+                                options = question.get("options", ["A", "B", "C", "D"])
+                                correct = question.get("correct_answer", "A")
+                                wrong_options = [opt for opt in options if opt != correct]
+                                student_answers[question_id] = wrong_options[0] if wrong_options else "B"
+                            else:  # biology - mixed
+                                import random
+                                if random.choice([True, False]):
+                                    student_answers[question_id] = question.get("correct_answer", "A")
+                                else:
+                                    student_answers[question_id] = "B"
+                        
+                        submit_payload = {
+                            "questions": question_ids,
+                            "student_answers": student_answers,
+                            "subject": subject,
+                            "time_taken": 120
+                        }
+                        
+                        submit_response = requests.post(submit_url, json=submit_payload, headers=headers)
+                        
+                        if submit_response.status_code == 200:
+                            submit_data = submit_response.json()
+                            print(f"    ✅ Created {subject} test - Score: {submit_data.get('score', 0)}%")
+                        else:
+                            print(f"    ❌ Failed to submit {subject} test")
+                    else:
+                        print(f"    ❌ No questions generated for {subject}")
+                else:
+                    print(f"    ❌ Failed to generate {subject} test")
+            except Exception as e:
+                print(f"    ❌ Exception creating {subject} test: {str(e)}")
+        
+        print("✅ Test data creation completed")
+
+    def test_21_verify_modern_ui_with_data(self):
+        """Re-test modern UI endpoints after creating test data"""
+        print("\n🔍 Re-testing Modern UI Endpoints with Test Data...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Re-test key endpoints that should now have data
+        endpoints_to_retest = [
+            ("practice_results", f"{API_URL}/practice/results"),
+            ("strengths_weaknesses", f"{API_URL}/student/analytics/strengths-weaknesses"),
+            ("subject_breakdown", f"{API_URL}/student/analytics/subject-breakdown"),
+            ("notes", f"{API_URL}/notes/")
+        ]
+        
+        retest_results = {}
+        
+        for endpoint_name, endpoint_url in endpoints_to_retest:
+            try:
+                response = requests.get(endpoint_url, headers=headers)
+                print(f"  {endpoint_name}: {response.status_code}")
+                
+                if response.status_code == 200:
+                    data = response.json()
+                    
+                    if endpoint_name == "practice_results":
+                        data_count = len(data) if isinstance(data, list) else 0
+                        retest_results[endpoint_name] = {"working": True, "data_count": data_count}
+                        print(f"    ✅ Practice Results: {data_count} results found")
+                    
+                    elif endpoint_name == "strengths_weaknesses":
+                        strengths = len(data.get("strengths", []))
+                        weaknesses = len(data.get("weaknesses", []))
+                        retest_results[endpoint_name] = {"working": True, "strengths": strengths, "weaknesses": weaknesses}
+                        print(f"    ✅ Strengths & Weaknesses: {strengths} strengths, {weaknesses} weaknesses")
+                    
+                    elif endpoint_name == "subject_breakdown":
+                        subjects = data.get("total_subjects", 0)
+                        retest_results[endpoint_name] = {"working": True, "subjects": subjects}
+                        print(f"    ✅ Subject Breakdown: {subjects} subjects analyzed")
+                    
+                    elif endpoint_name == "notes":
+                        notes_count = len(data) if isinstance(data, list) else 0
+                        retest_results[endpoint_name] = {"working": True, "notes_count": notes_count}
+                        print(f"    ✅ Notes: {notes_count} notes found")
+                    
+                else:
+                    retest_results[endpoint_name] = {"working": False, "error": f"HTTP {response.status_code}"}
+                    print(f"    ❌ {endpoint_name} failed: {response.status_code}")
+                    
+            except Exception as e:
+                retest_results[endpoint_name] = {"working": False, "error": str(e)}
+                print(f"    ❌ {endpoint_name} exception: {str(e)}")
+        
+        # Store results
+        self.modern_ui_retest_results = retest_results
+        
+        # Summary
+        working_endpoints = sum(1 for result in retest_results.values() if result.get("working", False))
+        total_endpoints = len(retest_results)
+        
+        print(f"\n📊 MODERN UI ENDPOINTS RE-TEST SUMMARY:")
+        print(f"  Working Endpoints: {working_endpoints}/{total_endpoints}")
+        print(f"  Success Rate: {(working_endpoints/total_endpoints)*100:.1f}%")
+        
+        print("✅ Modern UI endpoints re-test completed")
+
+    def test_22_teacher_analytics_student(self):
         """Test teacher analytics for a specific student"""
         print("\n🔍 Testing Teacher Analytics for Student...")
         
