@@ -36,9 +36,8 @@ const StrengthsWeaknessesComponent_Modern = ({ student, onNavigate }) => {
         return;
       }
 
-      const [strengths, weaknesses, trends, subjects, insights] = await Promise.all([
-        studentAnalyticsAPI.getStrengths().catch(err => ({ strengths: [] })),
-        studentAnalyticsAPI.getWeaknesses().catch(err => ({ weaknesses: [] })),
+      const [strengthsWeaknesses, trends, subjects, insights] = await Promise.all([
+        studentAnalyticsAPI.getStrengthsWeaknesses().catch(err => ({ strengths: [], weaknesses: [] })),
         studentAnalyticsAPI.getPerformanceTrends().catch(err => ({ trends: [] })),
         studentAnalyticsAPI.getSubjectBreakdown().catch(err => ({ subjects: [] })),
         studentAnalyticsAPI.getLearningInsights().catch(err => ({ insights: [] }))
