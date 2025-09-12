@@ -103,6 +103,12 @@ function App() {
   };
 
   const handleAuthSuccess = (userType, user) => {
+    // Get the token and setup axios auth
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      setupAxiosAuth(token);
+    }
+    
     setIsAuthenticated(true);
     setUserType(userType);
     setUser(user);
