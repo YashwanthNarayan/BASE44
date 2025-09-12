@@ -246,7 +246,7 @@ function App() {
           )}
 
           {currentView === 'classes' && (
-            <ClassesComponent student={user} onNavigate={navigate} />
+            <ClassesComponent_Modern student={user} onNavigate={navigate} />
           )}
 
           {currentView === 'study-planner' && (
