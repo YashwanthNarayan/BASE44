@@ -18,7 +18,7 @@ const CalendarComponent = React.lazy(() => import('./components/CalendarComponen
 const ProgressComponent = React.lazy(() => import('./components/ProgressComponent_Modern'));
 const TutorComponent = React.lazy(() => import('./components/TutorComponent_Modern'));
 const NotificationsComponent = React.lazy(() => import('./components/NotificationsComponent_Liquid'));
-const ClassesComponent = React.lazy(() => import('./components/ClassesComponent_Liquid'));
+const ClassesComponent_Modern = React.lazy(() => import('./components/ClassesComponent_Modern'));
 const TeacherAnalyticsDashboard = React.lazy(() => import('./components/TeacherAnalyticsDashboard_Liquid'));
 const StudyPlannerComponent = React.lazy(() => import('./components/StudyPlannerComponent_Liquid'));
 const ScheduledTestsComponent = React.lazy(() => import('./components/ScheduledTestsComponent_Modern'));
