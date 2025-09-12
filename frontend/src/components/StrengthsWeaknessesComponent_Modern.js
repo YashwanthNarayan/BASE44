@@ -327,18 +327,28 @@ const StrengthsWeaknessesComponent_Modern = ({ student, onNavigate }) => {
                         {analytics.subjects.map((subject, index) => {
                           const color = getSubjectColor(subject.subject);
                           const performance = getPerformanceLabel(subject.average_score || 0);
+                          const improvementTrend = subject.improvement_trend || 0;
                           
                           return (
-                            <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                              <div className="flex items-center justify-between mb-3">
+                            <div key={index} className="p-5 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+                              <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-3">
-                                  <div className={`w-4 h-4 rounded-full bg-${color}-500`}></div>
-                                  <ModernHeading level={5} className="text-gray-800 font-semibold capitalize">
-                                    {subject.subject}
-                                  </ModernHeading>
+                                  <div className={`w-6 h-6 rounded-full bg-${color}-500 flex items-center justify-center`}>
+                                    <span className="text-white text-xs font-bold">
+                                      {subject.subject.charAt(0).toUpperCase()}
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <ModernHeading level={5} className="text-gray-800 font-semibold capitalize">
+                                      {subject.subject}
+                                    </ModernHeading>
+                                    <ModernText variant="body-small" className="text-gray-500">
+                                      {subject.test_count || 0} tests • {subject.total_questions || 0} questions
+                                    </ModernText>
+                                  </div>
                                 </div>
                                 <div className="text-right">
-                                  <ModernHeading level={5} className="text-gray-900 font-bold">
+                                  <ModernHeading level={4} className="text-gray-900 font-bold text-2xl">
                                     {Math.round(subject.average_score || 0)}%
                                   </ModernHeading>
                                   <ModernBadge variant={performance.color} className="text-xs">
@@ -346,18 +356,48 @@ const StrengthsWeaknessesComponent_Modern = ({ student, onNavigate }) => {
                                   </ModernBadge>
                                 </div>
                               </div>
-                              <ModernProgress 
-                                value={subject.average_score || 0} 
-                                max={100}
-                                className="mb-2"
-                              />
-                              <div className="flex justify-between text-sm">
-                                <ModernText variant="body-small" className="text-gray-600 font-medium">
-                                  {subject.tests_taken || 0} tests taken
-                                </ModernText>
-                                <ModernText variant="body-small" className="text-gray-600 font-medium">
-                                  Last: {subject.last_score || 0}%
-                                </ModernText>
+                              
+                              <ModernProgress value={subject.average_score || 0} max={100} className="mb-4" />
+                              
+                              <div className="grid grid-cols-3 gap-4 text-center">
+                                <div className="p-3 bg-gray-50 rounded-lg">
+                                  <div className="text-lg font-bold text-gray-900">
+                                    {Math.round(((subject.correct_answers || 0) / (subject.total_questions || 1)) * 100)}%
+                                  </div>
+                                  <ModernText variant="body-small" className="text-gray-500 font-medium">
+                                    Accuracy
+                                  </ModernText>
+                                </div>
+                                <div className="p-3 bg-gray-50 rounded-lg">
+                                  <div className="text-lg font-bold text-gray-900">
+                                    {subject.test_count || 0}
+                                  </div>
+                                  <ModernText variant="body-small" className="text-gray-500 font-medium">
+                                    Tests
+                                  </ModernText>
+                                </div>
+                                <div className="p-3 bg-gray-50 rounded-lg">
+                                  <div className={`text-lg font-bold flex items-center justify-center gap-1 ${
+                                    improvementTrend > 0 ? 'text-green-600' : 
+                                    improvementTrend < 0 ? 'text-red-600' : 'text-gray-600'
+                                  }`}>
+                                    {improvementTrend > 0 ? (
+                                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                                      </svg>
+                                    ) : improvementTrend < 0 ? (
+                                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fillRule="evenodd" d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                      </svg>
+                                    ) : (
+                                      <div className="w-4 h-4 border border-gray-400 rounded-full"></div>
+                                    )}
+                                    {Math.abs(improvementTrend) > 0 ? `${Math.abs(Math.round(improvementTrend))}%` : 'Stable'}
+                                  </div>
+                                  <ModernText variant="body-small" className="text-gray-500 font-medium">
+                                    Trend
+                                  </ModernText>
+                                </div>
                               </div>
                             </div>
                           );
