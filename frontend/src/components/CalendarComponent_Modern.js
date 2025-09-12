@@ -34,11 +34,11 @@ const CalendarComponent_Modern = ({ student, onNavigate }) => {
   });
 
   const eventTypes = [
-    { value: 'study', label: 'Study Session', icon: '📚', color: 'blue', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-800' },
-    { value: 'assignment', label: 'Assignment', icon: '📝', color: 'green', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-800' },
-    { value: 'exam', label: 'Exam', icon: '📋', color: 'red', bgColor: 'bg-red-50', borderColor: 'border-red-200', textColor: 'text-red-800' },
-    { value: 'review_test', label: 'Review Test', icon: '🔄', color: 'purple', bgColor: 'bg-purple-50', borderColor: 'border-purple-200', textColor: 'text-purple-800' },
-    { value: 'personal', label: 'Personal', icon: '📅', color: 'gray', bgColor: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-800' }
+    { value: 'study', label: 'Study Session', icon: 'St', color: 'blue', bgColor: 'bg-blue-50', borderColor: 'border-blue-200', textColor: 'text-blue-800' },
+    { value: 'assignment', label: 'Assignment', icon: 'As', color: 'green', bgColor: 'bg-green-50', borderColor: 'border-green-200', textColor: 'text-green-800' },
+    { value: 'exam', label: 'Exam', icon: 'Ex', color: 'red', bgColor: 'bg-red-50', borderColor: 'border-red-200', textColor: 'text-red-800' },
+    { value: 'review_test', label: 'Review Test', icon: 'Rv', color: 'purple', bgColor: 'bg-purple-50', borderColor: 'border-purple-200', textColor: 'text-purple-800' },
+    { value: 'personal', label: 'Personal', icon: 'Pr', color: 'gray', bgColor: 'bg-gray-50', borderColor: 'border-gray-200', textColor: 'text-gray-800' }
   ];
 
   useEffect(() => {
