@@ -50,7 +50,9 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
 
       // Load recent test results
       const results = await studentAPI.getTestResults();
-      setRecentResults(Array.isArray(results) ? results : results.results || []);
+      const allTestResults = Array.isArray(results) ? results : results.results || [];
+      setAllResults(allTestResults);
+      setRecentResults(allTestResults.slice(0, displayedCount));
 
     } catch (error) {
       console.error('Error loading progress:', error);
