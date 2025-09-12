@@ -1331,7 +1331,278 @@ class TestProjectKV3Backend(unittest.TestCase):
         except Exception as e:
             print(f"❌ Teacher analytics class test failed: {str(e)}")
 
-    def test_19_modern_ui_endpoints_testing(self):
+    def test_19_calendar_endpoints_testing(self):
+        """Test Calendar API endpoints for CalendarComponent_Modern.js"""
+        print("\n🔍 Testing Calendar API Endpoints...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test 1: GET /api/calendar/events - Get all calendar events
+        print("\n📅 Testing GET /api/calendar/events...")
+        try:
+            get_url = f"{API_URL}/calendar/events"
+            get_response = requests.get(get_url, headers=headers)
+            print(f"GET Calendar Events Response: {get_response.status_code}")
+            
+            if get_response.status_code == 200:
+                events_data = get_response.json()
+                print(f"✅ Successfully retrieved calendar events: {len(events_data) if isinstance(events_data, list) else 'N/A'} events")
+                
+                # Verify data structure
+                if isinstance(events_data, list):
+                    if len(events_data) > 0:
+                        event = events_data[0]
+                        required_fields = ["id", "title", "event_type", "start_time", "end_time"]
+                        for field in required_fields:
+                            if field not in event:
+                                print(f"⚠️ Missing field '{field}' in calendar event")
+                    else:
+                        print("📝 No calendar events found (empty array)")
+                else:
+                    print(f"⚠️ Unexpected response format: {type(events_data)}")
+            else:
+                print(f"❌ Failed to get calendar events: {get_response.status_code}")
+                if get_response.status_code == 404:
+                    print("   Calendar endpoints may not be implemented")
+                elif get_response.status_code == 401:
+                    print("   Authentication issue")
+                
+        except Exception as e:
+            print(f"❌ Exception in GET calendar events: {str(e)}")
+        
+        # Test 2: POST /api/calendar/events - Create calendar event
+        print("\n📝 Testing POST /api/calendar/events...")
+        try:
+            post_url = f"{API_URL}/calendar/events"
+            
+            # Test with valid event data as specified in review request
+            event_data = {
+                "title": "Mathematics Study Session",
+                "event_type": "study",
+                "start_time": "2024-01-15T09:00:00",
+                "end_time": "2024-01-15T10:00:00",
+                "description": "Algebra review session",
+                "subject": "Mathematics"
+            }
+            
+            post_response = requests.post(post_url, json=event_data, headers=headers)
+            print(f"POST Calendar Event Response: {post_response.status_code}")
+            
+            if post_response.status_code == 200:
+                created_event = post_response.json()
+                print(f"✅ Successfully created calendar event: {created_event.get('title', 'N/A')}")
+                
+                # Verify created event structure
+                required_fields = ["id", "title", "event_type", "start_time", "end_time"]
+                for field in required_fields:
+                    if field in created_event:
+                        print(f"   ✓ {field}: {created_event[field]}")
+                    else:
+                        print(f"   ❌ Missing field: {field}")
+                        
+                # Store event ID for potential cleanup
+                self.created_event_id = created_event.get("id")
+                
+            else:
+                print(f"❌ Failed to create calendar event: {post_response.status_code}")
+                if post_response.status_code == 404:
+                    print("   Calendar endpoints may not be implemented")
+                elif post_response.status_code == 422:
+                    print("   Validation error - check event data format")
+                    print(f"   Response: {post_response.text}")
+                
+        except Exception as e:
+            print(f"❌ Exception in POST calendar event: {str(e)}")
+        
+        # Test 3: Test different event types
+        print("\n🎯 Testing Different Event Types...")
+        event_types = ["study", "assignment", "exam", "review_test", "personal"]
+        
+        for event_type in event_types:
+            try:
+                test_event = {
+                    "title": f"Test {event_type.title()} Event",
+                    "event_type": event_type,
+                    "start_time": "2024-01-16T10:00:00",
+                    "end_time": "2024-01-16T11:00:00",
+                    "description": f"Testing {event_type} event type",
+                    "subject": "Mathematics"
+                }
+                
+                response = requests.post(post_url, json=test_event, headers=headers)
+                if response.status_code == 200:
+                    print(f"   ✅ {event_type}: Created successfully")
+                else:
+                    print(f"   ❌ {event_type}: Failed ({response.status_code})")
+                    
+            except Exception as e:
+                print(f"   ❌ {event_type}: Exception - {str(e)}")
+        
+        # Test 4: Authentication testing
+        print("\n🔐 Testing Calendar Authentication...")
+        try:
+            # Test without authentication
+            no_auth_response = requests.get(f"{API_URL}/calendar/events")
+            print(f"No Auth Response: {no_auth_response.status_code}")
+            
+            if no_auth_response.status_code in [401, 403]:
+                print("✅ Proper authentication required")
+            else:
+                print("⚠️ Calendar endpoints may not require authentication")
+            
+            # Test with invalid token
+            invalid_headers = {"Authorization": "Bearer invalid.token.here"}
+            invalid_response = requests.get(f"{API_URL}/calendar/events", headers=invalid_headers)
+            print(f"Invalid Token Response: {invalid_response.status_code}")
+            
+            if invalid_response.status_code in [401, 403]:
+                print("✅ Invalid tokens properly rejected")
+            else:
+                print("⚠️ Invalid tokens may not be properly validated")
+                
+        except Exception as e:
+            print(f"❌ Exception in authentication testing: {str(e)}")
+        
+        print("✅ Calendar endpoints testing completed")
+
+    def test_20_practice_scheduler_integration(self):
+        """Test integration with Practice Scheduler for calendar display"""
+        print("\n🔍 Testing Practice Scheduler Integration...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Test GET /api/practice-scheduler/upcoming-tests
+        print("\n📋 Testing GET /api/practice-scheduler/upcoming-tests...")
+        try:
+            url = f"{API_URL}/practice-scheduler/upcoming-tests"
+            response = requests.get(url, headers=headers)
+            print(f"Upcoming Tests Response: {response.status_code}")
+            
+            if response.status_code == 200:
+                tests_data = response.json()
+                print(f"✅ Successfully retrieved upcoming tests")
+                
+                # Verify data structure for calendar integration
+                if isinstance(tests_data, dict):
+                    categories = ["overdue", "today", "this_week", "later"]
+                    for category in categories:
+                        if category in tests_data:
+                            count = len(tests_data[category])
+                            print(f"   📅 {category}: {count} tests")
+                            
+                            # Check first test structure if available
+                            if count > 0:
+                                test = tests_data[category][0]
+                                calendar_fields = ["id", "subject", "topics", "scheduled_for", "priority"]
+                                for field in calendar_fields:
+                                    if field in test:
+                                        print(f"      ✓ {field}: {test[field]}")
+                                    else:
+                                        print(f"      ❌ Missing field: {field}")
+                        else:
+                            print(f"   ❌ Missing category: {category}")
+                else:
+                    print(f"⚠️ Unexpected response format: {type(tests_data)}")
+                    
+            else:
+                print(f"❌ Failed to get upcoming tests: {response.status_code}")
+                
+        except Exception as e:
+            print(f"❌ Exception in upcoming tests: {str(e)}")
+        
+        print("✅ Practice scheduler integration testing completed")
+
+    def test_21_calendar_data_structure_verification(self):
+        """Verify calendar data structure matches frontend expectations"""
+        print("\n🔍 Testing Calendar Data Structure Verification...")
+        
+        if not self.student_token:
+            self.skipTest("Student token not available")
+        
+        headers = {"Authorization": f"Bearer {self.student_token}"}
+        
+        # Create test event with all expected fields
+        print("\n📝 Creating comprehensive test event...")
+        try:
+            event_data = {
+                "title": "Comprehensive Test Event",
+                "event_type": "study",
+                "start_time": "2024-01-20T14:00:00",
+                "end_time": "2024-01-20T15:30:00",
+                "description": "Testing all calendar fields for frontend compatibility",
+                "subject": "Physics"
+            }
+            
+            create_response = requests.post(f"{API_URL}/calendar/events", json=event_data, headers=headers)
+            
+            if create_response.status_code == 200:
+                created_event = create_response.json()
+                print("✅ Event created successfully")
+                
+                # Verify all expected fields for frontend
+                expected_fields = {
+                    "id": str,
+                    "title": str,
+                    "event_type": str,
+                    "start_time": str,  # Should be ISO format
+                    "end_time": str,    # Should be ISO format
+                    "description": str,
+                    "subject": str
+                }
+                
+                print("\n📋 Field verification:")
+                all_fields_present = True
+                for field, expected_type in expected_fields.items():
+                    if field in created_event:
+                        actual_value = created_event[field]
+                        if isinstance(actual_value, expected_type):
+                            print(f"   ✅ {field}: {actual_value} ({type(actual_value).__name__})")
+                        else:
+                            print(f"   ⚠️ {field}: {actual_value} (expected {expected_type.__name__}, got {type(actual_value).__name__})")
+                    else:
+                        print(f"   ❌ Missing field: {field}")
+                        all_fields_present = False
+                
+                # Test date/time format compatibility
+                if "start_time" in created_event and "end_time" in created_event:
+                    try:
+                        from datetime import datetime
+                        start_time = created_event["start_time"]
+                        end_time = created_event["end_time"]
+                        
+                        # Try to parse as ISO format (frontend expectation)
+                        if isinstance(start_time, str):
+                            datetime.fromisoformat(start_time.replace('Z', '+00:00'))
+                            print("   ✅ start_time format compatible with frontend")
+                        
+                        if isinstance(end_time, str):
+                            datetime.fromisoformat(end_time.replace('Z', '+00:00'))
+                            print("   ✅ end_time format compatible with frontend")
+                            
+                    except Exception as e:
+                        print(f"   ❌ Date/time format issue: {str(e)}")
+                
+                if all_fields_present:
+                    print("\n🎉 All expected fields present and correctly typed")
+                else:
+                    print("\n⚠️ Some fields missing or incorrectly typed")
+                    
+            else:
+                print(f"❌ Failed to create test event: {create_response.status_code}")
+                print(f"   Response: {create_response.text}")
+                
+        except Exception as e:
+            print(f"❌ Exception in data structure verification: {str(e)}")
+        
+        print("✅ Calendar data structure verification completed")
+
+    def test_22_modern_ui_endpoints_testing(self):
         """Test specific endpoints causing 'failed to load data' errors in modern UI components"""
         print("\n🔍 Testing Modern UI Components API Endpoints...")
         
@@ -1343,7 +1614,7 @@ class TestProjectKV3Backend(unittest.TestCase):
             "dashboard": {"tested": False, "working": False, "error": None},
             "practice_results": {"tested": False, "working": False, "error": None},
             "strengths_weaknesses": {"tested": False, "working": False, "error": None},
-            "performance_trends": {"tested": False, "working": False, "error": None},
+            "performance_trends": {"tested": False, "error": None},
             "subject_breakdown": {"tested": False, "working": False, "error": None},
             "learning_insights": {"tested": False, "working": False, "error": None},
             "notes": {"tested": False, "working": False, "error": None}
