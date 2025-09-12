@@ -245,9 +245,10 @@
 ##
 ## test_plan:
   current_focus:
-    - "Classes Component Modern UI Implementation"
+    - "Frontend Authentication Flow Issues"
   stuck_tasks: 
     - "NCERT Units Relevancy Issue - AI Prompt Improvements and Fallback System"
+    - "Classes Component Modern UI Implementation"
   test_all: false
   test_priority: "high_first"
 
