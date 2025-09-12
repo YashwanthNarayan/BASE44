@@ -68,7 +68,16 @@ const NotesComponent_Modern = ({ student, onNavigate }) => {
       setNotes(response.notes || []);
     } catch (error) {
       console.error('Error loading notes:', error);
-      setError('Failed to load notes. Please try again.');
+      
+      // Handle authentication errors
+      if (error.response?.status === 403 || error.response?.status === 401) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_type');  
+        localStorage.removeItem('user');
+        setError('Authentication expired. Please refresh the page and log in again.');
+      } else {
+        setError('Failed to load notes. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
