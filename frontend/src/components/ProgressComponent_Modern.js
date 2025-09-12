@@ -360,27 +360,36 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
                       const color = getSubjectColor(result.subject);
                       
                       return (
-                        <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <button 
+                          key={index} 
+                          onClick={() => handleTestClick(result)}
+                          className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-indigo-50 hover:border-indigo-200 transition-all duration-200 border border-transparent cursor-pointer group"
+                        >
                           <div className="flex items-center gap-4">
                             <div className={`w-2 h-8 rounded-full bg-${color}-500`}></div>
-                            <div>
-                              <ModernText className="font-semibold text-gray-800 capitalize">
+                            <div className="text-left">
+                              <ModernText className="font-semibold text-gray-800 capitalize group-hover:text-indigo-900">
                                 {result.subject || 'General'}
                               </ModernText>
-                              <ModernText variant="body-small" className="text-gray-600 font-medium">
-                                {new Date(result.completed_at).toLocaleDateString()}
+                              <ModernText variant="body-small" className="text-gray-600 font-medium group-hover:text-indigo-700">
+                                {new Date(result.completed_at).toLocaleDateString()} • Click for details
                               </ModernText>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <ModernHeading level={5} className="text-gray-900 font-bold">
-                              {result.score || 0}%
-                            </ModernHeading>
-                            <ModernBadge variant={performance.color} className="text-xs">
-                              {performance.label}
-                            </ModernBadge>
+                          <div className="text-right flex items-center gap-3">
+                            <div>
+                              <ModernHeading level={5} className="text-gray-900 font-bold group-hover:text-indigo-900">
+                                {result.score || 0}%
+                              </ModernHeading>
+                              <ModernBadge variant={performance.color} className="text-xs">
+                                {performance.label}
+                              </ModernBadge>
+                            </div>
+                            <svg className="w-5 h-5 text-gray-400 group-hover:text-indigo-500 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                            </svg>
                           </div>
-                        </div>
+                        </button>
                       );
                     })}
                   </div>
