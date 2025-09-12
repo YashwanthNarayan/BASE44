@@ -85,7 +85,7 @@ export const studentAPI = {
   },
   
   getProgress: async () => {
-    const response = await axios.get(`${API_BASE}/practice/results`);
+    const response = await axios.get(`${API_BASE}/api/practice/results`);
     return response.data;
   },
   
