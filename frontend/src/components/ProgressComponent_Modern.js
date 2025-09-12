@@ -375,27 +375,13 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
 
       <ModernContainer className="py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-10">
-          <div>
-            <ModernHeading level={1} className="text-3xl font-bold text-gray-900 mb-2">
-              Progress Tracker
-            </ModernHeading>
-            <ModernText variant="body-large" className="text-gray-600 font-medium">
-              Monitor your learning journey and academic performance
-            </ModernText>
-          </div>
-          <div className="flex gap-2">
-            {timeframeOptions.map((option) => (
-              <ModernButton
-                key={option.value}
-                variant={selectedTimeframe === option.value ? 'primary' : 'outline'}
-                onClick={() => setSelectedTimeframe(option.value)}
-                className="text-sm font-medium"
-              >
-                {option.label}
-              </ModernButton>
-            ))}
-          </div>
+        <div className="mb-10">
+          <ModernHeading level={1} className="text-3xl font-bold text-gray-900 mb-2">
+            Progress Tracker
+          </ModernHeading>
+          <ModernText variant="body-large" className="text-gray-600 font-medium">
+            Monitor your learning journey and academic performance
+          </ModernText>
         </div>
 
         {error && (
