@@ -38,7 +38,23 @@ const StudentDashboard_Modern = ({ user, onNavigate, onLogout }) => {
       setDashboardData(data);
     } catch (error) {
       console.error('Error loading dashboard:', error);
-      setError('Failed to load dashboard data');
+      
+      // Handle different types of errors
+      if (error.response?.status === 403 || error.response?.status === 401) {
+        // Clear invalid token and redirect to login
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_type');
+        localStorage.removeItem('user');
+        setError('Authentication expired. Please log in again.');
+        // Redirect to login after a short delay
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      } else if (error.response?.status >= 500) {
+        setError('Server error. Please try again later.');
+      } else {
+        setError('Failed to load dashboard data. Please refresh the page.');
+      }
     } finally {
       setLoading(false);
     }
