@@ -242,7 +242,7 @@
 ##
 ## test_plan:
   current_focus:
-    - "Authentication and Data Loading Issues - RESOLVED"
+    - "Classes Component Modern UI Implementation"
   stuck_tasks: 
     - "NCERT Units Relevancy Issue - AI Prompt Improvements and Fallback System"
   test_all: false
