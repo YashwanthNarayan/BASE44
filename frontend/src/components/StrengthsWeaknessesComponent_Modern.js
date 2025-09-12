@@ -53,7 +53,16 @@ const StrengthsWeaknessesComponent_Modern = ({ student, onNavigate }) => {
 
     } catch (error) {
       console.error('Error loading analytics:', error);
-      setError('Failed to load analytics data. Please try again.');
+      
+      // Handle authentication errors
+      if (error.response?.status === 403 || error.response?.status === 401) {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_type');
+        localStorage.removeItem('user');
+        setError('Authentication expired. Please refresh the page and log in again.');
+      } else {
+        setError('Failed to load analytics data. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
