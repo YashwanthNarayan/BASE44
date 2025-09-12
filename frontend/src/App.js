@@ -230,7 +230,7 @@ function App() {
           )}
 
           {currentView === 'calendar' && (
-            <CalendarComponent student={user} onNavigate={navigate} />
+            <CalendarComponent_Modern student={user} onNavigate={navigate} />
           )}
 
           {currentView === 'progress' && (
