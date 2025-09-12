@@ -212,13 +212,103 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
 
   const startStudySession = async (planId) => {
     try {
-      await studyPlannerAPI.startSession(planId);
-      setSuccess('Study session started! Good luck with your studies!');
+      // Find the plan to get session details
+      const plan = myPlans.find(p => p.id === planId || p.plan_id === planId);
+      if (!plan || !plan.pomodoro_sessions) {
+        setError('Invalid study plan selected.');
+        return;
+      }
+
+      // Get the first incomplete session
+      const nextSession = plan.pomodoro_sessions.find(session => !session.completed);
+      if (!nextSession) {
+        setError('All sessions in this plan are completed.');
+        return;
+      }
+
+      // Start the session
+      const response = await studyPlannerAPI.startSession(planId);
+      
+      // Set up active session tracking
+      const sessionData = {
+        planId: planId,
+        plan: plan,
+        currentSession: nextSession,
+        sessionIndex: plan.pomodoro_sessions.indexOf(nextSession),
+        totalSessions: plan.pomodoro_sessions.length,
+        startTime: new Date(),
+        duration: nextSession.duration_minutes * 60 * 1000 // Convert to milliseconds
+      };
+      
+      setActiveSession(sessionData);
+      setSessionTimeRemaining(sessionData.duration);
+      setSuccess('Study session started! Focus time begins now.');
+      
+      // Start countdown timer
+      startSessionTimer(sessionData.duration);
+      
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
       console.error('Error starting session:', error);
-      setError('Failed to start study session. Please try again.');
+      const errorMessage = error.response?.data?.detail || 'Failed to start study session. Please try again.';
+      setError(errorMessage);
     }
+  };
+
+  const startSessionTimer = (duration) => {
+    let timeLeft = duration;
+    
+    const timer = setInterval(() => {
+      timeLeft -= 1000;
+      setSessionTimeRemaining(timeLeft);
+      
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        completeCurrentSession();
+      }
+    }, 1000);
+    
+    // Store timer reference to clear it if needed
+    if (activeSession) {
+      setActiveSession(prev => ({ ...prev, timerId: timer }));
+    }
+  };
+
+  const completeCurrentSession = () => {
+    if (activeSession) {
+      // Clear timer
+      if (activeSession.timerId) {
+        clearInterval(activeSession.timerId);
+      }
+      
+      // Check if there are more sessions
+      const nextSessionIndex = activeSession.sessionIndex + 1;
+      const hasMoreSessions = nextSessionIndex < activeSession.totalSessions;
+      
+      if (hasMoreSessions) {
+        const nextSession = activeSession.plan.pomodoro_sessions[nextSessionIndex];
+        setSuccess(`Session completed! ${nextSession.session_type === 'work' ? 'Work' : 'Break'} session is next.`);
+      } else {
+        setSuccess('Congratulations! You have completed all sessions in this study plan!');
+      }
+      
+      // Clear active session after a delay
+      setTimeout(() => {
+        setActiveSession(null);
+        setSessionTimeRemaining(0);
+        loadMyPlans(); // Refresh plans to show updated progress
+      }, 3000);
+    }
+  };
+
+  const stopSession = () => {
+    if (activeSession && activeSession.timerId) {
+      clearInterval(activeSession.timerId);
+    }
+    setActiveSession(null);
+    setSessionTimeRemaining(0);
+    setSuccess('Study session stopped.');
+    setTimeout(() => setSuccess(''), 3000);
   };
 
   const deletePlan = async (planId) => {
