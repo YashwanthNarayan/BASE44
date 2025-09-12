@@ -31,7 +31,7 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
 
   useEffect(() => {
     loadProgressData();
-  }, [selectedTimeframe]);
+  }, []);
 
   const loadProgressData = async () => {
     try {
