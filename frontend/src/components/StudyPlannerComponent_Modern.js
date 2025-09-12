@@ -680,8 +680,9 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
                           </ModernButton>
                           <ModernButton
                             variant="outline"
-                            onClick={() => deletePlan(plan.id)}
-                            className="font-medium text-red-600 border-red-200 hover:bg-red-50"
+                            onClick={() => deletePlan(plan.plan_id || plan.id)}
+                            disabled={activeSession && (activeSession.planId === (plan.plan_id || plan.id))}
+                            className="font-medium text-red-600 border-red-200 hover:bg-red-50 disabled:opacity-50"
                           >
                             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clipRule="evenodd" />
