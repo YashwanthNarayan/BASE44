@@ -358,10 +358,11 @@ const CalendarComponent_Modern = ({ student, onNavigate }) => {
                                 return (
                                   <div
                                     key={eventIndex}
-                                    className={`text-xs px-2 py-1 rounded ${typeInfo.bgColor} ${typeInfo.textColor} truncate`}
+                                    className={`text-xs px-2 py-1 rounded-md ${typeInfo.bgColor} ${typeInfo.textColor} truncate font-medium flex items-center gap-1`}
                                     title={event.title}
                                   >
-                                    {typeInfo.icon} {event.title}
+                                    <span className="font-bold text-xs">{typeInfo.icon}</span>
+                                    <span>{event.title}</span>
                                   </div>
                                 );
                               })}
