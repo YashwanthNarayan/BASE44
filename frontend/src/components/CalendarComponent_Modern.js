@@ -470,43 +470,73 @@ const CalendarComponent_Modern = ({ student, onNavigate }) => {
 
         {/* Event Form Modal */}
         {showEventForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <ModernHeading level={3} className="text-gray-900 font-bold">
-                    Create New Event
-                  </ModernHeading>
+          <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden">
+              {/* Modal Header */}
+              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
+                      <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <ModernHeading level={3} className="text-white font-bold text-xl">
+                        Create New Event
+                      </ModernHeading>
+                      <ModernText className="text-indigo-100 text-sm font-medium">
+                        Schedule your activities and stay organized
+                      </ModernText>
+                    </div>
+                  </div>
                   <button 
                     onClick={() => {
                       setShowEventForm(false);
                       setSelectedDate(null);
                       setError('');
                     }}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    className="text-white hover:text-indigo-200 transition-colors p-2 hover:bg-white hover:bg-opacity-10 rounded-xl"
                   >
                     <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                     </svg>
                   </button>
                 </div>
+              </div>
 
+              {/* Modal Body */}
+              <div className="p-8 overflow-y-auto max-h-[60vh]">
+                {/* Selected Date Display */}
                 {selectedDate && (
-                  <div className="mb-6 p-4 bg-indigo-50 rounded-xl">
-                    <ModernText className="text-indigo-800 font-medium">
-                      📅 {new Date(selectedDate).toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      })}
-                    </ModernText>
+                  <div className="mb-8 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <ModernText className="text-indigo-900 font-bold text-lg">
+                          {new Date(selectedDate).toLocaleDateString('en-US', { 
+                            weekday: 'long', 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                          })}
+                        </ModernText>
+                        <ModernText className="text-indigo-600 text-sm font-medium">
+                          Selected date for your new event
+                        </ModernText>
+                      </div>
+                    </div>
                   </div>
                 )}
 
-                <div className="space-y-4">
+                <div className="space-y-6">
+                  {/* Event Title */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-bold text-gray-800 mb-3">
                       Event Title *
                     </label>
                     <ModernInput
@@ -514,80 +544,120 @@ const CalendarComponent_Modern = ({ student, onNavigate }) => {
                       value={eventForm.title}
                       onChange={(e) => setEventForm({...eventForm, title: e.target.value})}
                       placeholder="e.g., Mathematics Study Session"
-                      className="w-full"
+                      className="w-full text-lg py-4 px-5 bg-gray-50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-indigo-500 text-gray-900"
                     />
                   </div>
 
+                  {/* Event Type Selection */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-bold text-gray-800 mb-4">
                       Event Type
                     </label>
-                    <ModernSelect
-                      value={eventForm.event_type}
-                      onChange={(e) => setEventForm({...eventForm, event_type: e.target.value})}
-                      className="w-full"
-                    >
+                    <div className="grid grid-cols-2 gap-3">
                       {eventTypes.map(type => (
-                        <option key={type.value} value={type.value}>
-                          {type.icon} {type.label}
-                        </option>
+                        <button
+                          key={type.value}
+                          onClick={() => setEventForm({...eventForm, event_type: type.value})}
+                          className={`p-4 rounded-2xl border-2 transition-all duration-300 text-left hover:shadow-lg ${
+                            eventForm.event_type === type.value
+                              ? `bg-${type.color}-50 border-${type.color}-300 shadow-md`
+                              : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm ${
+                              eventForm.event_type === type.value 
+                                ? `bg-${type.color}-500 text-white` 
+                                : 'bg-gray-200 text-gray-600'
+                            }`}>
+                              {type.icon}
+                            </div>
+                            <div className="flex-1">
+                              <div className={`font-bold text-sm ${
+                                eventForm.event_type === type.value ? `text-${type.color}-900` : 'text-gray-700'
+                              }`}>
+                                {type.label}
+                              </div>
+                            </div>
+                          </div>
+                        </button>
                       ))}
-                    </ModernSelect>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* Time Selection */}
+                  <div className="grid grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-bold text-gray-800 mb-3">
                         Start Time
                       </label>
-                      <ModernInput
-                        type="time"
-                        value={eventForm.start_time}
-                        onChange={(e) => setEventForm({...eventForm, start_time: e.target.value})}
-                        className="w-full"
-                      />
+                      <div className="relative">
+                        <ModernInput
+                          type="time"
+                          value={eventForm.start_time}
+                          onChange={(e) => setEventForm({...eventForm, start_time: e.target.value})}
+                          className="w-full text-lg py-4 px-5 bg-gray-50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                        />
+                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <label className="block text-sm font-bold text-gray-800 mb-3">
                         End Time
                       </label>
-                      <ModernInput
-                        type="time"
-                        value={eventForm.end_time}
-                        onChange={(e) => setEventForm({...eventForm, end_time: e.target.value})}
-                        className="w-full"
-                      />
+                      <div className="relative">
+                        <ModernInput
+                          type="time"
+                          value={eventForm.end_time}
+                          onChange={(e) => setEventForm({...eventForm, end_time: e.target.value})}
+                          className="w-full text-lg py-4 px-5 bg-gray-50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-indigo-500 text-gray-900"
+                        />
+                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                          <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
+                  {/* Subject */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-bold text-gray-800 mb-3">
                       Subject (Optional)
                     </label>
                     <ModernInput
                       type="text"
                       value={eventForm.subject}
                       onChange={(e) => setEventForm({...eventForm, subject: e.target.value})}
-                      placeholder="e.g., Mathematics, Physics"
-                      className="w-full"
+                      placeholder="e.g., Mathematics, Physics, Chemistry"
+                      className="w-full text-lg py-4 px-5 bg-gray-50 border-gray-200 focus:bg-white focus:ring-2 focus:ring-indigo-500 text-gray-900"
                     />
                   </div>
 
+                  {/* Description */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-bold text-gray-800 mb-3">
                       Description (Optional)
                     </label>
                     <textarea
                       value={eventForm.description}
                       onChange={(e) => setEventForm({...eventForm, description: e.target.value})}
-                      placeholder="Additional details about this event..."
-                      rows="3"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                      placeholder="Add notes, goals, or any additional details about this event..."
+                      rows="4"
+                      className="w-full px-5 py-4 text-lg bg-gray-50 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white resize-none text-gray-900 placeholder-gray-500"
                     />
                   </div>
                 </div>
+              </div>
 
-                <div className="flex gap-3 mt-8">
+              {/* Modal Footer */}
+              <div className="bg-gray-50 px-8 py-6 border-t border-gray-100">
+                <div className="flex gap-4">
                   <ModernButton
                     variant="outline"
                     onClick={() => {
@@ -595,16 +665,21 @@ const CalendarComponent_Modern = ({ student, onNavigate }) => {
                       setSelectedDate(null);
                       setError('');
                     }}
-                    className="flex-1 font-medium"
+                    className="flex-1 font-bold py-4 text-gray-700 border-gray-300 hover:bg-gray-100"
                   >
                     Cancel
                   </ModernButton>
                   <ModernButton
                     variant="primary"
                     onClick={createEvent}
-                    className="flex-1 font-medium"
+                    className="flex-1 font-bold py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-lg"
                   >
-                    Create Event
+                    <div className="flex items-center justify-center gap-2">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
+                      </svg>
+                      Create Event
+                    </div>
                   </ModernButton>
                 </div>
               </div>
