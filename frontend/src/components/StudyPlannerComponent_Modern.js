@@ -249,12 +249,11 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
         duration: nextSession.duration_minutes * 60 * 1000 // Convert to milliseconds
       };
       
-      setActiveSession(sessionData);
       setSessionTimeRemaining(sessionData.duration);
       setSuccess('Study session started! Focus time begins now.');
       
-      // Start countdown timer
-      startSessionTimer(sessionData.duration);
+      // Start countdown timer and set active session with timer ID
+      startSessionTimer(sessionData);
       
       setTimeout(() => setSuccess(''), 3000);
     } catch (error) {
