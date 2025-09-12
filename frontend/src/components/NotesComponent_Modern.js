@@ -64,7 +64,7 @@ const NotesComponent_Modern = ({ student, onNavigate }) => {
       }
 
       setupAxiosAuth(token);
-      const response = await notesAPI.getUserNotes();
+      const response = await notesAPI.getAll();
       setNotes(response.notes || []);
     } catch (error) {
       console.error('Error loading notes:', error);
