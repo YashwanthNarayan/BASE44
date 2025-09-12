@@ -8,6 +8,7 @@ import uuid
 from dotenv import load_dotenv
 import sys
 from enum import Enum
+from datetime import datetime
 
 # Load environment variables from frontend/.env to get the backend URL
 load_dotenv('/app/frontend/.env')
