@@ -495,18 +495,22 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
                       className={`w-full text-left p-6 rounded-xl border-2 transition-all duration-300 hover:shadow-md ${
                         userAnswers[currentQuestion.id] === option
                           ? 'border-indigo-500 bg-indigo-50 text-indigo-900 shadow-md'
-                          : 'border-gray-200 hover:border-indigo-200 hover:bg-indigo-25'
+                          : 'border-gray-200 hover:border-indigo-200 hover:bg-indigo-50 text-gray-800'
                       }`}
                     >
                       <div className="flex items-center gap-4">
                         <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center font-bold text-sm ${
                           userAnswers[currentQuestion.id] === option
                             ? 'border-indigo-500 bg-indigo-500 text-white'
-                            : 'border-gray-300 text-gray-500'
+                            : 'border-gray-300 text-gray-600 bg-white'
                         }`}>
                           {String.fromCharCode(65 + index)}
                         </div>
-                        <span className="text-lg leading-relaxed font-medium">
+                        <span className={`text-lg leading-relaxed font-medium ${
+                          userAnswers[currentQuestion.id] === option
+                            ? 'text-indigo-900'
+                            : 'text-gray-800'
+                        }`}>
                           {option}
                         </span>
                       </div>
