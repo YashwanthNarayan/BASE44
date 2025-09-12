@@ -69,6 +69,7 @@ app.include_router(study_planner.router)
 app.include_router(notes.router)
 app.include_router(practice_scheduler.router)
 app.include_router(student_analytics.router)  # Add analytics router
+app.include_router(calendar.router)  # Add calendar router
 app.include_router(dashboard_router)
 
 # Health check endpoint
