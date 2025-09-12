@@ -12,6 +12,7 @@ const NavigationBar_Modern = ({ user, currentPage, onNavigate, onLogout }) => {
   const navigationItems = [
     { id: 'student-dashboard', label: 'Dashboard', icon: '●' },
     { id: 'classes', label: 'Classes', icon: '⬢' },
+    { id: 'calendar', label: 'Calendar', icon: '◈' },
     { id: 'practice-tests', label: 'Practice Tests', icon: '◆' },
     { id: 'strengths-weaknesses', label: 'Analytics', icon: '◇' },
     { id: 'tutor', label: 'AI Tutor', icon: '◎' },
