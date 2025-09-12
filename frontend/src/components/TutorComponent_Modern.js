@@ -123,7 +123,7 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
       let sessionId = currentSessionId;
       if (!sessionId) {
         const sessionResponse = await tutorAPI.createSession({
-          subject: 'general'
+          subject: selectedSubject
         });
         sessionId = sessionResponse.session_id;
         setCurrentSessionId(sessionId);
@@ -131,7 +131,7 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
 
       const response = await tutorAPI.sendMessage({
         message: userMessage,
-        subject: 'general',
+        subject: selectedSubject,
         session_id: sessionId
       });
 
