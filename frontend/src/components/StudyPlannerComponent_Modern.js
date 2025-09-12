@@ -390,8 +390,8 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
                     : 'bg-blue-400'
                 } animate-pulse`}></div>
                 <span className="font-mono text-lg font-bold">
-                  {Math.floor(sessionTimeRemaining / 60000)}:
-                  {String(Math.floor((sessionTimeRemaining % 60000) / 1000)).padStart(2, '0')}
+                  {Math.floor(Math.max(0, sessionTimeRemaining) / 60000)}:
+                  {String(Math.floor((Math.max(0, sessionTimeRemaining) % 60000) / 1000)).padStart(2, '0')}
                 </span>
               </div>
 
