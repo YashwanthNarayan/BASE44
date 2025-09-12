@@ -24,6 +24,7 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
   const [error, setError] = useState('');
   const [sessionActive, setSessionActive] = useState(false);
   const [helpTopics, setHelpTopics] = useState([]);
+  const [currentSessionId, setCurrentSessionId] = useState(null);
   const messagesEndRef = useRef(null);
 
   const quickQuestions = [
