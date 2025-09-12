@@ -71,12 +71,65 @@ const StrengthsWeaknessesComponent_Modern = ({ student, onNavigate }) => {
   const getSubjectColor = (subject) => {
     const colors = {
       mathematics: 'blue',
-      physics: 'purple',
-      chemistry: 'red',
-      biology: 'green',
-      english: 'indigo'
+      physics: 'green',
+      chemistry: 'purple',
+      biology: 'emerald',
+      english: 'indigo',
+      science: 'teal',
+      social: 'amber'
     };
     return colors[subject?.toLowerCase()] || 'gray';
+  };
+
+  // Calculate subject performance from test results
+  const calculateSubjectPerformance = () => {
+    // Get test results from localStorage or make API call
+    const storedResults = localStorage.getItem('recent_test_results');
+    let testResults = [];
+    
+    if (storedResults) {
+      try {
+        testResults = JSON.parse(storedResults);
+      } catch (e) {
+        console.warn('Could not parse stored results');
+      }
+    }
+
+    if (!Array.isArray(testResults) || testResults.length === 0) {
+      return [];
+    }
+
+    // Group tests by subject and calculate averages
+    const subjectStats = {};
+    
+    testResults.forEach(result => {
+      const subject = result.subject || 'general';
+      if (!subjectStats[subject]) {
+        subjectStats[subject] = {
+          subject: subject,
+          scores: [],
+          totalQuestions: 0,
+          correctAnswers: 0,
+          testCount: 0
+        };
+      }
+      
+      subjectStats[subject].scores.push(result.score || 0);
+      subjectStats[subject].totalQuestions += result.total_questions || 0;
+      subjectStats[subject].correctAnswers += result.correct_count || 0;
+      subjectStats[subject].testCount += 1;
+    });
+
+    // Convert to array format expected by the component
+    return Object.values(subjectStats).map(stat => ({
+      subject: stat.subject,
+      average_score: stat.scores.reduce((sum, score) => sum + score, 0) / stat.scores.length,
+      test_count: stat.testCount,
+      total_questions: stat.totalQuestions,
+      correct_answers: stat.correctAnswers,
+      improvement_trend: stat.scores.length > 1 ? 
+        (stat.scores[stat.scores.length - 1] - stat.scores[0]) : 0
+    })).sort((a, b) => b.average_score - a.average_score);
   };
 
   const getColorClasses = (color) => {
