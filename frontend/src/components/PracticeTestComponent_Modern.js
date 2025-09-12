@@ -725,6 +725,53 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
               </div>
             </ModernGrid>
 
+            {/* Question Type Selection */}
+            <div className="mb-8">
+              <ModernHeading level={4} className="mb-6 text-gray-800 font-semibold">
+                Question Types ({selectedQuestionTypes.length > 0 ? selectedQuestionTypes.length : 'All'} selected)
+              </ModernHeading>
+              <ModernText variant="body-small" className="text-gray-600 mb-6 font-medium">
+                Choose specific question formats or leave empty for mixed types
+              </ModernText>
+              <ModernGrid cols={2}>
+                {questionTypes.map(type => (
+                  <button
+                    key={type.value}
+                    onClick={() => handleQuestionTypeToggle(type.value)}
+                    className={`p-5 rounded-xl border-2 transition-all duration-300 text-left group hover:shadow-md ${
+                      selectedQuestionTypes.includes(type.value)
+                        ? 'border-green-500 bg-green-50 shadow-md'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 flex-shrink-0 transition-colors duration-300 ${
+                        selectedQuestionTypes.includes(type.value) 
+                          ? 'border-green-500 bg-green-500' 
+                          : 'border-gray-300 group-hover:border-gray-400'
+                      }`}>
+                        {selectedQuestionTypes.includes(type.value) && (
+                          <span className="text-white text-xs font-bold">✓</span>
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <div className={`font-medium text-sm transition-colors duration-300 ${
+                          selectedQuestionTypes.includes(type.value) ? 'text-green-900' : 'text-gray-700 group-hover:text-gray-900'
+                        }`}>
+                          {type.label}
+                        </div>
+                        <div className={`text-xs mt-1 transition-colors duration-300 ${
+                          selectedQuestionTypes.includes(type.value) ? 'text-green-700' : 'text-gray-500 group-hover:text-gray-600'
+                        }`}>
+                          {type.description}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </ModernGrid>
+            </div>
+
             {/* Generate Test Button */}
             <div className="text-center">
               <ModernButton
