@@ -59,17 +59,30 @@ function App() {
       if (token && userType && user) {
         setupAxiosAuth(token);
         
-        // Skip token validation call that was causing issues
-        // Just trust the stored token and set auth state
-        setIsAuthenticated(true);
-        setUserType(userType);
-        setUser(user);
-        
-        if (userType === 'student') {
-          await loadDashboardData();
-          setCurrentView('student-dashboard');
-        } else {
-          setCurrentView('teacher-dashboard');
+        // Test the token by making a simple API call
+        try {
+          const response = await axios.get(`${API_BASE}/api/dashboard`);
+          // If successful, set auth state
+          setIsAuthenticated(true);
+          setUserType(userType);
+          setUser(user);
+          
+          if (userType === 'student') {
+            await loadDashboardData();
+            setCurrentView('student-dashboard');
+          } else {
+            setCurrentView('teacher-dashboard');
+          }
+        } catch (tokenError) {
+          console.error('Token validation failed:', tokenError);
+          // Clear invalid tokens
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('user_type');
+          localStorage.removeItem('user');
+          storage.remove('user_type');
+          storage.remove('user');
+          setupAxiosAuth(null);
+          // Stay on login page
         }
       }
     } catch (error) {
