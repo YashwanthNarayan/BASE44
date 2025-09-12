@@ -355,6 +355,88 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
         onLogout={() => onNavigate('auth')}
       />
 
+      {/* Dynamic Island - Active Session Tracker */}
+      {activeSession && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <div 
+            className={`bg-black rounded-full px-6 py-3 shadow-2xl transition-all duration-300 cursor-pointer ${
+              showSessionDetails ? 'px-8 py-4' : ''
+            }`}
+            onMouseEnter={() => setShowSessionDetails(true)}
+            onMouseLeave={() => setShowSessionDetails(false)}
+          >
+            <div className="flex items-center gap-4 text-white">
+              {/* Timer Display */}
+              <div className="flex items-center gap-2">
+                <div className={`w-3 h-3 rounded-full ${
+                  activeSession.currentSession.session_type === 'work' 
+                    ? 'bg-green-400' 
+                    : 'bg-blue-400'
+                } animate-pulse`}></div>
+                <span className="font-mono text-lg font-bold">
+                  {Math.floor(sessionTimeRemaining / 60000)}:
+                  {String(Math.floor((sessionTimeRemaining % 60000) / 1000)).padStart(2, '0')}
+                </span>
+              </div>
+
+              {/* Expanded Details */}
+              {showSessionDetails && (
+                <>
+                  <div className="h-6 w-px bg-gray-600"></div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-sm">
+                      <div className="font-semibold">
+                        {activeSession.currentSession.session_type === 'work' ? 'Focus Time' : 'Break Time'}
+                      </div>
+                      <div className="text-gray-300 text-xs">
+                        Session {activeSession.sessionIndex + 1} of {activeSession.totalSessions}
+                      </div>
+                    </div>
+                    
+                    {activeSession.currentSession.subject && (
+                      <>
+                        <div className="h-6 w-px bg-gray-600"></div>
+                        <div className="text-sm">
+                          <div className="font-medium text-gray-300">
+                            {activeSession.currentSession.subject}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    
+                    <button
+                      onClick={stopSession}
+                      className="ml-3 w-6 h-6 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center transition-colors"
+                      title="Stop session"
+                    >
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Progress Bar */}
+            <div className="mt-2">
+              <div className="w-full bg-gray-700 rounded-full h-1">
+                <div 
+                  className={`h-1 rounded-full transition-all duration-1000 ${
+                    activeSession.currentSession.session_type === 'work' 
+                      ? 'bg-green-400' 
+                      : 'bg-blue-400'
+                  }`}
+                  style={{
+                    width: `${Math.max(0, (activeSession.duration - sessionTimeRemaining) / activeSession.duration * 100)}%`
+                  }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <ModernContainer className="py-8">
         {/* Header */}
         <div className="mb-8">
