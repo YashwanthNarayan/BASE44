@@ -247,6 +247,12 @@ export const tutorAPI = {
   updateSessionTitle: async (sessionId, title) => {
     const response = await axios.patch(`${API_BASE}/api/tutor/session/${sessionId}/title?title=${encodeURIComponent(title)}`);
     return response.data;
+  },
+  
+  // Alias for sendMessage for backward compatibility
+  chat: async (data) => {
+    const response = await axios.post(`${API_BASE}/api/tutor/chat`, data);
+    return response.data;
   }
 };
 
