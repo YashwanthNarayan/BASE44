@@ -264,8 +264,8 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
     }
   };
 
-  const startSessionTimer = (duration) => {
-    let timeLeft = duration;
+  const startSessionTimer = (sessionData) => {
+    let timeLeft = sessionData.duration;
     
     const timer = setInterval(() => {
       timeLeft -= 1000;
@@ -277,10 +277,11 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
       }
     }, 1000);
     
-    // Store timer reference to clear it if needed
-    if (activeSession) {
-      setActiveSession(prev => ({ ...prev, timerId: timer }));
-    }
+    // Store timer reference in session data
+    const updatedSessionData = { ...sessionData, timerId: timer };
+    setActiveSession(updatedSessionData);
+    
+    return timer;
   };
 
   const completeCurrentSession = () => {
