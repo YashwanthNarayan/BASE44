@@ -667,11 +667,16 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
                         <div className="flex gap-2 pt-4 border-t border-gray-100">
                           <ModernButton
                             variant="primary"
-                            onClick={() => startStudySession(plan.id)}
-                            disabled={isCompleted}
+                            onClick={() => startStudySession(plan.plan_id || plan.id)}
+                            disabled={isCompleted || (activeSession && (activeSession.planId === (plan.plan_id || plan.id)))}
                             className="flex-1 font-medium"
                           >
-                            {isCompleted ? 'Completed' : 'Start Study'}
+                            {activeSession && (activeSession.planId === (plan.plan_id || plan.id)) 
+                              ? 'In Progress' 
+                              : isCompleted 
+                                ? 'Completed' 
+                                : 'Start Study'
+                            }
                           </ModernButton>
                           <ModernButton
                             variant="outline"
