@@ -78,7 +78,7 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
       setupAxiosAuth(token);
 
       const sessionResponse = await tutorAPI.createSession({
-        subject: 'general' // Default subject
+        subject: selectedSubject
       });
 
       if (sessionResponse && sessionResponse.session_id) {
