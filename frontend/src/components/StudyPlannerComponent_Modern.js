@@ -77,6 +77,15 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
     }
   }, [activeTab]);
 
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (activeSession && activeSession.timerId) {
+        clearInterval(activeSession.timerId);
+      }
+    };
+  }, [activeSession]);
+
   const startConversation = async () => {
     try {
       setLoading(true);
