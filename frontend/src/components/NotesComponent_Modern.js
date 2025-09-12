@@ -123,9 +123,13 @@ const NotesComponent_Modern = ({ student, onNavigate }) => {
       };
 
       if (isEditing && selectedNote) {
-        await notesAPI.updateNote(selectedNote.id, noteData);
+        // Update not supported yet, log for debugging
+        console.log('Update functionality not yet implemented');
+        setError('Note editing not yet supported');
+        return;
       } else {
-        await notesAPI.createNote(noteData);
+        // Use generate method with subject and title as topic
+        await notesAPI.generate(noteData.subject, noteData.title, 10); // Default grade level
       }
 
       closeModal();
