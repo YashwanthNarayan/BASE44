@@ -92,6 +92,55 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
     }
   };
 
+  const loadMoreResults = () => {
+    const newCount = Math.min(displayedCount + 5, allResults.length);
+    setDisplayedCount(newCount);
+    setRecentResults(allResults.slice(0, newCount));
+  };
+
+  const calculateStats = () => {
+    if (!allResults.length) {
+      return {
+        totalTests: 0,
+        averageScore: 0,
+        weeklyTests: 0,
+        weeklyGoalProgress: 0,
+        targetProgress: 0
+      };
+    }
+
+    // Calculate overall statistics
+    const totalTests = allResults.length;
+    const averageScore = allResults.reduce((sum, test) => sum + (test.score || 0), 0) / totalTests;
+
+    // Calculate weekly tests (tests from last 7 days)
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    
+    const weeklyTests = allResults.filter(test => {
+      const testDate = new Date(test.completed_at);
+      return testDate >= oneWeekAgo;
+    }).length;
+
+    // Weekly goal progress (assuming goal of 5 tests per week)
+    const weeklyGoal = 5;
+    const weeklyGoalProgress = Math.min((weeklyTests / weeklyGoal) * 100, 100);
+
+    // Target average progress (assuming target of 85%)
+    const targetAverage = 85;
+    const targetProgress = Math.min((averageScore / targetAverage) * 100, 100);
+
+    return {
+      totalTests,
+      averageScore: Math.round(averageScore),
+      weeklyTests,
+      weeklyGoalProgress: Math.round(weeklyGoalProgress),
+      targetProgress: Math.round(targetProgress),
+      weeklyGoal,
+      targetAverage
+    };
+  };
+
   const getSubjectColor = (subject) => {
     const colors = {
       mathematics: 'blue',
