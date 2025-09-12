@@ -517,13 +517,22 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
               
               {currentQuestion.question_type !== 'mcq' && (
                 <div className="mb-8">
+                  <div className="mb-3">
+                    <ModernText variant="body-small" className="text-gray-600 font-medium">
+                      Your Answer:
+                    </ModernText>
+                  </div>
                   <textarea
-                    className="w-full p-6 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors duration-300 text-gray-900 bg-white placeholder-gray-500"
-                    rows="6"
-                    placeholder="Enter your answer here..."
+                    className="w-full p-6 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-all duration-300 text-gray-900 bg-white placeholder-gray-500 font-medium leading-relaxed resize-none shadow-sm"
+                    rows="8"
+                    placeholder="Type your detailed answer here. Take your time to explain your reasoning..."
                     value={userAnswers[currentQuestion.id] || ''}
                     onChange={(e) => handleAnswerSubmit(currentQuestion.id, e.target.value)}
                   />
+                  <div className="mt-2 flex justify-between text-xs text-gray-500">
+                    <span>Press Tab for better formatting</span>
+                    <span>{(userAnswers[currentQuestion.id] || '').length} characters</span>
+                  </div>
                 </div>
               )}
               
