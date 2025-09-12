@@ -314,12 +314,19 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
 
                 {/* Input Form */}
                 <form onSubmit={handleSubmit} className="flex gap-2">
-                  <ModernInput
+                  <textarea
                     value={currentMessage}
                     onChange={(e) => setCurrentMessage(e.target.value)}
                     placeholder="Ask me anything about your studies..."
-                    className="flex-1"
+                    className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-black font-medium leading-relaxed min-h-[48px] max-h-32"
                     disabled={loading}
+                    rows="2"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSubmit(e);
+                      }
+                    }}
                   />
                   <ModernButton 
                     type="submit" 
