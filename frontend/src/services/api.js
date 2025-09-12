@@ -80,7 +80,7 @@ export const studentAPI = {
   },
   
   getDashboard: async () => {
-    const response = await axios.get(`${API_BASE}/dashboard`);
+    const response = await axios.get(`${API_BASE}/api/dashboard`);
     return response.data;
   },
   
