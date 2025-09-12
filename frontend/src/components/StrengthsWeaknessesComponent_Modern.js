@@ -44,8 +44,8 @@ const StrengthsWeaknessesComponent_Modern = ({ student, onNavigate }) => {
       ]);
 
       setAnalytics({
-        strengths: strengths.strengths || [],
-        weaknesses: weaknesses.weaknesses || [],
+        strengths: strengthsWeaknesses.strengths || [],
+        weaknesses: strengthsWeaknesses.weaknesses || [],
         trends: trends.trends || [],
         subjects: subjects.subjects || [],
         insights: insights.insights || []
