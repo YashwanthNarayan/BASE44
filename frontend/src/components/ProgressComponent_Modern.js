@@ -172,11 +172,7 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
     return { label: 'Needs Help', color: 'error' };
   };
 
-  const timeframeOptions = [
-    { value: 'week', label: 'This Week' },
-    { value: 'month', label: 'This Month' },
-    { value: 'all', label: 'All Time' }
-  ];
+
 
   // Detailed Results View
   if (showDetailedResults && selectedTest) {
