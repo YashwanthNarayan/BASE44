@@ -293,11 +293,11 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
                           ? 'bg-indigo-600 text-white' 
                           : 'bg-gray-100 text-gray-900'
                       }`}>
-                        <ModernText variant="body-small" className={`font-medium ${
-                          message.sender === 'user' ? 'text-white' : 'text-gray-900'
+                        <div className={`font-medium text-sm leading-relaxed ${
+                          message.sender === 'user' ? 'text-white' : 'text-black'
                         }`}>
                           {message.text}
-                        </ModernText>
+                        </div>
                       </div>
                     </div>
                   ))}
