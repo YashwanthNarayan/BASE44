@@ -40,6 +40,8 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
         return;
       }
 
+      setupAxiosAuth(token);
+
       // Load progress data
       const progress = await studentAPI.getProgress();
       setProgressData(progress);
@@ -53,6 +55,36 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
       setError('Failed to load progress data. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadDetailedResults = async (testId) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        setError('Authentication required. Please log in again.');
+        return;
+      }
+
+      setupAxiosAuth(token);
+      
+      const results = await practiceAPI.getDetailedResults(testId);
+      setDetailedResults(results.detailed_results || []);
+      setShowDetailedResults(true);
+    } catch (error) {
+      console.error('Error loading detailed results:', error);
+      setError('Failed to load detailed results. Please try again.');
+    }
+  };
+
+  const handleTestClick = (result) => {
+    setSelectedTest(result);
+    if (result.id) {
+      loadDetailedResults(result.id);
+    } else {
+      // If no detailed results available, show basic info
+      setShowDetailedResults(true);
+      setDetailedResults([]);
     }
   };
 
