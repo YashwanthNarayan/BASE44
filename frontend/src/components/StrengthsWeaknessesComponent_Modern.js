@@ -36,18 +36,30 @@ const StrengthsWeaknessesComponent_Modern = ({ student, onNavigate }) => {
         return;
       }
 
-      const [strengthsWeaknesses, trends, subjects, insights] = await Promise.all([
+      const [strengthsWeaknesses, trends, subjects, insights, testResults] = await Promise.all([
         studentAnalyticsAPI.getStrengthsWeaknesses().catch(err => ({ strengths: [], weaknesses: [] })),
         studentAnalyticsAPI.getPerformanceTrends().catch(err => ({ trends: [] })),
         studentAnalyticsAPI.getSubjectBreakdown().catch(err => ({ subjects: [] })),
-        studentAnalyticsAPI.getLearningInsights().catch(err => ({ insights: [] }))
+        studentAnalyticsAPI.getLearningInsights().catch(err => ({ insights: [] })),
+        studentAPI.getTestResults().catch(err => [])
       ]);
 
+      // Store test results for subject performance calculation
+      if (Array.isArray(testResults) && testResults.length > 0) {
+        localStorage.setItem('recent_test_results', JSON.stringify(testResults));
+      } else if (testResults.results && Array.isArray(testResults.results)) {
+        localStorage.setItem('recent_test_results', JSON.stringify(testResults.results));
+      }
+
+      // Use calculated subject performance if API doesn't return it
+      const calculatedSubjects = calculateSubjectPerformance();
+      const apiSubjects = subjects.subject_breakdown || subjects.subjects || [];
+      
       setAnalytics({
         strengths: strengthsWeaknesses.strengths || [],
         weaknesses: strengthsWeaknesses.weaknesses || [],
         trends: trends.trend_data || trends.trends || [],
-        subjects: subjects.subject_breakdown || subjects.subjects || [],
+        subjects: apiSubjects.length > 0 ? apiSubjects : calculatedSubjects,
         insights: insights.insights || insights || []
       });
 
