@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { studentAPI } from '../services/api';
+import { studentAPI, setupAxiosAuth, practiceAPI } from '../services/api';
 import NavigationBar_Modern from './NavigationBar_Modern';
 import { 
   ModernCard, 
