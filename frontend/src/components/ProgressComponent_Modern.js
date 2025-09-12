@@ -632,6 +632,22 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
                         </button>
                       );
                     })}
+                    
+                    {/* Load More Button */}
+                    {displayedCount < allResults.length && (
+                      <div className="pt-4 border-t border-gray-100">
+                        <ModernButton 
+                          variant="outline" 
+                          onClick={loadMoreResults}
+                          className="w-full font-medium"
+                        >
+                          Load {Math.min(5, allResults.length - displayedCount)} More Tests
+                          <svg className="w-4 h-4 ml-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                          </svg>
+                        </ModernButton>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="text-center py-8">
