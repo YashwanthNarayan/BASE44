@@ -26,6 +26,9 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [planCreating, setPlanCreating] = useState(false);
+  const [activeSession, setActiveSession] = useState(null);
+  const [sessionTimeRemaining, setSessionTimeRemaining] = useState(0);
+  const [showSessionDetails, setShowSessionDetails] = useState(false);
 
   // Quick plan templates
   const planTemplates = [
