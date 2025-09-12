@@ -230,7 +230,7 @@
 ##
 ## test_plan:
   current_focus:
-    - "NCERT Caching Fix Implementation - Question Variety Improvement"
+    - "Modern UI Components API Endpoints Testing - Data Loading Issues"
   stuck_tasks: 
     - "NCERT Units Relevancy Issue - AI Prompt Improvements and Fallback System"
   test_all: false
