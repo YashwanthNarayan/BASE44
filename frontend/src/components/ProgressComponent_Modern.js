@@ -125,6 +125,181 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
     { value: 'all', label: 'All Time' }
   ];
 
+  // Detailed Results View
+  if (showDetailedResults && selectedTest) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b border-gray-200">
+          <ModernContainer>
+            <div className="flex items-center justify-between py-4">
+              <ModernButton variant="ghost" onClick={() => setShowDetailedResults(false)}>
+                ← Back to Progress
+              </ModernButton>
+              <ModernHeading level={4}>Test Details</ModernHeading>
+              <div></div>
+            </div>
+          </ModernContainer>
+        </header>
+
+        <ModernContainer className="py-8 max-w-6xl">
+          {/* Test Summary */}
+          <div className="mb-8">
+            <div className="text-center mb-6">
+              <div className="text-5xl font-bold text-indigo-600 mb-2">
+                {selectedTest.score || 0}%
+              </div>
+              <ModernText variant="body-large" className="text-gray-600 mb-2">
+                {selectedTest.subject} • {new Date(selectedTest.completed_at).toLocaleDateString()}
+              </ModernText>
+              <ModernBadge variant="primary" className="text-lg px-4 py-2">
+                Grade: {selectedTest.grade || 'N/A'}
+              </ModernBadge>
+            </div>
+
+            {/* Summary Stats */}
+            <ModernGrid cols={4} className="mb-8">
+              <ModernCard>
+                <ModernCardBody>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-indigo-600">{selectedTest.score || 0}%</div>
+                    <ModernText variant="body-small" className="text-gray-500">Overall Score</ModernText>
+                  </div>
+                </ModernCardBody>
+              </ModernCard>
+              <ModernCard>
+                <ModernCardBody>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-green-500">{selectedTest.correct_count || 0}</div>
+                    <ModernText variant="body-small" className="text-gray-500">Correct</ModernText>
+                  </div>
+                </ModernCardBody>
+              </ModernCard>
+              <ModernCard>
+                <ModernCardBody>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-red-500">{(selectedTest.total_questions || 0) - (selectedTest.correct_count || 0)}</div>
+                    <ModernText variant="body-small" className="text-gray-500">Incorrect</ModernText>
+                  </div>
+                </ModernCardBody>
+              </ModernCard>
+              <ModernCard>
+                <ModernCardBody>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-blue-600">{selectedTest.total_questions || 0}</div>
+                    <ModernText variant="body-small" className="text-gray-500">Total Questions</ModernText>
+                  </div>
+                </ModernCardBody>
+              </ModernCard>
+            </ModernGrid>
+          </div>
+
+          {/* Detailed Question Results */}
+          {detailedResults.length > 0 ? (
+            <div className="space-y-6">
+              <ModernHeading level={3} className="mb-6">Question by Question Results</ModernHeading>
+              {detailedResults.map((result, index) => (
+                <ModernCard 
+                  key={result.question_id || index}
+                  className={`border-l-4 ${result.is_correct ? 'border-l-green-500' : 'border-l-red-500'}`}
+                >
+                  <ModernCardBody>
+                    {/* Question Header */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                          result.is_correct ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                        }`}>
+                          {result.is_correct ? '✓' : '✗'}
+                        </div>
+                        <ModernHeading level={4}>Question {index + 1}</ModernHeading>
+                        {result.topic && <ModernBadge variant="secondary">{result.topic}</ModernBadge>}
+                      </div>
+                      <ModernBadge variant={result.is_correct ? 'success' : 'error'}>
+                        {result.is_correct ? 'Correct' : 'Incorrect'}
+                      </ModernBadge>
+                    </div>
+
+                    {/* Question Text */}
+                    <ModernText className="mb-4 text-lg font-medium">
+                      {result.question_text}
+                    </ModernText>
+                    
+                    {/* MCQ Options */}
+                    {result.question_type === 'mcq' && result.options && (
+                      <ModernGrid cols={2} className="mb-4">
+                        {result.options.map((option, optIndex) => (
+                          <div 
+                            key={optIndex}
+                            className={`p-3 rounded-lg border ${
+                              option === result.correct_answer
+                                ? 'border-green-500 bg-green-50 text-green-800'
+                                : option === result.student_answer && !result.is_correct
+                                ? 'border-red-500 bg-red-50 text-red-800'
+                                : 'border-gray-200'
+                            }`}
+                          >
+                            <span className="font-medium">{String.fromCharCode(65 + optIndex)}.</span> {option}
+                            {option === result.correct_answer && (
+                              <span className="ml-2 text-green-600">✓ Correct</span>
+                            )}
+                            {option === result.student_answer && !result.is_correct && (
+                              <span className="ml-2 text-red-600">Your Answer</span>
+                            )}
+                          </div>
+                        ))}
+                      </ModernGrid>
+                    )}
+
+                    {/* Answers */}
+                    <ModernGrid cols={2} className="mb-4">
+                      <div>
+                        <ModernText variant="body-small" className="text-gray-500 mb-1">Your Answer:</ModernText>
+                        <ModernText className={`font-medium ${
+                          result.is_correct ? 'text-green-600' : 'text-red-600'
+                        }`}>
+                          {result.student_answer || 'No answer provided'}
+                        </ModernText>
+                      </div>
+                      <div>
+                        <ModernText variant="body-small" className="text-gray-500 mb-1">Correct Answer:</ModernText>
+                        <ModernText className="font-medium text-green-600">
+                          {result.correct_answer}
+                        </ModernText>
+                      </div>
+                    </ModernGrid>
+
+                    {/* Explanation */}
+                    {result.explanation && (
+                      <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                        <ModernText variant="body-small" className="text-blue-800 font-semibold mb-2">Explanation:</ModernText>
+                        <ModernText className="text-blue-700 leading-relaxed">
+                          {result.explanation}
+                        </ModernText>
+                      </div>
+                    )}
+                  </ModernCardBody>
+                </ModernCard>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <ModernHeading level={4} className="text-gray-600 font-semibold mb-2">Basic Test Information</ModernHeading>
+              <ModernText variant="body-small" className="text-gray-500 font-medium mb-4">
+                Detailed question-by-question results are not available for this test
+              </ModernText>
+            </div>
+          )}
+        </ModernContainer>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
