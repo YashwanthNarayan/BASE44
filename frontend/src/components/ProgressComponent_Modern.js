@@ -553,33 +553,42 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <ModernText className="font-semibold text-gray-800">Weekly Test Goal</ModernText>
-                        <ModernText className="text-gray-600 font-medium">3/5</ModernText>
+                        <ModernText className="text-gray-600 font-medium">{calculateStats().weeklyTests}/{calculateStats().weeklyGoal}</ModernText>
                       </div>
-                      <ModernProgress value={60} max={100} className="mb-1" />
+                      <ModernProgress value={calculateStats().weeklyGoalProgress} max={100} className="mb-1" />
                       <ModernText variant="body-small" className="text-gray-600 font-medium">
-                        2 more tests to reach your weekly goal
+                        {calculateStats().weeklyTests >= calculateStats().weeklyGoal 
+                          ? "Great job! You've reached your weekly goal!" 
+                          : `${calculateStats().weeklyGoal - calculateStats().weeklyTests} more tests to reach your weekly goal`
+                        }
                       </ModernText>
                     </div>
                     
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <ModernText className="font-semibold text-gray-800">Target Average</ModernText>
-                        <ModernText className="text-gray-600 font-medium">82/85%</ModernText>
+                        <ModernText className="text-gray-600 font-medium">{calculateStats().averageScore}/{calculateStats().targetAverage}%</ModernText>
                       </div>
-                      <ModernProgress value={96} max={100} className="mb-1" />
+                      <ModernProgress value={calculateStats().targetProgress} max={100} className="mb-1" />
                       <ModernText variant="body-small" className="text-gray-600 font-medium">
-                        You're almost at your target!
+                        {calculateStats().averageScore >= calculateStats().targetAverage 
+                          ? "Excellent! You've exceeded your target average!" 
+                          : `${calculateStats().targetAverage - calculateStats().averageScore}% more to reach your target`
+                        }
                       </ModernText>
                     </div>
                     
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <ModernText className="font-semibold text-gray-800">Study Streak</ModernText>
-                        <ModernText className="text-gray-600 font-medium">7/10 days</ModernText>
+                        <ModernText className="font-semibold text-gray-800">Total Progress</ModernText>
+                        <ModernText className="text-gray-600 font-medium">{calculateStats().totalTests} tests</ModernText>
                       </div>
-                      <ModernProgress value={70} max={100} className="mb-1" />
+                      <ModernProgress value={Math.min((calculateStats().totalTests / 20) * 100, 100)} max={100} className="mb-1" />
                       <ModernText variant="body-small" className="text-gray-600 font-medium">
-                        Keep going to reach 10 days!
+                        {calculateStats().totalTests >= 20 
+                          ? "Amazing! You're a testing champion!" 
+                          : `${20 - calculateStats().totalTests} more tests to reach 20 tests milestone`
+                        }
                       </ModernText>
                     </div>
                   </div>
