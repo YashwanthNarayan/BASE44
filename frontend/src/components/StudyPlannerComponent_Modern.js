@@ -223,13 +223,19 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
     try {
       // Find the plan to get session details
       const plan = myPlans.find(p => p.id === planId || p.plan_id === planId);
+      console.log('Found plan:', plan);
+      
       if (!plan || !plan.pomodoro_sessions) {
+        console.error('Invalid plan or missing pomodoro_sessions:', plan);
         setError('Invalid study plan selected.');
         return;
       }
 
       // Get the first incomplete session
-      const nextSession = plan.pomodoro_sessions.find(session => !session.completed);
+      const nextSession = plan.pomodoro_sessions.find(session => !session.completed && !session.status);
+      console.log('Next session:', nextSession);
+      console.log('All sessions:', plan.pomodoro_sessions);
+      
       if (!nextSession) {
         setError('All sessions in this plan are completed.');
         return;
