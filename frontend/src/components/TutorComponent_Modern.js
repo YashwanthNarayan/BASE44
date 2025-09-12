@@ -60,9 +60,33 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
     }
   ];
 
+  // Initialize session when component mounts
+  useEffect(() => {
+    initializeSession();
+  }, []);
+
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const initializeSession = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      if (!token) return;
+
+      setupAxiosAuth(token);
+
+      const sessionResponse = await tutorAPI.createSession({
+        subject: 'general' // Default subject
+      });
+
+      if (sessionResponse && sessionResponse.session_id) {
+        setCurrentSessionId(sessionResponse.session_id);
+      }
+    } catch (error) {
+      console.error('Failed to initialize tutor session:', error);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
