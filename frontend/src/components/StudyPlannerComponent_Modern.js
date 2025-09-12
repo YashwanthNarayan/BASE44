@@ -255,6 +255,10 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
         duration: nextSession.duration_minutes * 60 * 1000 // Convert to milliseconds
       };
       
+      console.log('Session data:', sessionData);
+      console.log('Session duration in minutes:', nextSession.duration_minutes);
+      console.log('Session duration in milliseconds:', sessionData.duration);
+      
       setSessionTimeRemaining(sessionData.duration);
       setSuccess('Study session started! Focus time begins now.');
       
