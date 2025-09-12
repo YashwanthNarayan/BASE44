@@ -23,6 +23,9 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedTimeframe, setSelectedTimeframe] = useState('week');
+  const [showDetailedResults, setShowDetailedResults] = useState(false);
+  const [selectedTest, setSelectedTest] = useState(null);
+  const [detailedResults, setDetailedResults] = useState([]);
 
   useEffect(() => {
     loadProgressData();
