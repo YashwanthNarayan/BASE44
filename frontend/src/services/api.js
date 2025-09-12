@@ -102,6 +102,27 @@ export const studentAPI = {
   getJoinedClasses: async () => {
     const response = await axios.get(`${API_BASE}/api/student/joined-classes`);
     return response.data;
+  },
+  
+  // Student Analytics endpoints
+  getStrengthsWeaknesses: async () => {
+    const response = await axios.get(`${API_BASE}/api/student/analytics/strengths-weaknesses`);
+    return response.data;
+  },
+  
+  getPerformanceTrends: async (days = 30) => {
+    const response = await axios.get(`${API_BASE}/api/student/analytics/performance-trends?days=${days}`);
+    return response.data;
+  },
+  
+  getSubjectBreakdown: async () => {
+    const response = await axios.get(`${API_BASE}/api/student/analytics/subject-breakdown`);
+    return response.data;
+  },
+  
+  getLearningInsights: async () => {
+    const response = await axios.get(`${API_BASE}/api/student/analytics/learning-insights`);
+    return response.data;
   }
 };
 
