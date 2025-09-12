@@ -510,7 +510,7 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
               {currentQuestion.question_type !== 'mcq' && (
                 <div className="mb-8">
                   <textarea
-                    className="w-full p-6 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors duration-300"
+                    className="w-full p-6 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors duration-300 text-gray-900 bg-white placeholder-gray-500"
                     rows="6"
                     placeholder="Enter your answer here..."
                     value={userAnswers[currentQuestion.id] || ''}
