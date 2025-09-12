@@ -93,17 +93,17 @@ const ClassesComponent_Modern = ({ student, onNavigate }) => {
 
   const getSubjectIcon = (subject) => {
     const icons = {
-      mathematics: 'π',
-      math: 'π',
-      physics: 'Φ',  
-      chemistry: '⚗',
-      biology: '🧬',
-      english: 'En',
-      history: '📜',
-      geography: '🌍',
-      science: '🔬'
+      mathematics: 'M',
+      math: 'M',
+      physics: 'P',  
+      chemistry: 'C',
+      biology: 'B',
+      english: 'E',
+      history: 'H',
+      geography: 'G',
+      science: 'S'
     };
-    return icons[subject?.toLowerCase()] || '📚';
+    return icons[subject?.toLowerCase()] || 'G';
   };
 
   const getGradeColor = (grade) => {
