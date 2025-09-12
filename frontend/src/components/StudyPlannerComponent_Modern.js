@@ -332,9 +332,16 @@ const StudyPlannerComponent_Modern = ({ student, onNavigate }) => {
     return `${mins}m`;
   };
 
+  const formatTime = (milliseconds) => {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${String(seconds).padStart(2, '0')}`;
+  };
+
   const getPlanProgress = (plan) => {
-    if (!plan.pomodoro_sessions) return 0;
-    const completedSessions = plan.pomodoro_sessions.filter(s => s.completed).length;
+    if (!plan.pomodoro_sessions || plan.pomodoro_sessions.length === 0) return 0;
+    const completedSessions = plan.pomodoro_sessions.filter(s => s.completed || s.status === 'completed').length;
     return Math.round((completedSessions / plan.pomodoro_sessions.length) * 100);
   };
 
