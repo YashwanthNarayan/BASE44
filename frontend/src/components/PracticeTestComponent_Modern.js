@@ -487,29 +487,27 @@ const PracticeTestComponent_Modern = ({ student, onNavigate }) => {
               </div>
               
               {currentQuestion.question_type === 'mcq' && currentQuestion.options && (
-                <div className="space-y-4 mb-8">
+                <div className="space-y-3 mb-8">
                   {currentQuestion.options.map((option, index) => (
                     <button
                       key={index}
                       onClick={() => handleAnswerSubmit(currentQuestion.id, option)}
-                      className={`w-full text-left p-6 rounded-xl border-2 transition-all duration-300 ${
+                      className={`w-full text-left p-6 rounded-xl border-2 transition-all duration-300 hover:shadow-md ${
                         userAnswers[currentQuestion.id] === option
-                          ? 'border-indigo-500 bg-indigo-50 text-indigo-900'
-                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          ? 'border-indigo-500 bg-indigo-50 text-indigo-900 shadow-md'
+                          : 'border-gray-200 hover:border-indigo-200 hover:bg-indigo-25'
                       }`}
                     >
                       <div className="flex items-center gap-4">
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                        <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center font-bold text-sm ${
                           userAnswers[currentQuestion.id] === option
-                            ? 'border-indigo-500 bg-indigo-500'
-                            : 'border-gray-300'
+                            ? 'border-indigo-500 bg-indigo-500 text-white'
+                            : 'border-gray-300 text-gray-500'
                         }`}>
-                          {userAnswers[currentQuestion.id] === option && (
-                            <div className="w-3 h-3 rounded-full bg-white" />
-                          )}
+                          {String.fromCharCode(65 + index)}
                         </div>
-                        <span className="text-lg">
-                          {String.fromCharCode(65 + index)}. {option}
+                        <span className="text-lg leading-relaxed font-medium">
+                          {option}
                         </span>
                       </div>
                     </button>
