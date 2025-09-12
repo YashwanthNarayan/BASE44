@@ -595,7 +595,7 @@ const ProgressComponent_Modern = ({ student, onNavigate }) => {
               <ModernCardBody>
                 {recentResults.length > 0 ? (
                   <div className="space-y-3">
-                    {recentResults.slice(0, 10).map((result, index) => {
+                    {recentResults.map((result, index) => {
                       const performance = getPerformanceLabel(result.score || 0);
                       const color = getSubjectColor(result.subject);
                       
