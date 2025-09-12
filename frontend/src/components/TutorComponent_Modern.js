@@ -118,9 +118,20 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
 
       setupAxiosAuth(token);
 
+      // Initialize session if not exists
+      let sessionId = currentSessionId;
+      if (!sessionId) {
+        const sessionResponse = await tutorAPI.createSession({
+          subject: 'general'
+        });
+        sessionId = sessionResponse.session_id;
+        setCurrentSessionId(sessionId);
+      }
+
       const response = await tutorAPI.chat({
         message: userMessage,
-        conversation_history: newMessages.slice(-10) // Last 10 messages for context
+        subject: 'general',
+        session_id: sessionId
       });
 
       // Add tutor response
@@ -135,7 +146,8 @@ const TutorComponent_Modern = ({ student, onNavigate }) => {
 
     } catch (error) {
       console.error('Tutor error:', error);
-      setError('Failed to get response. Please try again.');
+      const errorMessage = error.response?.data?.detail || 'Failed to get response. Please try again.';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
